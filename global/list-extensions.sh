@@ -3,4 +3,3 @@
 function ls-extensions {
   find . -type f | rev | cut -d. -f1 | rev  | tr '[:upper:]' '[:lower:]' | sort | uniq --count | sort -rn | less
 }
-
