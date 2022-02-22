@@ -1,6 +1,6 @@
 # List PDFs containing phrase. Can be run as `paper constant-q transform`.
 function paper {
-  query=$@
+  query=$*
   path=$HOME/Documents/Papers
 
   echo "Searching for \"$query\"..."
