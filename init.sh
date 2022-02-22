@@ -1,3 +1,5 @@
-for file in $(dirname $BASH_SOURCE)/global/*.sh
+export DOTFILES=$(dirname $BASH_SOURCE)
+
+for file in $DOTFILES/global/*.sh
 do source $file
 done
