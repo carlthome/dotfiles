@@ -10,7 +10,7 @@ source "$gcloud/completion.bash.inc"
 
 # Append active gcloud config in Bash terminal prompt. For configuration names
 # containing "prod", the prompt is colored red for extra visibility.
-function gcloud_prompt() {
+function gcloud_prompt {
 
   # Store original prompt.
   if [[ "${ORIG_PS1}" == "" ]]; then
