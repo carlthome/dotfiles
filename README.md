@@ -3,3 +3,11 @@ Until I learn about [home-manager](https://github.com/nix-community/home-manager
 
 - `global/` contains .bashrc config intended to be sourced by default.
 - `scripts/` contains ad-hoc scripts intended to be run on demand.
+
+## Install
+Simply `git clone` directly with $HOME as the repo root (don't worry, [.gitignore](.gitignore) is an allowlist by design).
+
+## Develop
+1. Make changes. 🤞
+1. Install a local GitHub Actions runner (https://github.com/nektos/act for example).
+1. Run test workflows in [.github](.github) (e.g. run `act` or `gh workflow run` with $HOME as working directory).
