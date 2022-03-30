@@ -9,5 +9,5 @@ source "$gcloud/path.bash.inc"
 source "$gcloud/completion.bash.inc"
 
 # Append active gcloud config in Bash terminal prompt.
-PS1='\[\033[01;33m\][$(cat $config/active_config)]\[\033[00m\] '"${PS1}"
+PS1='[$(cat $config/active_config)] '"${PS1}"
 export PS1
