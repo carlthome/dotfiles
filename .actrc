@@ -1,3 +1,6 @@
--P ubuntu-latest=node:12-buster-slim
--P ubuntu-20.04=node:12-buster-slim
--P ubuntu-18.04=node:12-buster-slim
+--reuse
+--rebuild
+--bind
+-P ubuntu-latest=docker.io/ubuntu:latest
+-P ubuntu-20.04=docker.io/ubuntu:20.04
+-P ubuntu-18.04=docker.io/ubuntu:18.04
