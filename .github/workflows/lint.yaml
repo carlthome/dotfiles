@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - uses: docker://koalaman/shellcheck:v0.8.0
+      - uses: docker://koalaman/shellcheck-alpine:v0.8.0
         with:
-          entrypoint: shellcheck
-          args: --shell=bash --exclude=SC1090,SC2086 .bashrc
+          entrypoint: sh
+          args: -c 'shellcheck --shell=bash --exclude=SC1090,SC2086 **/*.sh'
