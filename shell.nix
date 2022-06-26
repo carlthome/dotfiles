@@ -21,6 +21,7 @@
     buildInputs = [
       python
       pkgs.git
+      pkgs.act
       pkgs.ffmpeg
       pkgs.libsndfile
       pkgs.sox
