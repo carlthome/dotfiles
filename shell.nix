@@ -14,8 +14,8 @@ let
     pandas
     matplotlib
     librosa
-    pytorchWithCuda
-    tensorflowWithCuda
+    pytorch
+    tensorflow
   ]);
 in
 mkShell {
