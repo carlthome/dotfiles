@@ -44,6 +44,7 @@ mkShell {
     rustup
     sox
     starship
+    shellcheck
     vim
     vscode
   ];
