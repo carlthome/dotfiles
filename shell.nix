@@ -46,7 +46,6 @@ mkShell {
     starship
     shellcheck
     vim
-    vscode
   ];
   shellHook = ''
     echo "Hello $(whoami)!"
