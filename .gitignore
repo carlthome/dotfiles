@@ -13,3 +13,5 @@
 !/.config/nixpkgs/config.nix
 !/shell.nix
 !/.envrc
+!/flake.nix
+!/flake.lock
