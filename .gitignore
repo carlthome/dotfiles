@@ -3,9 +3,6 @@
 !/.github
 !/scripts
 !/global
-!/.bashrc
-!/.bash_aliases
-!/.zshrc
 !/.actrc
 !/.config/yabridgectl/config.toml
 !/.config/gamemode.ini
