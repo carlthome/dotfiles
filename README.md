@@ -7,11 +7,11 @@ My personal [Home Manager](https://github.com/nix-community/home-manager) config
 ## Install
 1. Install `nix` on the system.
 1. `git clone` repo to $HOME ([.gitignore](.gitignore) is an allowlist by design).
-1. Activate Home Manager [(instructions)](https://nix-community.github.io/home-manager/index.html#ch-nix-flakes) by `nix run .#homeConfigurations.carlthome.activationPackage`
+1. Activate Home Manager [(instructions)](https://nix-community.github.io/home-manager/index.html#ch-nix-flakes) by `nix run .`
 
-## Usage.
+## Usage
 1. Make declarative changes in [home.nix](./home.nix)
-1. Build and switch to the new configuration by `home-manager switch --flake '.#carlthome'`
+1. Build and switch to the new configuration by `nix run .`
 
 ## Develop
 1. Make code changes. 🤞
