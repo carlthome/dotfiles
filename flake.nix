@@ -53,7 +53,15 @@
         };
 
         devShells = {
-          default = import ./shell.nix { inherit pkgs; };
+          default = pkgs.mkShell {
+            buildInputs = with pkgs; [
+              nixpkgs-fmt
+              act
+            ];
+            shellHook = ''
+              echo "Hello $(whoami)!"
+            '';
+          };
         };
       });
 }
