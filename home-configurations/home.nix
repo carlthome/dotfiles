@@ -1,32 +1,18 @@
 { config, pkgs, ... }:
 {
   home.stateVersion = "22.05";
-  home.packages = with pkgs; [
-    coreutils
-    curl
-    wget
-    google-cloud-sdk
-    awscli
-    act
-    nixpkgs-fmt
-    cachix
-    slack
-    caprine-bin
-    tdesktop
+  home.username = "carlthome";
+  home.homeDirectory = "/home/carlthome";
 
-    pre-commit
-    cargo
-    ffmpeg
-    git
-    jupyter
-    jq
-    libsndfile
-    nodejs
-    nodePackages.npm
-    nodePackages.prettier
-    opencv
-    poetry
-    python3.withPackages (ps: with ps; [
+  nixpkgs.config = {
+    allowUnfree = true;
+    allowUnfreePredicate = (pkg: true);
+    cudaSupport = true;
+    cudnnSupport = true;
+  };
+
+  home.packages = with pkgs;
+  let python = python3.withPackages (ps: with ps; [
       black
       jax
       jaxlib
@@ -44,9 +30,34 @@
       pip
       scipy
       setuptools
-    ])
+    ]); in [
+    coreutils
+    curl
+    wget
+    google-cloud-sdk
+    awscli
+    act
+    nixpkgs-fmt
+    cachix
+    slack
+    caprine-bin
+    tdesktop
+
+    python
+    pre-commit
+    cargo
+    rustc
+    ffmpeg
+    git
+    jupyter
+    jq
+    libsndfile
+    nodejs
+    nodePackages.npm
+    nodePackages.prettier
+    opencv
+    poetry
     pdfgrep
-    rustup
     sox
     shellcheck
   ];
