@@ -15,35 +15,24 @@
       homeConfigurations = {
         carlthome = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.x86_64-linux;
-          modules = [
-            ./home-configurations/shared.nix
-            ./home-configurations/workstation.nix
-            ./home-configurations/gpu.nix
-          ];
+          modules =
+            [ ./home-configurations/shared.nix ./home-configurations/workstation.nix ./home-configurations/gpu.nix ];
         };
 
         carl = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.x86_64-linux;
-          modules = [
-            ./home-configurations/shared.nix
-            ./home-configurations/desktop.nix
-            ./home-configurations/gpu.nix
-          ];
+          modules =
+            [ ./home-configurations/shared.nix ./home-configurations/desktop.nix ./home-configurations/gpu.nix ];
         };
 
         Carl = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.aarch64-darwin;
-          modules = [
-            ./home-configurations/shared.nix
-            ./home-configurations/laptop.nix
-          ];
+          modules = [ ./home-configurations/shared.nix ./home-configurations/laptop.nix ];
         };
       };
     } // utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system};
-      in
-      {
+      let pkgs = nixpkgs.legacyPackages.${system};
+      in {
         packages = rec {
           hello = pkgs.hello;
           default = hello;
@@ -64,10 +53,7 @@
 
         devShells = {
           default = pkgs.mkShell {
-            buildInputs = with pkgs; [
-              nixpkgs-fmt
-              act
-            ];
+            buildInputs = with pkgs; [ nixpkgs-fmt nixfmt act ];
             shellHook = ''
               echo "Hello $(whoami)!"
             '';
