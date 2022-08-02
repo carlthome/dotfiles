@@ -16,23 +16,26 @@
         carlthome = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.x86_64-linux;
           modules = [
-            ./home-configurations/home.nix
+            ./home-configurations/shared.nix
+            ./home-configurations/workstation.nix
+            ./home-configurations/gpu.nix
           ];
         };
 
-        "carl@t1" = home-manager.lib.homeManagerConfiguration {
+        carl = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.x86_64-linux;
           modules = [
-            ./home-configurations/home.nix
-            ./home-configurations/t1.nix
+            ./home-configurations/shared.nix
+            ./home-configurations/desktop.nix
+            ./home-configurations/gpu.nix
           ];
         };
 
-        "Carl@Betty" = home-manager.lib.homeManagerConfiguration {
+        Carl = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.aarch64-darwin;
           modules = [
-            ./home-configurations/home.nix
-            ./home-configurations/m1.nix
+            ./home-configurations/shared.nix
+            ./home-configurations/laptop.nix
           ];
         };
       };

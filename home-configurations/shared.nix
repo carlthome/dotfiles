@@ -1,15 +1,6 @@
 { config, pkgs, ... }:
 {
   home.stateVersion = "22.05";
-  home.username = "carlthome";
-  home.homeDirectory = "/home/carlthome";
-
-  nixpkgs.config = {
-    allowUnfree = true;
-    allowUnfreePredicate = (pkg: true);
-    cudaSupport = true;
-    cudnnSupport = true;
-  };
 
   home.packages = with pkgs;
   let python = python3.withPackages (ps: with ps; [
