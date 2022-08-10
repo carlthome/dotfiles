@@ -1,5 +1,5 @@
 {
-  description = "My personal config for learning more about flakes and Home Manager";
+  description = "Carl Thomé's personal Home Manager config";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -15,19 +15,28 @@
       homeConfigurations = {
         carlthome = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.x86_64-linux;
-          modules =
-            [ ./home-configurations/shared.nix ./home-configurations/workstation.nix ./home-configurations/gpu.nix ];
+          modules = [
+            ./home-configurations/shared.nix
+            ./home-configurations/workstation.nix
+            ./home-configurations/gpu.nix
+          ];
         };
 
         carl = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.x86_64-linux;
-          modules =
-            [ ./home-configurations/shared.nix ./home-configurations/desktop.nix ./home-configurations/gpu.nix ];
+          modules = [
+            ./home-configurations/shared.nix
+            ./home-configurations/desktop.nix
+            ./home-configurations/gpu.nix
+          ];
         };
 
         Carl = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.aarch64-darwin;
-          modules = [ ./home-configurations/shared.nix ./home-configurations/laptop.nix ];
+          modules = [
+            ./home-configurations/shared.nix
+            ./home-configurations/laptop.nix
+          ];
         };
       };
     } // utils.lib.eachDefaultSystem (system:
@@ -53,7 +62,7 @@
 
         devShells = {
           default = pkgs.mkShell {
-            buildInputs = with pkgs; [ nixpkgs-fmt nixfmt act ];
+            buildInputs = with pkgs; [ nixpkgs-fmt nixfmt act vim git ];
             shellHook = ''
               echo "Hello $(whoami)!"
             '';
