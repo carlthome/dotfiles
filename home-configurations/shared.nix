@@ -4,10 +4,7 @@
   fonts.fontconfig.enable = true;
 
   home.packages = with pkgs;
-    let
-      python = import ./python.nix;
-    in
-    [
+    let python = import ./python.nix;
     in [
       act
       awscli
