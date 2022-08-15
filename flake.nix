@@ -62,7 +62,7 @@
 
         devShells = {
           default = pkgs.mkShell {
-            buildInputs = with pkgs; [ nixpkgs-fmt nixfmt act vim git ];
+            buildInputs = with pkgs; [ nixpkgs-fmt nixfmt cachix act vim git ];
             shellHook = ''
               echo "Hello $(whoami)!"
             '';
