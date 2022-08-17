@@ -51,7 +51,9 @@
           update-home = {
             type = "app";
             program = (pkgs.writeScript "update-home" ''
+              set -e
               profile=$(nix profile list | grep home-manager-path | head -n1 | awk '{print $4}')
+              home-manager build --flake .
               nix profile remove $profile
               home-manager switch --flake .
             '').outPath;
