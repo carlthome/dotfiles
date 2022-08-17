@@ -8,8 +8,8 @@ My personal [Home Manager](https://github.com/nix-community/home-manager) config
 
 ## Install
 
-1. Install `nix` on the system.
-1. `git clone` repo to $HOME ([.gitignore](.gitignore) is an allowlist by design).
+1. Install `nix` on the system
+1. `git clone` repo to $HOME ([.gitignore](.gitignore) is an allowlist by design)
 1. Install Home Manager with `nix profile install home-manager`
 
 ## Use
@@ -19,5 +19,5 @@ My personal [Home Manager](https://github.com/nix-community/home-manager) config
 
 ## Develop
 
-1. Make code changes. 🤞
-1. Run test jobs in [.github](.github) (e.g. run `act` or `gh workflow run`).
+1. Make code changes 🤞
+1. Run test jobs in [.github](.github) (e.g. run `act` or `gh workflow run`)
