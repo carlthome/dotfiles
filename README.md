@@ -2,9 +2,9 @@
 
 My personal [Home Manager](https://github.com/nix-community/home-manager) configuration that I wish to sync between machines.
 
-- `home-configurations` contains Home Manager configuration for my personal devices.
-- `global/` contains .bashrc config intended to be sourced by default.
-- `scripts/` contains ad-hoc scripts intended to be run on demand.
+- [home-configurations](./home-configurations) contains Home Manager configuration for my personal devices.
+- [global](./global) contains .bashrc config intended to be sourced by default.
+- [scripts](./scripts) contains ad-hoc scripts intended to be run on demand.
 
 ## Install
 
