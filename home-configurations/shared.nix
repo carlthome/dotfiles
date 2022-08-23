@@ -25,6 +25,7 @@
     fira-code-symbols
     git
     google-cloud-sdk
+    isort
     jq
     jupyter
     libsndfile
@@ -32,14 +33,13 @@
     nodejs
     nodePackages.npm
     nodePackages.prettier
+    mypy
     okular
     opencv
     pdfgrep
     poetry
     postman
     pre-commit
-    #python3Packages.ipython
-    #python3Packages.numpy
     rclone
     rsync
     rustc
