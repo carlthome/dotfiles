@@ -94,21 +94,6 @@
         "type": "github"
       }
     },
-    "flake-utils_4": {
-      "locked": {
-        "lastModified": 1659877975,
-        "narHash": "sha256-zllb8aq3YO3h8B/U0/J1WBgAL8EX5yWf5pMj3G0NAmc=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "c0e246b9b83f637f4681389ecabcb2681b4f3af0",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
-      }
-    },
     "gitignore": {
       "flake": false,
       "locked": {
@@ -194,42 +179,19 @@
         "flake-compat": "flake-compat",
         "flake-utils": "flake-utils",
         "ihaskell": "ihaskell",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
+        "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1660763943,
-        "narHash": "sha256-wztwwHUgdsJDfn8NKAW/TwchjqODYl27bQ3QwWMhbw8=",
+        "lastModified": 1661197553,
+        "narHash": "sha256-8IHj56gBv4Hxf5LP7ZeDh++2hNvzq/nIIloiz/6B5uk=",
         "owner": "tweag",
         "repo": "jupyterWith",
-        "rev": "d5d7d75a6b0745d107641a0d26454bc8a55cb412",
+        "rev": "00dae0df2d86fe78c3666acbdb423ca0ee69f461",
         "type": "github"
       },
       "original": {
         "owner": "tweag",
         "repo": "jupyterWith",
-        "type": "github"
-      }
-    },
-    "nixgl": {
-      "inputs": {
-        "flake-utils": "flake-utils_4",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1660560253,
-        "narHash": "sha256-cq7z+NX3zIfXdRjMOgo1JysTlSpkyRLZqFL9L2S2qhc=",
-        "owner": "guibou",
-        "repo": "nixGL",
-        "rev": "6ba34f86658ba9a30b3c2e5cd5ae0709676583f2",
-        "type": "github"
-      },
-      "original": {
-        "owner": "guibou",
-        "repo": "nixGL",
         "type": "github"
       }
     },
@@ -266,6 +228,22 @@
       }
     },
     "nixpkgs_3": {
+      "locked": {
+        "lastModified": 1659446231,
+        "narHash": "sha256-hekabNdTdgR/iLsgce5TGWmfIDZ86qjPhxDg/8TlzhE=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "eabc38219184cc3e04a974fe31857d8e0eac098d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "release-21.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_4": {
       "locked": {
         "lastModified": 1659981942,
         "narHash": "sha256-uCFiP/B/NXOWzhN6TKfMbSxtVMk1bVnCrnJRjCF6RmU=",
@@ -314,8 +292,7 @@
       "inputs": {
         "home-manager": "home-manager",
         "jupyterWith": "jupyterWith",
-        "nixgl": "nixgl",
-        "nixpkgs": "nixpkgs_3",
+        "nixpkgs": "nixpkgs_4",
         "utils": "utils_2"
       }
     },

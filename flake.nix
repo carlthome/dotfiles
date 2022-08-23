@@ -8,17 +8,10 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    jupyterWith = {
-      url = "github:tweag/jupyterWith";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nixgl = {
-      url = "github:guibou/nixGL";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    jupyterWith.url = "github:tweag/jupyterWith";
   };
 
-  outputs = { self, nixpkgs, utils, home-manager, jupyterWith, nixgl }:
+  outputs = { self, nixpkgs, utils, home-manager, jupyterWith }:
     {
       homeConfigurations = {
         carlthome = home-manager.lib.homeManagerConfiguration {
@@ -51,7 +44,7 @@
       let
         pkgs = import nixpkgs {
           system = system;
-          overlays = (nixpkgs.lib.attrValues jupyterWith.overlays) ++ (nixpkgs.lib.attrValues nixgl.overlay);
+          overlays = nixpkgs.lib.attrValues jupyterWith.overlays;
         };
 
         jax = pkgs.kernels.iPythonWith {
