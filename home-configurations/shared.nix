@@ -37,7 +37,7 @@
       curl
       docker
       docker-compose
-      ffmpeg
+      ffmpeg-full
       git
       google-cloud-sdk
       jq
@@ -75,8 +75,10 @@
   programs.bash.enable = true;
   programs.tmux.enable = true;
 
-  # TODO Enable Docker BuildKit globally by default.
-  # DOCKER_BUILDKIT=1
+  # Enable Docker BuildKit globally by default.
+  home.sessionVariables = {
+    DOCKER_BUILDKIT = true;
+  };
 
   # TODO Add VST bridge to PATH.
   # export PATH="$PATH:$HOME/.local/share/yabridge"
