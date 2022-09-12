@@ -9,9 +9,9 @@
     black
     cachix
     cargo
+    cmake
     coreutils
     curl
-    cmake
     dive
     docker
     docker-compose
@@ -21,6 +21,7 @@
     google-cloud-sdk
     jq
     jupyter
+    kind
     libsndfile
     nixpkgs-fmt
     nodejs
@@ -78,12 +79,12 @@
     enable = true;
     userName = "Carl Thomé";
     userEmail = "carlthome@gmail.com";
-  };
 
-  # TODO Play around with non-standard git diff extensions.
-  #programs.git.delta.enable = true;
-  #programs.git.diff-so-fancy.enable = true;
-  #programs.git.difftastic.enable = true;
+    # TODO Play around with non-standard git diff extensions.
+    delta.enable = false;
+    diff-so-fancy.enable = false;
+    difftastic.enable = false;
+  };
 
   programs.gitui.enable = true;
   programs.gh.enable = true;
