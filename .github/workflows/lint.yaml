@@ -9,7 +9,7 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-20.04
-    container: docker pull koalaman/shellcheck:v0.8.0
+    container: docker.io/koalaman/shellcheck:v0.8.0
     steps:
       - uses: actions/checkout@v2
       - run: shellcheck --shell=bash --exclude=SC1090,SC2086 **/*.sh
