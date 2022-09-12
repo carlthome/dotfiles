@@ -1,7 +1,6 @@
 { config, pkgs, ... }:
 {
   home.stateVersion = "22.05";
-
   home.packages = with pkgs; [
     coreutils
     curl
@@ -11,7 +10,50 @@
     act
     nixpkgs-fmt
     cachix
+    slack
+    caprine-bin
+    tdesktop
+
+    pre-commit
+    cargo
+    ffmpeg
+    git
+    jupyter
+    jq
+    libsndfile
+    nodejs
+    nodePackages.npm
+    nodePackages.prettier
+    opencv
+    poetry
+    python3.withPackages (ps: with ps; [
+      black
+      jax
+      jaxlib
+      librosa
+      matplotlib
+      mypy
+      pytorch
+      tensorflow
+      flake8
+      ipython
+      isort
+      numpy
+      opencv
+      pandas
+      pip
+      scipy
+      setuptools
+    ])
+    pdfgrep
+    rustup
+    sox
+    shellcheck
   ];
+
+  programs.vim.enable = true;
+
+  programs.vscode.enable = true;
 
   programs.starship = {
     enable = true;
