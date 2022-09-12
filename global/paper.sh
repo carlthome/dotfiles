@@ -1,4 +1,4 @@
-# List PDFs containing phrase.
+# List PDFs containing phrase. Can be run as `paper constant-q transform`.
 function paper {
   query=$@
   path=$HOME/Documents/Papers
