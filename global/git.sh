@@ -24,5 +24,5 @@ function git-refresh {
 }
 
 # Show current git branch on terminal prompt.
-PS1='($(git branch --show-current): $(git log --oneline -n 1)) '"${PS1}"
+PS1='$(git -c color.ui=always status --short)\n($(git -c color.ui=always log --decorate --oneline -n 1))\n($(git branch --show-current)) '"${PS1}"
 export PS1
