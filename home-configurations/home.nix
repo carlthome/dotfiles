@@ -13,8 +13,6 @@
     cachix
   ];
 
-  programs.home-manager.enable = true;
-
   programs.starship = {
     enable = true;
     enableZshIntegration = true;
