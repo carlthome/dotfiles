@@ -1,14 +1,17 @@
 {
-  description = "A very basic flake";
+  description = "My personal config for learning more about flakes";
 
-  inputs.flake-utils.url = "github:numtide/flake-utils";
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
+  };
 
   outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
       let pkgs = nixpkgs.legacyPackages.${system}; in
       rec {
         packages.hello = pkgs.hello;
-        defaultPackage = packages.hello;
+        packages.default = packages.hello;
 
         # TODO Let shell.nix still be around for nix-shell legacy usage.
         #devShells.default = import ./shell.nix { inherit pkgs; };
@@ -28,7 +31,7 @@
               isort
               numpy
               opencv
-              pandas
+              #pandas
               pip
               scipy
               setuptools
