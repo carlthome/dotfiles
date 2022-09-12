@@ -12,6 +12,8 @@
       signal-desktop
       steam
       tdesktop
+      yabridge
+      yabridgectl
     ];
 
   programs.firefox.enable = true;
