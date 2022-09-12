@@ -3,15 +3,10 @@
 !/.github
 !/scripts
 !/global
-!/.bashrc
-!/.bash_aliases
-!/.zshrc
 !/.actrc
 !/.config/yabridgectl/config.toml
 !/.config/gamemode.ini
 !/.config/nix/nix.conf
-!/.config/nixpkgs/config.nix
-!/shell.nix
-!/.envrc
 !/flake.nix
 !/flake.lock
+!/home-configurations
