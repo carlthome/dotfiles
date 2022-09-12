@@ -1,3 +1,3 @@
-for file in global/*.sh; do
-    source $file
-done;
+for file in $(dirname $BASH_SOURCE)/global/*.sh
+do source $file
+done
