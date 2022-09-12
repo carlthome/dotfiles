@@ -7,8 +7,6 @@
 !/.config/yabridgectl/config.toml
 !/.config/gamemode.ini
 !/.config/nix/nix.conf
-!/shell.nix
-!/.envrc
 !/flake.nix
 !/flake.lock
 !/home-configurations
