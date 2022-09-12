@@ -44,6 +44,8 @@
     } // utils.lib.eachDefaultSystem (system:
       let pkgs = nixpkgs.legacyPackages.${system};
       in {
+        formatter = pkgs.nixfmt;
+
         packages = rec {
           hello = pkgs.hello;
           default = hello;
