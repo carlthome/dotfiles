@@ -8,7 +8,8 @@ on:
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
+    container: docker.io/koalaman/shellcheck@sha256:385b7edd906dcd83438fddc911658bce89ccbaada44ec0111f102886d8228e0c
     steps:
       - uses: actions/checkout@v2
       - run: shellcheck --shell=bash --exclude=SC1090,SC2086 **/*.sh
