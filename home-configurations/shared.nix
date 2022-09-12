@@ -12,18 +12,21 @@
       cachix
       caprine-bin
       cargo
+      comic-mono
       coreutils
       curl
       docker
       docker-compose
+      fantasque-sans-mono
       fira-code
       ffmpeg-full
+      fira-code
+      fira-code-symbols
       git
       google-cloud-sdk
       jq
       jupyter
       libsndfile
-      nerdfonts
       nixpkgs-fmt
       nodejs
       nodePackages.npm
@@ -34,16 +37,14 @@
       pre-commit
       python3Packages.ipython
       python3Packages.numpy
-      #reaper
       rclone
       rsync
       rustc
       shellcheck
       slack
       sox
-      #tdesktop
       tree
-      victor-mono
+      ubuntu_font_family
       wget
     ];
 

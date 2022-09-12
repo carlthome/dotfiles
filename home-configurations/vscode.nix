@@ -27,10 +27,12 @@
     "cloudcode.enableTelemetry" = false;
     "cmake.configureOnOpen" = true;
     "debug.allowBreakpointsEverywhere" = true;
-    "editor.fontFamily" = "Ubuntu Mono, Menlo, Victor Mono, monospace";
+    "editor.fontFamily" = "Fantasque Sans Mono";
     "editor.fontLigatures" = true;
+    "editor.fontSize" = 14;
     "editor.formatOnSave" = true;
     "editor.inlineSuggest.enabled" = true;
+    "editor.mouseWheelZoom" = true;
     "editor.suggestSelection" = "first";
     "explorer.excludeGitIgnore" = true;
     "git.autofetch" = true;
@@ -42,9 +44,11 @@
     "terminal.integrated.defaultProfile.osx" = "fish";
     "terminal.integrated.defaultProfile.windows" = "fish";
     "terminal.integrated.enableMultiLinePasteWarning" = false;
+    "window.commandCenter" = true;
     "window.restoreWindows" = "none";
     "window.titleBarStyle" = "custom";
-    "workbench.colorTheme" = "Material";
+    "window.zoomLevel" = 1;
+    "workbench.colorTheme" = "Jupyter Theme";
     "workbench.enableExperiments" = false;
     "workbench.iconTheme" = "material-icon-theme";
     "workbench.layoutControl.enabled" = true;
