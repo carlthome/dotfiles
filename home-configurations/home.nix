@@ -2,11 +2,15 @@
 {
   home.stateVersion = "22.05";
 
-  home.packages = [
-    pkgs.google-cloud-sdk
-    pkgs.awscli
-    pkgs.act
-    pkgs.nixpkgs-fmt
+  home.packages = with pkgs; [
+    coreutils
+    curl
+    wget
+    google-cloud-sdk
+    awscli
+    act
+    nixpkgs-fmt
+    cachix
   ];
 
   programs.home-manager.enable = true;
