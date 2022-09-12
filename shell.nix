@@ -22,6 +22,8 @@ let
 in
 mkShell {
   buildInputs = [
+    nodejs
+    nodePackages.npm
     rustup
     cargo
     starship
@@ -34,6 +36,7 @@ mkShell {
     ffmpeg
     libsndfile
     sox
+    awscli
     google-cloud-sdk
     github-cli
   ];
