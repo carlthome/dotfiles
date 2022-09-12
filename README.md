@@ -2,6 +2,7 @@
 
 My personal [Home Manager](https://github.com/nix-community/home-manager) configuration that I wish to sync between machines.
 
+- `home-configurations` contains Home Manager configuration for my personal devices.
 - `global/` contains .bashrc config intended to be sourced by default.
 - `scripts/` contains ad-hoc scripts intended to be run on demand.
 
@@ -11,10 +12,10 @@ My personal [Home Manager](https://github.com/nix-community/home-manager) config
 1. `git clone` repo to $HOME ([.gitignore](.gitignore) is an allowlist by design).
 1. Install Home Manager with `nix profile install home-manager`
 
-## Usage
+## Use
 
-1. Make declarative changes in [home.nix](./home.nix)
-1. Build and switch to the new configuration by `home-manager switch --flake .`
+1. Make declarative changes in [flake.nix](./flake.nix)
+1. Build and switch to the new configuration by `nix run`
 
 ## Develop
 
