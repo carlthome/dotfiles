@@ -3,52 +3,50 @@
   home.enableNixpkgsReleaseCheck = true;
   fonts.fontconfig.enable = true;
 
-  home.packages = with pkgs;
-    let python = import ./python.nix;
-    in [
-      act
-      awscli
-      black
-      cachix
-      caprine-bin
-      cargo
-      comic-mono
-      coreutils
-      curl
-      cmake
-      dive
-      docker
-      docker-compose
-      fantasque-sans-mono
-      fira-code
-      ffmpeg-full
-      fira-code
-      fira-code-symbols
-      git
-      google-cloud-sdk
-      jq
-      jupyter
-      libsndfile
-      nixpkgs-fmt
-      nodejs
-      nodePackages.npm
-      nodePackages.prettier
-      opencv
-      pdfgrep
-      poetry
-      pre-commit
-      python3Packages.ipython
-      python3Packages.numpy
-      rclone
-      rsync
-      rustc
-      shellcheck
-      slack
-      sox
-      tree
-      ubuntu_font_family
-      wget
-    ];
+  home.packages = with pkgs; [
+    act
+    awscli
+    black
+    cachix
+    caprine-bin
+    cargo
+    comic-mono
+    coreutils
+    curl
+    cmake
+    dive
+    docker
+    docker-compose
+    fantasque-sans-mono
+    fira-code
+    ffmpeg-full
+    fira-code
+    fira-code-symbols
+    git
+    google-cloud-sdk
+    jq
+    jupyter
+    libsndfile
+    nixpkgs-fmt
+    nodejs
+    nodePackages.npm
+    nodePackages.prettier
+    opencv
+    pdfgrep
+    poetry
+    pre-commit
+    #python3Packages.ipython
+    #python3Packages.numpy
+    rclone
+    rsync
+    rustc
+    shellcheck
+    slack
+    sox
+    tree
+    ubuntu_font_family
+    wget
+  ];
 
   programs.vim.enable = true;
 
