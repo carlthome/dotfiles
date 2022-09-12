@@ -11,16 +11,22 @@
   };
 
   outputs = { nixpkgs, flake-utils, home-manager, ... }:
-    let
-      username = "carlthome";
-    in
     {
-      homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+      homeConfigurations."carlthome@t1" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
         modules = [
-          ./home.nix
+          ./home-configurations/home.nix
+          ./home-configurations/t1.nix
         ];
       };
+      homeConfigurations."Carl@Betty" = home-manager.lib.homeManagerConfiguration
+        {
+          pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+          modules = [
+            ./home-configurations/home.nix
+            ./home-configurations/m1.nix
+          ];
+        };
     } // flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};

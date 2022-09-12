@@ -1,19 +1,5 @@
 { config, pkgs, ... }:
-let
-  user =
-    if pkgs.stdenv.isDarwin then
-      rec {
-        name = "Carl";
-        home = "/Users/{name}";
-      } else
-      rec {
-        name = "carlthome";
-        home = "/home/{name}";
-      };
-in
 {
-  home.username = user.name;
-  home.homeDirectory = user.home;
   home.stateVersion = "22.05";
 
   home.packages = [
