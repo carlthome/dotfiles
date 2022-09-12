@@ -15,6 +15,8 @@
       comic-mono
       coreutils
       curl
+      cmake
+      dive
       docker
       docker-compose
       fantasque-sans-mono
