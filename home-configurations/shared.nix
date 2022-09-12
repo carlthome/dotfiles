@@ -14,6 +14,7 @@
     coreutils
     curl
     cmake
+    discord
     dive
     docker
     docker-compose
@@ -31,9 +32,11 @@
     nodejs
     nodePackages.npm
     nodePackages.prettier
+    okular
     opencv
     pdfgrep
     poetry
+    postman
     pre-commit
     #python3Packages.ipython
     #python3Packages.numpy
@@ -43,6 +46,7 @@
     shellcheck
     slack
     sox
+    sqlitebrowser
     tree
     ubuntu_font_family
     wget
