@@ -4,9 +4,7 @@
 
   home.packages = with pkgs;
     let python = import ./python.nix { inherit pkgs; };
-    in [
-      reaper
-    ];
+    in [ reaper ];
 
   programs.firefox.enable = true;
   programs.chromium.enable = true;
