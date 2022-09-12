@@ -1,0 +1,2 @@
+eval "$(starship init bash)"
+
