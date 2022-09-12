@@ -13,6 +13,13 @@
   outputs = { self, nixpkgs, utils, home-manager, ... }:
     {
       homeConfigurations = {
+        carlthome = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+          modules = [
+            ./home-configurations/home.nix
+          ];
+        };
+
         "carl@t1" = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.x86_64-linux;
           modules = [
