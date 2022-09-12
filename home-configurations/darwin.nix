@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, home, ... }: {
   home.username = "Carl";
   home.homeDirectory = "/Users/Carl";
   nixpkgs.config = {
@@ -6,4 +6,7 @@
     allowUnfreePredicate = (pkg: true);
     virtualisation.docker.enable = true;
   };
+  home.packages = with pkgs; [
+
+  ];
 }

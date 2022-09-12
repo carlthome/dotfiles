@@ -13,29 +13,31 @@
   outputs = { self, nixpkgs, utils, home-manager, ... }:
     {
       homeConfigurations = {
-        carlthome = home-manager.lib.homeManagerConfiguration {
+        "carlthome@rtx3090" = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.x86_64-linux;
           modules = [
-            ./home-configurations/shared.nix
+            ./home-configurations/global.nix
+            ./home-configurations/linux.nix
+            ./home-configurations/gpu.nix
             ./home-configurations/workstation.nix
-            ./home-configurations/gpu.nix
           ];
         };
 
-        carl = home-manager.lib.homeManagerConfiguration {
+        "carl@t1" = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.x86_64-linux;
           modules = [
-            ./home-configurations/shared.nix
-            ./home-configurations/desktop.nix
+            ./home-configurations/global.nix
+            ./home-configurations/linux.nix
             ./home-configurations/gpu.nix
+            ./home-configurations/desktop.nix
           ];
         };
 
-        Carl = home-manager.lib.homeManagerConfiguration {
+        "Carl@Betty" = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.aarch64-darwin;
           modules = [
-            ./home-configurations/shared.nix
-            ./home-configurations/laptop.nix
+            ./home-configurations/global.nix
+            ./home-configurations/darwin.nix
           ];
         };
       };

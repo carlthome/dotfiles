@@ -8,21 +8,15 @@
     awscli
     black
     cachix
-    caprine-bin
     cargo
-    comic-mono
     coreutils
     curl
     cmake
-    discord
     dive
     docker
     docker-compose
     fantasque-sans-mono
-    fira-code
     ffmpeg-full
-    fira-code
-    fira-code-symbols
     git
     google-cloud-sdk
     jq
@@ -32,14 +26,11 @@
     nodejs
     nodePackages.npm
     nodePackages.prettier
-    okular
     opencv
     pdfgrep
     poetry
     postman
     pre-commit
-    #python3Packages.ipython
-    #python3Packages.numpy
     rclone
     rsync
     rustc
@@ -48,7 +39,6 @@
     sox
     sqlitebrowser
     tree
-    ubuntu_font_family
     wget
   ];
 
