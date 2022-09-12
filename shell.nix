@@ -37,6 +37,7 @@ mkShell {
     nixpkgs-fmt
     nodejs
     nodePackages.npm
+    nodePackages.prettier
     opencv
     poetry
     python
