@@ -1,9 +1,8 @@
 /**
 !/.gitignore
 !/.github
-!/scripts
-!/global
+!/scripts/*.sh
+!/global/*.sh
 !/.bashrc
 !/.actrc
 !/.config/gamemode.ini
-
