@@ -1,7 +1,6 @@
 { pkgs, ... }: {
   env = pkgs.python3.withPackages (ps:
     with ps; [
-      black
       jax
       jaxlib
       librosa

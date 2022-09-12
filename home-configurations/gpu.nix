@@ -1,7 +1,5 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, lib, options, specialArgs, modulesPath }: {
   nixpkgs.config = {
-    allowUnfree = true;
-    allowUnfreePredicate = (pkg: true);
     cudaSupport = true;
     cudnnSupport = true;
   };

@@ -1,4 +1,4 @@
-{ config, pkgs, home, ... }: {
+{ config, pkgs, lib, options, specialArgs, modulesPath }: {
   home.packages = with pkgs;
     let python = import ./python.nix { inherit pkgs; };
     in [
@@ -16,7 +16,9 @@
       yabridgectl
     ];
 
-  programs.firefox.enable = true;
-  programs.chromium.enable = true;
-  programs.obs-studio.enable = true;
+  programs = {
+    firefox.enable = true;
+    chromium.enable = true;
+    obs-studio.enable = true;
+  };
 }
