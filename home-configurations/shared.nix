@@ -106,9 +106,12 @@
     userName = "Carl Thomé";
     userEmail = "carlthome@gmail.com";
   };
+
+  # TODO Play around with non-standard git diff extensions.
   #programs.git.delta.enable = true;
-  programs.git.diff-so-fancy.enable = true;
+  #programs.git.diff-so-fancy.enable = true;
   #programs.git.difftastic.enable = true;
+
   programs.gitui.enable = true;
   programs.gh.enable = true;
 
