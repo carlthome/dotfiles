@@ -23,6 +23,7 @@
       ffmpeg-full
       git
       google-cloud-sdk
+      gnupg
       jq
       jupyter
       kind
@@ -64,12 +65,7 @@
     fish.enable = true;
     zsh.enable = true;
     nushell.enable = true;
-    bash = {
-      enable = true;
-      initExtra = ''
-        eval "$(pdm --pep582)"
-      '';
-    };
+    bash.enable = true;
     tmux.enable = true;
     starship = {
       enable = true;
