@@ -40,20 +40,12 @@
         };
         apps = rec {
 
-          hello-world = {
-            type = "app";
-            program = (pkgs.writeScript "hello-world" ''
-              echo "Hello world!"
-            '').outPath;
-          };
-
           update-home = {
             type = "app";
             program = (pkgs.writeScript "update-home" ''
               profile=$(nix profile list | grep home-manager-path | head -n1 | awk '{print $4}')
               nix profile remove $profile
-              host=$(whoami)@$(hostname -s)
-              ${self.homeConfigurations."Carl@Betty".activationPackage}/activate
+              home-manager switch --flake .
             '').outPath;
           };
 
