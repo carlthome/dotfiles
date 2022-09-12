@@ -15,3 +15,5 @@
 !/.envrc
 !/flake.nix
 !/flake.lock
+!/home.nix
+

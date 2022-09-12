@@ -15,7 +15,7 @@ let
     isort
     numpy
     opencv
-    pandas
+    #pandas
     pip
     scipy
     setuptools
@@ -28,7 +28,7 @@ mkShell {
     awscli
     cargo
     ffmpeg
-    git
+    #git
     github-cli
     google-cloud-sdk
     jupyter
