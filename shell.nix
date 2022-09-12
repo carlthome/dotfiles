@@ -41,6 +41,7 @@ mkShell {
     opencv
     poetry
     python
+    pdfgrep
     rustup
     sox
     starship
