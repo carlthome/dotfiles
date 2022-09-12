@@ -6,9 +6,9 @@
 !/.bashrc
 !/.bash_aliases
 !/.actrc
+!/.config/yabridgectl/config.toml
 !/.config/gamemode.ini
 !/.config/nix/nix.conf
 !/.config/nixpkgs/config.nix
 !/shell.nix
 !/.envrc
-
