@@ -1,1 +1,0 @@
-/nix/store/nx98nb6ql9pihqyvl3aw833s8ljs0jn5-home-manager-files/.bashrc
