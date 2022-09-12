@@ -2,43 +2,49 @@
 with pkgs;
 let
   python = python3.withPackages (p: with p; [
-    pip
-    setuptools
-    ipython
     #black
-    #mypy
-    flake8
-    isort
-    numpy
-    scipy
-    pandas
-    #matplotlib
-    #librosa
-    #pytorch
-    #tensorflow
     #jax
     #jaxlib
+    #librosa
+    #matplotlib
+    #mypy
+    #pytorch
+    #tensorflow
+    flake8
+    ipython
+    isort
+    numpy
+    opencv
+    pandas
+    pip
+    scipy
+    setuptools
   ]);
 in
 mkShell {
   buildInputs = [
+    #pre-commit
+    act
+    awscli
+    cargo
+    ffmpeg
+    git
+    github-cli
+    google-cloud-sdk
+    jupyter
+    jq
+    libsndfile
+    nixpkgs-fmt
     nodejs
     nodePackages.npm
-    rustup
-    cargo
-    starship
-    python
-    nixpkgs-fmt
+    opencv
     poetry
-    #pre-commit
-    git
-    act
-    ffmpeg
-    libsndfile
+    python
+    rustup
     sox
-    awscli
-    google-cloud-sdk
-    github-cli
+    starship
+    vim
+    vscode
   ];
   shellHook = ''
     echo "Hello $(whoami)!"
