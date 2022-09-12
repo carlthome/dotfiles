@@ -22,8 +22,8 @@
     svelte.svelte-vscode
   ];
   userSettings = {
-    "[python]" = { "editor.defaultFormatter" = "ms-python.python"; };
-    "[yaml]" = { "editor.defaultFormatter" = "googlecloudtools.cloudcode"; };
+    "[python]" = { "editor.defaultFormatter" = "ms-python.black-formatter"; };
+    "[yaml]" = { "editor.defaultFormatter" = "redhat.vscode-yaml"; };
     "cloudcode.enableTelemetry" = false;
     "cmake.configureOnOpen" = true;
     "debug.allowBreakpointsEverywhere" = true;
