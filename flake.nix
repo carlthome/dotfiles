@@ -12,7 +12,7 @@
 
   outputs = { nixpkgs, flake-utils, home-manager, ... }:
     {
-      homeConfigurations."carlthome@t1" = home-manager.lib.homeManagerConfiguration {
+      homeConfigurations."carl@t1" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         modules = [
           ./home-configurations/home.nix
