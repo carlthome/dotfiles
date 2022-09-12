@@ -44,14 +44,16 @@
     "terminal.integrated.defaultProfile.osx" = "fish";
     "terminal.integrated.defaultProfile.windows" = "fish";
     "terminal.integrated.enableMultiLinePasteWarning" = false;
+    "window.autoDetectColorScheme" = true;
     "window.commandCenter" = true;
     "window.restoreWindows" = "none";
     "window.titleBarStyle" = "custom";
     "window.zoomLevel" = 1;
-    "workbench.colorTheme" = "Jupyter Theme";
     "workbench.enableExperiments" = false;
     "workbench.iconTheme" = "material-icon-theme";
     "workbench.layoutControl.enabled" = true;
+    "workbench.preferredDarkColorTheme" = "Noctis Obscuro";
+    "workbench.preferredLightColorTheme" = "Jupyter Theme";
     "workbench.settings.enableNaturalLanguageSearch" = false;
   };
 }
