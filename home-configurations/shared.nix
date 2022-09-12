@@ -8,6 +8,7 @@
       python = import ./python.nix;
     in
     [
+    in [
       act
       awscli
       black
@@ -18,6 +19,7 @@
       curl
       docker
       docker-compose
+      fira-code
       ffmpeg-full
       git
       google-cloud-sdk
@@ -57,9 +59,7 @@
   programs.tmux.enable = true;
 
   # Enable Docker BuildKit globally by default.
-  home.sessionVariables = {
-    DOCKER_BUILDKIT = true;
-  };
+  home.sessionVariables = { DOCKER_BUILDKIT = true; };
 
   # TODO Add VST bridge to PATH.
   # export PATH="$PATH:$HOME/.local/share/yabridge"
