@@ -7,3 +7,8 @@
 !/.bash_aliases
 !/.actrc
 !/.config/gamemode.ini
+!/.config/nix/nix.conf
+!/.config/nixpkgs/config.nix
+!/shell.nix
+!/.envrc
+
