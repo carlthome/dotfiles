@@ -1,5 +1,5 @@
 { pkgs, ... }: {
-  python = pkgs.python3.withPackages (ps:
+  env = pkgs.python3.withPackages (ps:
     with ps; [
       black
       jax
@@ -8,12 +8,10 @@
       matplotlib
       mypy
       pytorch
-      tensorflow
       flake8
       ipython
       isort
       numpy
-      opencv
       pandas
       pip
       scipy
