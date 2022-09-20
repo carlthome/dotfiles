@@ -55,6 +55,8 @@
       d = "docker run --rm -it";
       k = "kubectl";
       g = "gcloud beta interactive";
+      use = "nix shell --inputs-from $HOME";
+      run = "nix run --inputs-from $HOME";
     };
   };
 
