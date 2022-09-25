@@ -40,6 +40,7 @@
       poetry
       postman
       pre-commit
+      ripgrep
       rclone
       rsync
       rustc
