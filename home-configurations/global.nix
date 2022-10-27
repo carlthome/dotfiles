@@ -28,6 +28,7 @@
       jupyter
       kind
       libsndfile
+      ninja
       nixpkgs-fmt
       nodejs
       nodePackages.npm
@@ -58,6 +59,7 @@
       g = "gcloud beta interactive";
       use = "nix shell --inputs-from $HOME";
       run = "nix run --inputs-from $HOME";
+      search = "nix search --inputs-from $HOME";
     };
   };
 
