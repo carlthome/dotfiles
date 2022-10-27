@@ -12,7 +12,6 @@
       awscli
       black
       cachix
-      cargo
       cmake
       coreutils-full
       curl
@@ -44,7 +43,7 @@
       ripgrep
       rclone
       rsync
-      rustc
+      rustup
       shellcheck
       slack
       sox
