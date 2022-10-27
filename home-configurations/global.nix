@@ -14,7 +14,7 @@
       cachix
       cargo
       cmake
-      coreutils
+      coreutils-full
       curl
       dive
       docker
