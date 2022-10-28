@@ -14,6 +14,7 @@
       tdesktop
       yabridge
       yabridgectl
+      marker
     ];
 
   programs = {
