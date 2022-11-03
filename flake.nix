@@ -2,19 +2,20 @@
   description = "Carl Thomé's personal Home Manager config";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-22.05";
+    nixpkgs-latest.url = "github:nixos/nixpkgs/nixos-unstable";
     utils.url = "github:numtide/flake-utils";
     home-manager = {
       url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-latest";
     };
   };
 
-  outputs = { self, nixpkgs, utils, home-manager, ... }:
+  outputs = { self, nixpkgs-stable, nixpkgs-latest, utils, home-manager, ... }:
     {
       homeConfigurations = {
         "carlthome@rtx3090" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+          pkgs = nixpkgs-latest.legacyPackages.x86_64-linux;
           modules = [
             ./home-configurations/global.nix
             ./home-configurations/linux.nix
@@ -24,7 +25,7 @@
         };
 
         "carl@t1" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+          pkgs = nixpkgs-latest.legacyPackages.x86_64-linux;
           modules = [
             ./home-configurations/global.nix
             ./home-configurations/linux.nix
@@ -33,8 +34,8 @@
           ];
         };
 
-        "Carl@Betty.local" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+        "Carl@Betty" = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs-latest.legacyPackages.aarch64-darwin;
           modules = [
             ./home-configurations/global.nix
             ./home-configurations/darwin.nix
@@ -42,45 +43,27 @@
         };
       };
     } // utils.lib.eachDefaultSystem (system:
-      let pkgs = nixpkgs.legacyPackages.${system};
-      in {
-        formatter = pkgs.nixfmt;
+      let
+        pkgs = nixpkgs-latest.legacyPackages.${system};
+      in
+      {
+        formatter = pkgs.nixpkgs-fmt;
 
-        packages = rec {
-          hello = pkgs.hello;
-          default = hello;
-        };
+        # TODO Add flakes testing.
+        #checks = { };
+
+        # TODO Add example package.
+        #packages = { };
+
         apps = rec {
-
-          update-home = {
-            type = "app";
-            program = (pkgs.writeScript "update-home" ''
-              set -e
-              profile=$(nix profile list | grep home-manager-path | head -n1 | awk '{print $4}')
-              home-manager build --flake .
-              nix profile remove $profile
-              home-manager switch --flake .
-            '').outPath;
-          };
-
+          update-home = import ./apps/update-home.nix { inherit pkgs; };
           default = update-home;
         };
 
-        devShells = {
-          default = pkgs.mkShell {
-            buildInputs = with pkgs; [
-              nixpkgs-fmt
-              nixfmt
-              nix-info
-              cachix
-              act
-              vim
-              git
-            ];
-            shellHook = ''
-              echo "Hello $(whoami)!"
-            '';
-          };
+        devShells = rec {
+          home-manager = import ./shells/home-manager.nix { inherit pkgs; };
+          ipython = import ./shells/ipython.nix { inherit pkgs; };
+          default = home-manager;
         };
       });
 }

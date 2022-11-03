@@ -92,6 +92,6 @@
     };
     gitui.enable = true;
     gh.enable = true;
-    vscode = import ./vscode.nix { inherit pkgs; };
+    #vscode = import ./vscode.nix { inherit pkgs; };
   };
 }
