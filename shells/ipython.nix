@@ -2,12 +2,18 @@
 pkgs.mkShell
 {
   name = "ipython";
-  nativeBuildInputs = with pkgs; [
-    python3Packages.ipython
+  nativeBuildInputs = [
+    (pkgs.python3.withPackages (ps: with ps; [
+      ipython
+      numpy
+      scipy
+      pandas
+      matplotlib
+      scikit-learn
+      librosa
+    ]))
   ];
-
-
   shellHook = ''
-    ipython
+    ipython --pylab
   '';
 }

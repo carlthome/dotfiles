@@ -12,7 +12,7 @@
       awscli
       black
       cachix
-      cmake
+      #cmake
       coreutils-full
       curl
       dive
@@ -24,19 +24,14 @@
       google-cloud-sdk
       gnupg
       jq
-      jupyter
       kind
-      libsndfile
       ninja
       nixpkgs-fmt
       nodejs
       nodePackages.npm
       nodePackages.prettier
-      opencv
       pdfgrep
       pipenv
-      python3
-      python3Packages.pip
       poetry
       postman
       pre-commit
