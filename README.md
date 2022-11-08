@@ -8,16 +8,14 @@ My personal [Home Manager](https://github.com/nix-community/home-manager) config
 
 ## Install
 
-1. Install `nix` on the system
-1. `git clone` repo to $HOME ([.gitignore](.gitignore) is an allowlist by design)
-1. Install Home Manager with `nix profile install home-manager`
-
-## Use
-
-1. Make declarative changes in [flake.nix](./flake.nix)
-1. Build and switch to the new configuration by `nix run`
+1. Install `nix` on the system (with [flakes enabled](https://nixos.wiki/wiki/Flakes#Enable_flakes))
+1. Add `home-manager` by running `nix develop github:carlthome/dotfiles`
+1. Create initial home configuration with `home-manager switch --flake github:carlthome/dotfiles`
+1. List installed packages with `home-manager packages`
 
 ## Develop
 
-1. Make code changes 🤞
-1. Run test jobs in [.github](.github) (e.g. run `act` or `gh workflow run`)
+1. Clone this flake repo by `nix flake clone github:carlthome/dotfiles --dest .`
+1. Stage declarative changes (in [flake.nix](./flake.nix) etc.) as needed
+1. Run tests with `nix flake check`
+1. Switch to the new configuration by `home-manager switch --flake .`

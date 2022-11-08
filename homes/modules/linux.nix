@@ -1,8 +1,7 @@
 { config, pkgs, lib, options, specialArgs, modulesPath }: {
   home.packages = with pkgs;
     let python = import ./python.nix { inherit pkgs; };
-    in
-    [
+    in [
       caprine-bin
       discord
       jupyter

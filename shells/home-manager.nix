@@ -1,18 +1,17 @@
 { pkgs, ... }:
-pkgs.mkShell
-{
+pkgs.mkShell {
   name = "home-manager";
   nativeBuildInputs = with pkgs; [
-    nixpkgs-fmt
+    home-manager
     nixfmt
     nix-info
+    nixpkgs-fmt
     cachix
+    git
     act
     vim
-    git
-    home-manager
   ];
   shellHook = ''
-    home-manager --version
+    home-manager help
   '';
 }
