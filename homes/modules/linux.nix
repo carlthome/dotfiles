@@ -1,21 +1,18 @@
 { config, pkgs, lib, options, specialArgs, modulesPath }: {
-  home.packages = with pkgs;
-    let python = import ./python.nix { inherit pkgs; };
-    in [
-      caprine-bin
-      discord
-      jupyter
-      keepassxc
-      okular
-      python.env
-      reaper
-      signal-desktop
-      steam
-      tdesktop
-      yabridge
-      yabridgectl
-      marker
-    ];
+  home.packages = with pkgs; [
+    caprine-bin
+    discord
+    jupyter
+    keepassxc
+    okular
+    reaper
+    signal-desktop
+    steam
+    tdesktop
+    yabridge
+    yabridgectl
+    marker
+  ];
 
   programs = {
     firefox.enable = true;
