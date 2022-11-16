@@ -1,4 +1,4 @@
-{ config, pkgs, lib, options, specialArgs, modulesPath }: {
+{ pkgs, ... }: {
   home.packages = with pkgs; [
     caprine-bin
     discord

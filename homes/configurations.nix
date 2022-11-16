@@ -20,11 +20,21 @@
 
   };
 
-  "Carl@Betty.local" = home-manager.lib.homeManagerConfiguration {
+  Carl = home-manager.lib.homeManagerConfiguration {
     pkgs = nixpkgs-latest.legacyPackages.aarch64-darwin;
     modules = [
       ./modules/global.nix
       ./modules/darwin.nix
     ];
+    extraSpecialArgs = { username = "Carl"; };
+  };
+
+  "carl.thome" = home-manager.lib.homeManagerConfiguration {
+    pkgs = nixpkgs-latest.legacyPackages.x86_64-darwin;
+    modules = [
+      ./modules/global.nix
+      ./modules/darwin.nix
+    ];
+    extraSpecialArgs = { username = "carl.thome"; };
   };
 }

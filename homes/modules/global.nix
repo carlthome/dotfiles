@@ -1,6 +1,8 @@
-{ config, pkgs, lib, options, specialArgs, modulesPath }: {
+{ pkgs, username, ... }: {
   fonts.fontconfig.enable = true;
   home = {
+    username = username;
+    homeDirectory = if pkgs.stdenv.hostPlatform.isDarwin then "/Users/${username}" else "/home/${username}";
     stateVersion = "22.05";
     enableNixpkgsReleaseCheck = true;
     sessionVariables = {
@@ -91,11 +93,14 @@
     git = {
       enable = true;
       userName = "Carl Thomé";
-      userEmail = "carlthome@gmail.com";
+      userEmail = "carlthome@gmail.com"; # TODO Work email setting
       # TODO Play around with non-standard git diff extensions.
       delta.enable = false;
       diff-so-fancy.enable = false;
       difftastic.enable = false;
+      extraConfig = {
+        init.defaultBranch = "main";
+      };
     };
     gitui.enable = true;
     gh.enable = true;
