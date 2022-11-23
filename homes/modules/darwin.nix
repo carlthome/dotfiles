@@ -1,11 +1,5 @@
-{ pkgs, username, ... }: {
-  # TODO MacOS specifics here.
+{ pkgs, ... }: {
   home.packages = with pkgs; [
-    podman
-    podman-compose
-    qemu
+    colima
   ];
-  home.sessionVariables = {
-    DOCKER_HOST = "unix:///Users/${username}/.local/share/containers/podman/machine/podman-machine-default/podman.sock";
-  };
 }

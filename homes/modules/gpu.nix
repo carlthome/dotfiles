@@ -1,4 +1,4 @@
-{ config, pkgs, lib, options, specialArgs, modulesPath }: {
+{ pkgs, ... }: {
   nixpkgs.config = {
     cudaSupport = true;
     cudnnSupport = true;
