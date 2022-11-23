@@ -26,8 +26,9 @@
       fantasque-sans-mono
       ffmpeg-full
       git
-      google-cloud-sdk
+      gnumake
       gnupg
+      google-cloud-sdk
       jq
       kind
       ninja
