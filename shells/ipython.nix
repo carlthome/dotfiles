@@ -1,6 +1,5 @@
 { pkgs, ... }:
-pkgs.mkShell
-{
+pkgs.mkShell {
   name = "ipython";
   nativeBuildInputs = [
     (pkgs.python3.withPackages (ps: with ps; [
