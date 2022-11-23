@@ -2,7 +2,7 @@
   description = "Carl Thomé's personal Home Manager config";
 
   inputs = {
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-22.05";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-22.11";
     nixpkgs-latest.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     home-manager = {
@@ -13,7 +13,7 @@
 
   outputs = { self, nixpkgs-stable, nixpkgs-latest, flake-utils, home-manager }:
     {
-      homeConfigurations = import ./homes/configurations.nix { inherit home-manager; inherit nixpkgs-stable; inherit nixpkgs-latest; };
+      homeConfigurations = import ./homes/configurations.nix { inherit home-manager; nixpkgs = nixpkgs-stable; };
     } // flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs-latest.legacyPackages.${system};

@@ -1,7 +1,7 @@
-{ home-manager, nixpkgs-latest, nixpkgs-stable }: {
+{ home-manager, nixpkgs }: {
 
   "carlthome@x86_64-linux" = home-manager.lib.homeManagerConfiguration {
-    pkgs = nixpkgs-latest.legacyPackages.x86_64-linux;
+    pkgs = nixpkgs.legacyPackages.x86_64-linux;
     modules = [
       ./modules/global.nix
       ./modules/linux.nix
@@ -11,7 +11,7 @@
   };
 
   "carl@x86_64-linux" = home-manager.lib.homeManagerConfiguration {
-    pkgs = nixpkgs-latest.legacyPackages.x86_64-linux;
+    pkgs = nixpkgs.legacyPackages.x86_64-linux;
     modules = [
       ./modules/global.nix
       ./modules/linux.nix
@@ -21,7 +21,7 @@
   };
 
   "carl@aarch64-darwin" = home-manager.lib.homeManagerConfiguration {
-    pkgs = nixpkgs-latest.legacyPackages.aarch64-darwin;
+    pkgs = nixpkgs.legacyPackages.aarch64-darwin;
     modules = [
       ./modules/global.nix
       ./modules/darwin.nix
@@ -30,7 +30,7 @@
   };
 
   "carlthome@aarch64-darwin" = home-manager.lib.homeManagerConfiguration {
-    pkgs = nixpkgs-latest.legacyPackages.aarch64-darwin;
+    pkgs = nixpkgs.legacyPackages.aarch64-darwin;
     modules = [
       ./modules/global.nix
       ./modules/darwin.nix
