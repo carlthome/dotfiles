@@ -7,7 +7,7 @@
     flake-utils.url = "github:numtide/flake-utils";
     home-manager = {
       url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs-latest";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
     };
   };
 
@@ -16,7 +16,7 @@
       homeConfigurations = import ./homes/configurations.nix { inherit home-manager; nixpkgs = nixpkgs-stable; };
     } // flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = nixpkgs-latest.legacyPackages.${system};
+        pkgs = nixpkgs-stable.legacyPackages.${system};
       in
       {
         formatter = pkgs.nixfmt;
