@@ -1,9 +1,13 @@
 { pkgs, ... }: {
   home.packages = with pkgs; [
     caprine-bin
-    discord
-    jupyter
+    chromium
+    dropbox-cli
+    firefox
+    google-chrome
     keepassxc
+    marker
+    obs-studio
     okular
     reaper
     signal-desktop
@@ -13,10 +17,4 @@
     yabridgectl
     marker
   ];
-
-  programs = {
-    firefox.enable = true;
-    chromium.enable = true;
-    obs-studio.enable = true;
-  };
 }
