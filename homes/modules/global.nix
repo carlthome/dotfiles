@@ -99,6 +99,7 @@
       difftastic.enable = false;
       extraConfig = {
         init.defaultBranch = "main";
+        push.autoSetupRemote = true;
       };
     };
     gitui.enable = true;
