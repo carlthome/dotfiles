@@ -102,7 +102,11 @@
       };
     };
     gitui.enable = true;
-    gh.enable = true;
+    gh = {
+      enable = true;
+      settings.git_protocol = "ssh";
+      enableGitCredentialHelper = false;
+    };
     vscode = {
       enable = false; # TODO
       package = pkgs.vscodium;
