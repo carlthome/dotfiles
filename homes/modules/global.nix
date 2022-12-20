@@ -48,6 +48,7 @@
         #tensorflow
         librosa
         matplotlib
+        docformatter
         mypy
         black
         scikit-learn
@@ -58,8 +59,7 @@
         pandas
         jupyter
         scipy
-      ])
-      )
+      ]))
       ripgrep
       rclone
       rsync
