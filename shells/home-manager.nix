@@ -1,7 +1,7 @@
 { pkgs, ... }:
 pkgs.mkShell {
   name = "home-manager";
-  nativeBuildInputs = with pkgs; [
+  packages = with pkgs; [
     home-manager
     nixfmt
     nix-info
