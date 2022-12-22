@@ -7,15 +7,6 @@ on:
       - main
 
 jobs:
-  lint:
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v3
-      - uses: docker://docker.io/koalaman/shellcheck-alpine:v0.8.0
-        with:
-          entrypoint: sh
-          args: '-c "shellcheck --shell=bash --exclude=SC1090,SC2086 **/*.sh"'
-
   test:
     runs-on: ubuntu-20.04
     steps:
@@ -34,7 +25,7 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('flake.lock') }}
 
       - name: Install nix
-      - uses: cachix/install-nix-action@v18
+        uses: cachix/install-nix-action@v18
         with:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
