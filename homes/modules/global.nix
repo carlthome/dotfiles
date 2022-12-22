@@ -30,6 +30,8 @@
       google-cloud-sdk
       jq
       kind
+      kubectl
+      kubectx
       ninja
       nixfmt
       nixpkgs-fmt
@@ -38,9 +40,8 @@
       nodePackages.prettier
       pdfgrep
       pipenv
-      poetry
+      #poetry
       pre-commit
-      yarn
       (python3.withPackages (ps: with ps; [
         #jax
         #jaxlib
@@ -60,15 +61,17 @@
         jupyter
         scipy
       ]))
-      ripgrep
       rclone
+      ripgrep
       rsync
       rustup
       shellcheck
+      skaffold
       sox
       sqlitebrowser
       tree
       wget
+      yarn
     ];
   };
   programs = {
