@@ -37,7 +37,7 @@ jobs:
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
 
       - name: Show flake metadata
-        run: nix flake info
+        run: nix flake metadata
 
       - name: Show the provided outputs
         run: nix flake show
