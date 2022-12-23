@@ -1,16 +1,16 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.2.0
+    rev: v4.4.0
     hooks:
-      - id: trailing-whitespace
-      - id: end-of-file-fixer
-      - id: check-yaml
       - id: check-added-large-files
       - id: check-merge-conflict
+      - id: check-shebang-scripts-are-executable
       - id: check-symlinks
       - id: check-vcs-permalinks
+      - id: check-yaml
+      - id: end-of-file-fixer
       - id: mixed-line-ending
-      - id: sort-simple-yaml
+      - id: trailing-whitespace
   - repo: https://github.com/nix-community/nixpkgs-fmt
     rev: v1.3.0
     hooks:
