@@ -22,6 +22,7 @@
       dive
       docker
       docker-compose
+      dvc-with-remotes
       fantasque-sans-mono
       ffmpeg-full
       git
