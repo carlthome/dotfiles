@@ -5,6 +5,7 @@ pkgs.mkShell {
     home-manager
     nixfmt
     nix-info
+    nix-diff
     nixpkgs-fmt
     cachix
     git
