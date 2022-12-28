@@ -3,6 +3,6 @@
     cudaSupport = true;
     cudnnSupport = true;
     allowUnfree = true;
-    allowUnfreePredicate = (pkg: true);
+    allowUnfreePredicate = pkg: true;
   };
 }
