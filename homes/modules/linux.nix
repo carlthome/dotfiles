@@ -25,6 +25,7 @@
     wineWowPackages.staging
     yabridge
     yabridgectl
+    stdenv.cc.cc.lib
   ];
 
   home.sessionVariables = {
