@@ -23,7 +23,7 @@
         pkgs = nixpkgs-stable.legacyPackages.${system};
       in
       {
-        formatter = pkgs.nixfmt;
+        formatter = pkgs.nixpkgs-fmt;
 
         # TODO Add flakes testing.
         #checks = { };
