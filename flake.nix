@@ -14,6 +14,10 @@
   outputs = { self, nixpkgs-stable, nixpkgs-latest, flake-utils, home-manager }:
     {
       homeConfigurations = import ./homes/configurations.nix { inherit home-manager; nixpkgs = nixpkgs-stable; };
+      nixosConfigurations.nixos = nixpkgs-stable.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [ ./homes/modules/nixos.nix ];
+      };
     } // flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs-stable.legacyPackages.${system};
@@ -29,6 +33,7 @@
 
         apps = rec {
           update-home = import ./apps/update-home.nix { inherit pkgs; };
+          update-system = import ./apps/update-system.nix { inherit pkgs; };
           default = update-home;
         };
 
