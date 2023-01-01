@@ -2,25 +2,67 @@
   description = "Carl Thomé's personal Home Manager config";
 
   inputs = {
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-22.11";
-    nixpkgs-latest.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-22.11";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     home-manager = {
       url = "github:nix-community/home-manager/release-22.11";
-      inputs.nixpkgs.follows = "nixpkgs-stable";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs-stable, nixpkgs-latest, flake-utils, home-manager }:
+  outputs = { self, nixpkgs, nixpkgs-unstable, flake-utils, home-manager }:
     {
-      homeConfigurations = import ./homes/configurations.nix { inherit home-manager; nixpkgs = nixpkgs-stable; };
-      nixosConfigurations.nixos = nixpkgs-stable.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [ ./homes/modules/nixos.nix ];
+      homeConfigurations = {
+        "carlthome@x86_64-linux" = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+          modules = [
+            ./modules/global.nix
+            ./modules/linux.nix
+            ./modules/gpu.nix
+            ./modules/work.nix
+          ];
+        };
+
+        "carl@x86_64-linux" = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+          modules = [
+            ./modules/global.nix
+            ./modules/linux.nix
+            ./modules/gpu.nix
+            ./modules/home.nix
+          ];
+        };
+
+        "carl@aarch64-darwin" = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+          modules = [
+            ./modules/global.nix
+            ./modules/darwin.nix
+            ./modules/home.nix
+          ];
+        };
+
+        "carlthome@aarch64-darwin" = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+          modules = [
+            ./modules/global.nix
+            ./modules/darwin.nix
+            ./modules/work.nix
+          ];
+        };
       };
+
+      nixosConfigurations = {
+        nixos = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [ ./modules/nixos.nix ];
+        };
+      };
+
     } // flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = nixpkgs-stable.legacyPackages.${system};
+        pkgs = nixpkgs.legacyPackages.${system};
       in
       {
         formatter = pkgs.nixpkgs-fmt;

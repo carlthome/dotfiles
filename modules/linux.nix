@@ -1,11 +1,10 @@
-{ pkgs, ... }: {
+{ config, options, lib, pkgs, modulesPath, ... }: {
 
-  # TODO Set this if not NixOS but still Linux.  
+  # TODO Set this if not NixOS but still Linux.
   # targets.genericLinux.enable = true;
 
   home.packages = with pkgs; [
-    # TODO Stop using flatpak version.
-    #discord
+    discord
     caprine-bin
     chromium
     dropbox-cli
@@ -13,7 +12,7 @@
     firefox
     google-chrome
     keepassxc
-    marker
+    #marker
     obs-studio
     okular
     reaper
@@ -21,7 +20,7 @@
     slack
     spotify
     steam
-    tdesktop
+    #tdesktop
     wineWowPackages.staging
     yabridge
     yabridgectl
