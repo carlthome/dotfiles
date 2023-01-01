@@ -73,19 +73,18 @@
         # TODO Add example package.
         #packages = { };
 
-        apps = rec {
-          update-home = import ./apps/update-home.nix { inherit pkgs; };
-          update-system = import ./apps/update-system.nix { inherit pkgs; };
-          default = update-home;
+        apps = {
+          default = import ./apps/update.nix { inherit pkgs; };
+          switch-home = import ./apps/switch-home.nix { inherit pkgs; };
+          switch-system = import ./apps/switch-system.nix { inherit pkgs; };
         };
 
-        devShells = rec {
-          home-manager = import ./shells/home-manager.nix { inherit pkgs; };
+        devShells = {
+          default = import ./shells/home-manager.nix { inherit pkgs; };
           ipython = import ./shells/ipython.nix { inherit pkgs; };
+          jax = import ./shells/jax.nix { inherit pkgs; };
           pytorch = import ./shells/pytorch.nix { inherit pkgs; };
           tensorflow = import ./shells/tensorflow.nix { inherit pkgs; };
-          jax = import ./shells/jax.nix { inherit pkgs; };
-          default = home-manager;
         };
       });
 }

@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ config, pkgs, ... }: {
   fonts.fontconfig.enable = true;
   home = {
     stateVersion = "22.05";
@@ -45,33 +45,7 @@
       #poetry
       pre-commit
       (python3.withPackages (ps: with ps; [
-
-        #jax
-        jaxlib-bin
-
-        torch-bin
-        torchaudio-bin
-        torchvision-bin
-
         #wandb
-        apache-beam
-
-        huggingface-hub
-        transformers
-        datasets
-
-        tensorflow-bin
-        #tensorflow-datasets
-
-        ipython
-        jupyter
-        librosa
-        matplotlib
-        numpy
-        pandas
-        scikit-learn
-        scipy
-
         black
         docformatter
         flake8

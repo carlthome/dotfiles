@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ config, pkgs, ... }: {
   nixpkgs.config = {
     cudaSupport = true;
     cudnnSupport = true;

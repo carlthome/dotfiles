@@ -1,4 +1,4 @@
-{ config, options, lib, pkgs, modulesPath, ... }: {
+{ config, pkgs, ... }: {
 
   # TODO Set this if not NixOS but still Linux.
   # targets.genericLinux.enable = true;
@@ -12,7 +12,7 @@
     firefox
     google-chrome
     keepassxc
-    #marker
+    marker
     obs-studio
     okular
     reaper
@@ -20,7 +20,7 @@
     slack
     spotify
     steam
-    #tdesktop
+    tdesktop
     wineWowPackages.staging
     yabridge
     yabridgectl

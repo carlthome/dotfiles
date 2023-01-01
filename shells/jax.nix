@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs ? import <nixpkgs> { } }:
 pkgs.mkShell {
   name = "jax";
   packages = [
@@ -6,9 +6,10 @@ pkgs.mkShell {
       ipython
       matplotlib
       jax
-      jaxlib-bin
-      flax
-      optax
+      #jaxlib
+      #jaxlib-bin
+      #flax
+      #optax
     ]))
   ];
   shellHook = ''

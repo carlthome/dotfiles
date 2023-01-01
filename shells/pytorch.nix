@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs ? import <nixpkgs> { } }:
 pkgs.mkShell {
   name = "pytorch";
   packages = [
@@ -8,6 +8,9 @@ pkgs.mkShell {
       torch-bin
       torchaudio-bin
       torchvision-bin
+      huggingface-hub
+      transformers
+      datasets
     ]))
   ];
   shellHook = ''

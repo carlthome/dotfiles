@@ -1,6 +1,6 @@
 { pkgs, ... }: {
   type = "app";
-  program = (pkgs.writeScript "update-system" ''
+  program = (pkgs.writeScript "switch-system" ''
     set -exuo pipefail
     sudo nixos-rebuild switch --impure --flake .
     nix-env --delete-generations 30d
