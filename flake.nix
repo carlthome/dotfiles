@@ -82,6 +82,9 @@
         devShells = rec {
           home-manager = import ./shells/home-manager.nix { inherit pkgs; };
           ipython = import ./shells/ipython.nix { inherit pkgs; };
+          pytorch = import ./shells/pytorch.nix { inherit pkgs; };
+          tensorflow = import ./shells/tensorflow.nix { inherit pkgs; };
+          jax = import ./shells/jax.nix { inherit pkgs; };
           default = home-manager;
         };
       });
