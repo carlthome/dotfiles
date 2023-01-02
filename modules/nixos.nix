@@ -166,7 +166,10 @@
   # List services that you want to enable:
 
   # Enable Docker container runtime.
-  virtualisation.docker.enable = true;
+  virtualisation.docker = {
+    enable = true;
+    enableNvidia = true;
+  };
 
   # Enable Steam games.
   programs.steam.enable = true;
