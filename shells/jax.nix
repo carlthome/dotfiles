@@ -6,10 +6,9 @@ pkgs.mkShell {
       ipython
       matplotlib
       jax
-      #jaxlib
-      #jaxlib-bin
-      #flax
-      #optax
+      jaxlib-bin
+      flax
+      optax
     ]))
   ];
   shellHook = ''
