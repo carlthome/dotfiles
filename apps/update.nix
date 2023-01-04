@@ -1,10 +1,16 @@
-{ pkgs, ... }: {
+{ pkgs, self, system, ... }: {
   type = "app";
   program = (pkgs.writeScript "update" ''
     set -exuo pipefail
-    nix flake update
-    nix run .#switch-system
-    nix run .#switch-home
-    git commit flake.lock -m "Update flake.lock"
+
+    nix flake update --commit-lock-file .
+
+    if [[ ${system} == "x86_64-linux" ]]; then
+      nix run ${self}#switch-system
+    fi
+
+    nix run ${self}#switch-home
+
+    nix store optimise
   '').outPath;
 }

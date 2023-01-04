@@ -74,9 +74,9 @@
         #packages = { };
 
         apps = {
-          default = import ./apps/update.nix { inherit pkgs; };
-          switch-home = import ./apps/switch-home.nix { inherit pkgs; };
-          switch-system = import ./apps/switch-system.nix { inherit pkgs; };
+          default = import ./apps/update.nix { inherit pkgs; inherit self; inherit system; };
+          switch-home = import ./apps/switch-home.nix { inherit pkgs; inherit self; };
+          switch-system = import ./apps/switch-system.nix { inherit pkgs; inherit self; };
         };
 
         devShells = {
