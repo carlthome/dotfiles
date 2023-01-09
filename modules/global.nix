@@ -20,8 +20,7 @@
       coreutils-full
       curl
       dive
-      docker
-      docker-compose
+      docker-client
       dvc-with-remotes
       fantasque-sans-mono
       ffmpeg-full
