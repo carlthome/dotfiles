@@ -59,6 +59,7 @@
       shellcheck
       skaffold
       sox
+      spr
       sqlitebrowser
       tree
       wget
