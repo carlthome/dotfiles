@@ -88,6 +88,7 @@
     git = {
       enable = true;
       userName = "Carl Thomé";
+      lfs.enable = true;
       # TODO Play around with non-standard git diff extensions.
       delta.enable = false;
       diff-so-fancy.enable = false;
@@ -105,7 +106,7 @@
     };
     vscode = {
       enable = true;
-      package = pkgs.vscode;
+      package = pkgs.vscodium;
       #extensions = with pkgs.vscode-extensions; [
       #  bbenoist.nix
       #  davidanson.vscode-markdownlint
