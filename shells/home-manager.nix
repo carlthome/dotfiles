@@ -13,6 +13,6 @@ pkgs.mkShell {
     vim
   ];
   shellHook = ''
-    home-manager help
+    home-manager generations
   '';
 }
