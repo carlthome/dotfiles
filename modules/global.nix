@@ -89,13 +89,11 @@
       enable = true;
       userName = "Carl Thomé";
       lfs.enable = true;
-      # TODO Play around with non-standard git diff extensions.
-      delta.enable = false;
-      diff-so-fancy.enable = false;
-      difftastic.enable = false;
       extraConfig = {
         init.defaultBranch = "main";
+        pull.ff = "only";
         push.autoSetupRemote = true;
+        user.useConfigOnly = true;
       };
     };
     gitui.enable = true;
