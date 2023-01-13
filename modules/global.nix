@@ -51,6 +51,8 @@
         flake8
         isort
         mypy
+        pip
+        pytest
       ]))
       rclone
       ripgrep
