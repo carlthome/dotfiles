@@ -33,6 +33,7 @@
       kind
       kubectl
       kubectx
+      kubernetes-helm
       minikube
       ninja
       nixfmt
