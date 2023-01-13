@@ -123,13 +123,9 @@
         ms-azuretools.vscode-docker
         ms-kubernetes-tools.vscode-kubernetes-tools
         ms-python.python
-        # TODO Unfree.
-        #ms-python.vscode-pylance
         ms-toolsai.jupyter
         ms-vscode.cmake-tools
         ms-vscode.makefile-tools
-        # TODO Unfree.
-        #ms-vsliveshare.vsliveshare
         njpwerner.autodocstring
         pkief.material-icon-theme
         redhat.vscode-yaml
