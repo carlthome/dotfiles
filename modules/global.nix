@@ -135,7 +135,7 @@
       ];
       userSettings = {
         "editor.defaultFormatter" = "esbenp.prettier-vscode";
-        "[python]" = { "editor.defaultFormatter" = "ms-python.black-formatter"; };
+        "[python]" = { "editor.defaultFormatter" = "ms-python.python"; };
         "[yaml]" = { "editor.defaultFormatter" = "redhat.vscode-yaml"; };
         "cloudcode.enableTelemetry" = false;
         "cmake.configureOnOpen" = true;
