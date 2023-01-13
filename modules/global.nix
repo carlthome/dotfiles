@@ -53,6 +53,7 @@
         mypy
         pip
         pytest
+        tensorboard
       ]))
       rclone
       ripgrep
