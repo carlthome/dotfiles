@@ -138,6 +138,7 @@
         twxs.cmake
       ];
       userSettings = {
+         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "[python]" = { "editor.defaultFormatter" = "ms-python.black-formatter"; };
         "[yaml]" = { "editor.defaultFormatter" = "redhat.vscode-yaml"; };
         "cloudcode.enableTelemetry" = false;
