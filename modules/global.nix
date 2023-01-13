@@ -42,7 +42,7 @@
       nodePackages.prettier
       pdfgrep
       pipenv
-      #poetry
+      poetry
       pre-commit
       (python3.withPackages (ps: with ps; [
         #wandb
