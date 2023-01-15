@@ -153,7 +153,6 @@
         "editor.inlineSuggest.enabled" = true;
         "editor.mouseWheelZoom" = true;
         "editor.suggestSelection" = "first";
-        "explorer.excludeGitIgnore" = true;
         "git.autofetch" = true;
         "jupyter.askForKernelRestart" = false;
         "jupyter.runStartupCommands" = [ "%load_ext autoreload" "%autoreload 2" ];
