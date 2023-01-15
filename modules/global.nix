@@ -109,7 +109,7 @@
     };
     vscode = {
       enable = true;
-      package = pkgs.vscodium;
+      package = pkgs.vscode; #TODO pkgs.vscodium if unfree disabled.
       extensions = with pkgs.vscode-extensions; [
         arrterian.nix-env-selector
         bbenoist.nix
@@ -133,7 +133,11 @@
         stkb.rewrap
         svelte.svelte-vscode
         twxs.cmake
-      ];
+      ] ++ (lib.optionals (pkgs.stdenv.isLinux) [
+        github.copilot
+        ms-python.vscode-pylance
+        ms-vsliveshare.vsliveshare
+      ]);
       userSettings = {
         "[dockercompose]" = { "editor.defaultFormatter" = "ms-azuretools.vscode-docker"; };
         "[python]" = { "editor.defaultFormatter" = "ms-python.python"; };
