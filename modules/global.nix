@@ -164,6 +164,7 @@
         "terminal.integrated.defaultProfile.osx" = "fish";
         "terminal.integrated.defaultProfile.windows" = "fish";
         "terminal.integrated.enableMultiLinePasteWarning" = false;
+        "update.mode" = "none";
         "window.autoDetectColorScheme" = true;
         "window.commandCenter" = true;
         "window.restoreWindows" = "none";
