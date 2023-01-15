@@ -3,7 +3,9 @@
   program = (pkgs.writeScript "update" ''
     set -exuo pipefail
 
-    nix flake update --commit-lock-file .
+    if [[ $(git rev-parse --is-inside-work-tree) ]]; then
+      nix flake update --commit-lock-file .
+    fi
 
     if [[ ${system} == "x86_64-linux" ]]; then
       nix run ${self}#switch-system
