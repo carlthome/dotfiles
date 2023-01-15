@@ -4,9 +4,9 @@
   # targets.genericLinux.enable = true;
 
   home.packages = with pkgs; [
-    discord
     caprine-bin
     chromium
+    discord
     dropbox-cli
     element-desktop
     firefox
@@ -19,15 +19,15 @@
     signal-desktop
     slack
     spotify
+    stdenv.cc.cc.lib
     steam
     tdesktop
     wineWowPackages.staging
     yabridge
     yabridgectl
-    stdenv.cc.cc.lib
   ];
 
-  home.sessionVariables = {
-    LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib:$LD_LIBRARY_PATH";
+  home.sessionVariables = with pkgs; {
+    LD_LIBRARY_PATH = "${stdenv.cc.cc.lib}/lib:$LD_LIBRARY_PATH";
   };
 }
