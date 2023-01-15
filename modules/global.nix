@@ -1,7 +1,7 @@
 { config, pkgs, ... }: {
   fonts.fontconfig.enable = true;
   home = {
-    stateVersion = "22.05";
+    stateVersion = "22.11";
     enableNixpkgsReleaseCheck = true;
     sessionVariables = {
       DOCKER_BUILDKIT = true;
