@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, lib, ... }: {
   fonts.fontconfig.enable = true;
   home = {
     stateVersion = "22.11";
