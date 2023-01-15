@@ -146,7 +146,7 @@
         "cmake.configureOnOpen" = true;
         "debug.allowBreakpointsEverywhere" = true;
         "editor.defaultFormatter" = "esbenp.prettier-vscode";
-        "editor.fontFamily" = "Fantasque Sans Mono";
+        "editor.fontFamily" = "Fantasque Sans Mono, monospace";
         "editor.fontLigatures" = true;
         "editor.fontSize" = 14;
         "editor.formatOnSave" = true;
