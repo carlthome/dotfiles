@@ -25,7 +25,7 @@
       #dvc-with-remotes
       fantasque-sans-mono
       ffmpeg-full
-      git
+      gitFull
       gnumake
       gnupg
       google-cloud-sdk
