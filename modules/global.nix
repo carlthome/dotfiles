@@ -169,7 +169,7 @@
         "window.commandCenter" = true;
         "window.restoreWindows" = "none";
         "window.titleBarStyle" = "custom";
-        "window.zoomLevel" = 1;
+        "window.zoomLevel" = 0;
         "workbench.enableExperiments" = false;
         "workbench.iconTheme" = "material-icon-theme";
         "workbench.layoutControl.enabled" = true;
