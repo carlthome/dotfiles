@@ -154,6 +154,8 @@
         "editor.mouseWheelZoom" = true;
         "editor.suggestSelection" = "first";
         "git.autofetch" = true;
+        "git.confirmSync" = false;
+        "git.suggestSmartCommit" = false;
         "jupyter.askForKernelRestart" = false;
         "jupyter.runStartupCommands" = [ "%load_ext autoreload" "%autoreload 2" ];
         "redhat.telemetry.enabled" = false;
