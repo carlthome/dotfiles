@@ -1,7 +1,7 @@
 { pkgs ? import <nixpkgs> { } }:
-pkgs.mkShell {
+pkgs.buildEnv {
   name = "pytorch";
-  packages = [
+  paths = [
     (pkgs.python3.withPackages (ps: with ps; [
       ipython
       matplotlib
@@ -13,7 +13,4 @@ pkgs.mkShell {
       datasets
     ]))
   ];
-  shellHook = ''
-    ipython --pylab
-  '';
 }

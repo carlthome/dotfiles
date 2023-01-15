@@ -1,7 +1,7 @@
 { pkgs ? import <nixpkgs> { } }:
-pkgs.mkShell {
+pkgs.buildEnv {
   name = "tensorflow";
-  packages = [
+  paths = [
     (pkgs.python3.withPackages (ps: with ps; [
       ipython
       matplotlib
@@ -10,7 +10,4 @@ pkgs.mkShell {
       apache-beam
     ]))
   ];
-  shellHook = ''
-    ipython --pylab
-  '';
 }

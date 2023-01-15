@@ -64,27 +64,25 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
       in
-      {
-        formatter = pkgs.nixpkgs-fmt;
-
-        # TODO Add flakes testing.
-        #checks = { };
-
+      rec {
         packages = {
-          ipython = import ./shells/ipython.nix { inherit pkgs; };
-          jax = import ./shells/jax.nix { inherit pkgs; };
-          pytorch = import ./shells/pytorch.nix { inherit pkgs; };
-          tensorflow = import ./shells/tensorflow.nix { inherit pkgs; };
+          sklearn = import ./packages/sklearn.nix { inherit pkgs; };
+          jax = import ./packages/jax.nix { inherit pkgs; };
+          pytorch = import ./packages/pytorch.nix { inherit pkgs; };
+          tensorflow = import ./packages/tensorflow.nix { inherit pkgs; };
         };
 
         apps = {
           default = import ./apps/update.nix { inherit pkgs; inherit self; inherit system; };
           switch-home = import ./apps/switch-home.nix { inherit pkgs; inherit self; };
           switch-system = import ./apps/switch-system.nix { inherit pkgs; inherit self; };
+          sklearn = flake-utils.lib.mkApp { drv = packages.sklearn; name = "ipython"; };
+          jax = flake-utils.lib.mkApp { drv = packages.jax; name = "ipython"; };
+          pytorch = flake-utils.lib.mkApp { drv = packages.pytorch; name = "ipython"; };
+          tensorflow = flake-utils.lib.mkApp { drv = packages.tensorflow; name = "ipython"; };
         };
 
-        devShells = {
-          default = import ./shells/home-manager.nix { inherit pkgs; };
-        };
+        formatter = pkgs.nixpkgs-fmt;
+        devShell = import ./shell.nix { inherit pkgs; };
       });
 }

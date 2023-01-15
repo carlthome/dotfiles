@@ -1,7 +1,7 @@
-{ pkgs ? import <nixpkgs> { } }:
-pkgs.mkShell {
-  name = "ipython";
-  packages = [
+{ pkgs ? import <nixpkgs> { } }: with pkgs;
+pkgs.buildEnv {
+  name = "sklearn";
+  paths = [
     (pkgs.python3.withPackages (ps: with ps; [
       ipython
       jupyter
@@ -14,7 +14,4 @@ pkgs.mkShell {
       apache-beam
     ]))
   ];
-  shellHook = ''
-    ipython --pylab
-  '';
 }

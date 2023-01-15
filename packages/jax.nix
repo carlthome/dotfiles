@@ -1,7 +1,7 @@
 { pkgs ? import <nixpkgs> { } }:
-pkgs.mkShell {
+pkgs.buildEnv {
   name = "jax";
-  packages = [
+  paths = [
     (pkgs.python3.withPackages (ps: with ps; [
       ipython
       matplotlib
@@ -11,7 +11,4 @@ pkgs.mkShell {
       optax
     ]))
   ];
-  shellHook = ''
-    ipython --pylab
-  '';
 }
