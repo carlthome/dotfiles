@@ -173,8 +173,8 @@
         "workbench.enableExperiments" = false;
         "workbench.iconTheme" = "material-icon-theme";
         "workbench.layoutControl.enabled" = true;
-        "workbench.preferredDarkColorTheme" = "Noctis Obscuro";
-        "workbench.preferredLightColorTheme" = "Jupyter Theme";
+        "workbench.preferredDarkColorTheme" = "GitHub Dark";
+        "workbench.preferredLightColorTheme" = "GitHub Light";
         "workbench.settings.enableNaturalLanguageSearch" = false;
       };
     };
