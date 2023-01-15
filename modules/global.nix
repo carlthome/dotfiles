@@ -134,12 +134,13 @@
         twxs.cmake
       ];
       userSettings = {
-        "editor.defaultFormatter" = "esbenp.prettier-vscode";
+        "[dockercompose]" = { "editor.defaultFormatter" = "ms-azuretools.vscode-docker"; };
         "[python]" = { "editor.defaultFormatter" = "ms-python.python"; };
         "[yaml]" = { "editor.defaultFormatter" = "redhat.vscode-yaml"; };
         "cloudcode.enableTelemetry" = false;
         "cmake.configureOnOpen" = true;
         "debug.allowBreakpointsEverywhere" = true;
+        "editor.defaultFormatter" = "esbenp.prettier-vscode";
         "editor.fontFamily" = "Fantasque Sans Mono";
         "editor.fontLigatures" = true;
         "editor.fontSize" = 14;
