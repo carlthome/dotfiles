@@ -91,6 +91,7 @@
     };
     git = {
       enable = true;
+      package = pkgs.gitFull;
       userName = "Carl Thomé";
       lfs.enable = true;
       extraConfig = {
