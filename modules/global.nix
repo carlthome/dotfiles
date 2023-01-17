@@ -65,6 +65,7 @@
       sox
       spr
       sqlitebrowser
+      terraform
       tree
       wget
       yarn
