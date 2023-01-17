@@ -172,6 +172,7 @@
         "window.restoreWindows" = "none";
         "window.titleBarStyle" = "custom";
         "window.zoomLevel" = 0;
+        "workbench.colorTheme" = "GitHub Light";
         "workbench.enableExperiments" = false;
         "workbench.iconTheme" = "material-icon-theme";
         "workbench.layoutControl.enabled" = true;
