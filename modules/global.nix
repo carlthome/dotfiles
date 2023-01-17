@@ -114,6 +114,7 @@
         arrterian.nix-env-selector
         bbenoist.nix
         davidanson.vscode-markdownlint
+        eamodio.gitlens
         esbenp.prettier-vscode
         github.github-vscode-theme
         github.vscode-pull-request-github
