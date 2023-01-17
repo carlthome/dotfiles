@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }: {
+{ pkgs, lib, ... }: {
   fonts.fontconfig.enable = true;
   home = {
     stateVersion = "22.11";
@@ -135,7 +135,7 @@
         stkb.rewrap
         svelte.svelte-vscode
         twxs.cmake
-      ] ++ (lib.optionals (pkgs.stdenv.isLinux) [
+      ] ++ (lib.optionals pkgs.stdenv.isLinux [
         github.copilot
         ms-python.vscode-pylance
         ms-vsliveshare.vsliveshare
