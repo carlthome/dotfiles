@@ -59,6 +59,8 @@
           system = "x86_64-linux";
           modules = [
             ./modules/nixos.nix
+            ./modules/substituters.nix
+            ./machines/t1/hardware-configuration.nix
           ];
         };
       };
