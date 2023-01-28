@@ -12,7 +12,5 @@
     fi
 
     nix run ${self}#switch-home
-
-    nix store optimise
   '').outPath;
 }

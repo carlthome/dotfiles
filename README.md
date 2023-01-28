@@ -5,7 +5,6 @@ My personal [Home Manager](https://github.com/nix-community/home-manager) config
 ## Install
 
 1. Install `nix` on the system (with [flakes enabled](https://nixos.wiki/wiki/Flakes#Enable_flakes))
-1. (optional) Configure additional binary caches by `nix run nixpkgs#cachix use cuda-maintainers` and `nix run nixpkgs#cachix use nixpkgs-unfree`
 1. See available packages by `nix flake show github:carlthome/dotfiles`
 1. Create system and home configuration with `nix run github:carlthome/dotfiles`
 

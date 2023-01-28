@@ -14,45 +14,66 @@
 
   outputs = { self, nixpkgs, nixpkgs-unstable, flake-utils, pre-commit-hooks, home-manager }:
     {
-      homeConfigurations = {
-        "carlthome@x86_64-linux" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.x86_64-linux;
-          modules = [
-            ./modules/global.nix
-            ./modules/linux.nix
-            ./modules/gpu.nix
-            ./modules/work.nix
-          ];
-        };
+      homeConfigurations =
+        let
+          home = {
+            name = "Carl Thomé";
+            handle = "carl";
+            email = "carlthome@gmail.com";
+          };
+          work = {
+            name = "Carl Thomé";
+            handle = "carlthome";
+            email = "carl.thome@epidemicsound.com";
+          };
+        in
+        {
+          "${work.handle}@x86_64-linux" = home-manager.lib.homeManagerConfiguration {
+            pkgs = nixpkgs.legacyPackages.x86_64-linux;
+            modules = [
+              ./modules/home.nix
+              ./modules/x86_64-linux.nix
+              ./modules/gpu.nix
+            ];
+            extraSpecialArgs = {
+              user = work;
+            };
+          };
 
-        "carl@x86_64-linux" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.x86_64-linux;
-          modules = [
-            ./modules/global.nix
-            ./modules/linux.nix
-            ./modules/gpu.nix
-            ./modules/home.nix
-          ];
-        };
+          "${home.handle}@x86_64-linux" = home-manager.lib.homeManagerConfiguration {
+            pkgs = nixpkgs.legacyPackages.x86_64-linux;
+            modules = [
+              ./modules/home.nix
+              ./modules/x86_64-linux.nix
+              ./modules/gpu.nix
+            ];
+            extraSpecialArgs = {
+              user = home;
+            };
+          };
 
-        "carl@aarch64-darwin" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.aarch64-darwin;
-          modules = [
-            ./modules/global.nix
-            ./modules/darwin.nix
-            ./modules/home.nix
-          ];
-        };
+          "${home.handle}@aarch64-darwin" = home-manager.lib.homeManagerConfiguration {
+            pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+            modules = [
+              ./modules/home.nix
+              ./modules/aarch64-darwin.nix
+            ];
+            extraSpecialArgs = {
+              user = home;
+            };
+          };
 
-        "carlthome@aarch64-darwin" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.aarch64-darwin;
-          modules = [
-            ./modules/global.nix
-            ./modules/darwin.nix
-            ./modules/work.nix
-          ];
+          "${work.handle}@aarch64-darwin" = home-manager.lib.homeManagerConfiguration {
+            pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+            modules = [
+              ./modules/home.nix
+              ./modules/aarch64-darwin.nix
+            ];
+            extraSpecialArgs = {
+              user = work;
+            };
+          };
         };
-      };
 
       nixosConfigurations = {
         nixos = nixpkgs.lib.nixosSystem {
@@ -105,20 +126,18 @@
 
         formatter = pkgs.nixpkgs-fmt;
 
-        devShells = {
-          default = pkgs.mkShell {
-            name = "home-manager";
-            packages = with pkgs; [
-              act
-              cachix
-              git
-              nix-diff
-              nix-info
-              nixpkgs-fmt
-              pkgs.home-manager
-            ];
-            inherit (self.checks.${system}.pre-commit-check) shellHook;
-          };
+        devShells.default = pkgs.mkShell {
+          name = "home-manager";
+          packages = with pkgs; [
+            act
+            cachix
+            git
+            nix-diff
+            nix-info
+            nixpkgs-fmt
+            pkgs.home-manager
+          ];
+          inherit (self.checks.${system}.pre-commit-check) shellHook;
         };
       });
 }

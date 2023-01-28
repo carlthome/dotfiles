@@ -5,9 +5,6 @@
 { config, pkgs, ... }:
 
 {
-  # Automatic optimisation for newer derivations.
-  nix.settings.auto-optimise-store = true;
-
   # Enable Plex media server.
   services.plex.enable = true;
 
