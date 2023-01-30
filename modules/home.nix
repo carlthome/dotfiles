@@ -133,7 +133,7 @@
         hashicorp.terraform
         jnoortheen.nix-ide
         mikestead.dotenv
-        #mkhl.direnv
+        mkhl.direnv
         ms-azuretools.vscode-docker
         ms-kubernetes-tools.vscode-kubernetes-tools
         ms-python.python
