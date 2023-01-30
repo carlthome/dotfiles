@@ -120,7 +120,7 @@
     };
     vscode = {
       enable = true;
-      package = pkgs.vscodium; # TODO if nixpkgs.config.allowUnfree then pkgs.vscode else pkgs.vscodium;
+      package = if pkgs.config.allowUnfree then pkgs.vscode else pkgs.vscodium;
       extensions = with pkgs.vscode-extensions; [
         arrterian.nix-env-selector
         bbenoist.nix
@@ -145,7 +145,7 @@
         stkb.rewrap
         svelte.svelte-vscode
         twxs.cmake
-      ] ++ (lib.optionals pkgs.stdenv.isLinux [
+      ] ++ (lib.optionals pkgs.config.allowUnfree [
         github.copilot
         ms-python.vscode-pylance
         ms-vsliveshare.vsliveshare
