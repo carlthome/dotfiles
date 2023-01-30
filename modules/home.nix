@@ -132,6 +132,7 @@
         gitlab.gitlab-workflow
         hashicorp.terraform
         jnoortheen.nix-ide
+        mikestead.dotenv
         #mkhl.direnv
         ms-azuretools.vscode-docker
         ms-kubernetes-tools.vscode-kubernetes-tools
