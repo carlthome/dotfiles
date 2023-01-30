@@ -76,12 +76,12 @@
         };
 
       nixosConfigurations = {
-        nixos = nixpkgs.lib.nixosSystem {
+        t1 = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
             ./modules/nixos.nix
-            ./modules/substituters.nix
             ./machines/t1/hardware-configuration.nix
+            ./machines/t1/configuration.nix
           ];
         };
       };
