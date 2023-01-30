@@ -115,7 +115,7 @@
         };
 
         apps = {
-          default = import ./apps/update.nix { inherit pkgs; inherit self; inherit system; };
+          default = import ./apps/update.nix { inherit pkgs; inherit self; };
           switch-home = import ./apps/switch-home.nix { inherit pkgs; inherit self; };
           switch-system = import ./apps/switch-system.nix { inherit pkgs; inherit self; };
           sklearn = flake-utils.lib.mkApp { drv = packages.sklearn; name = "ipython"; };

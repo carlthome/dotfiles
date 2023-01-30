@@ -1,4 +1,4 @@
-{ pkgs, self, system, ... }: {
+{ pkgs, self, ... }: {
   type = "app";
   program = (pkgs.writeScript "update" ''
     set -exuo pipefail
@@ -7,7 +7,7 @@
       nix flake update --commit-lock-file .
     fi
 
-    if [[ ${system} == "x86_64-linux" ]]; then
+    if [[ ${pkgs.system} == "x86_64-linux" ]]; then
       nix run ${self}#switch-system
     fi
 
