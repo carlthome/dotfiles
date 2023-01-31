@@ -1,4 +1,4 @@
 { pkgs, self, ... }: {
   type = "app";
-  program = "${self.outputs.packages.sklearn}/bin/ipython";
+  program = "${self.outputs.packages.jax}/bin/ipython";
 }

@@ -41,9 +41,9 @@
             let names = builtins.attrNames (builtins.readDir d);
             in pkgs.lib.genAttrs names f;
 
-          callPackages = d:
-            let f = name: pkgs.callPackage "${d}/${name}" { };
-            in mapDir d f;
+          callPackages = dir:
+            let f = name: pkgs.callPackage "${dir}/${name}" { };
+            in mapDir dir f;
         in
         {
           apps = callPackages ./apps;
