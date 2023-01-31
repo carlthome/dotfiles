@@ -21,8 +21,6 @@
   home = {
     stateVersion = "22.11";
     enableNixpkgsReleaseCheck = true;
-    username = user.handle;
-    homeDirectory = if pkgs.stdenv.hostPlatform.isDarwin then "/Users/${user.handle}" else "/home/${user.handle}";
     sessionVariables = {
       DOCKER_BUILDKIT = true;
     };
@@ -102,8 +100,6 @@
     git = {
       enable = true;
       package = pkgs.gitFull;
-      userName = user.name;
-      userEmail = user.email;
       lfs.enable = true;
       extraConfig = {
         init.defaultBranch = "main";

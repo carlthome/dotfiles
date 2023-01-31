@@ -13,131 +13,71 @@
   };
 
   outputs = { self, nixpkgs, nixpkgs-unstable, flake-utils, pre-commit-hooks, home-manager }:
-    {
-      homeConfigurations =
+    let
+      mkSystem = system:
         let
-          home = {
-            name = "Carl Thomé";
-            handle = "carl";
-            email = "carlthome@gmail.com";
+          pkgs = nixpkgs.legacyPackages.${system};
+          pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
+
+          mkHome = name: home-manager.lib.homeManagerConfiguration {
+            inherit pkgs;
+            modules = [
+              ./modules/home.nix
+              ./modules/${system}.nix
+              ./homes/${name}/home.nix
+            ];
           };
-          work = {
-            name = "Carl Thomé";
-            handle = "carlthome";
-            email = "carl.thome@epidemicsound.com";
+
+          mkNixos = name: nixpkgs.lib.nixosSystem {
+            system = (import ./machines/${name}/system.nix).system;
+            modules = [
+              ./modules/nixos.nix
+              ./machines/${name}/hardware-configuration.nix
+              ./machines/${name}/configuration.nix
+            ];
           };
+
+          mapDir = d: f:
+            let names = builtins.attrNames (builtins.readDir d);
+            in pkgs.lib.genAttrs names f;
+
+          callPackages = d:
+            let f = name: pkgs.callPackage "${d}/${name}" { };
+            in mapDir d f;
         in
         {
-          "${work.handle}@x86_64-linux" = home-manager.lib.homeManagerConfiguration {
-            pkgs = nixpkgs.legacyPackages.x86_64-linux;
-            modules = [
-              ./modules/home.nix
-              ./modules/x86_64-linux.nix
-              ./modules/gpu.nix
+          apps = callPackages ./apps;
+          packages = callPackages ./packages;
+          legacyPackages.homeConfigurations = mapDir ./homes mkHome;
+          nixosConfigurations = mapDir ./machines mkNixos;
+          formatter = pkgs.nixpkgs-fmt;
+          checks = {
+            pre-commit-check = pre-commit-hooks.lib.${system}.run {
+              src = ./.;
+              hooks = {
+                actionlint.enable = true;
+                nixpkgs-fmt.enable = true;
+                prettier.enable = true;
+                shellcheck.enable = true;
+                shfmt.enable = true;
+                statix.enable = true;
+              };
+            };
+          };
+          devShells.default = pkgs.mkShell {
+            name = self;
+            packages = with pkgs; [
+              act
+              cachix
+              git
+              nix-diff
+              nix-info
+              nixpkgs-fmt
+              pkgs.home-manager
             ];
-            extraSpecialArgs = {
-              user = work;
-            };
-          };
-
-          "${home.handle}@x86_64-linux" = home-manager.lib.homeManagerConfiguration {
-            pkgs = nixpkgs.legacyPackages.x86_64-linux;
-            modules = [
-              ./modules/home.nix
-              ./modules/x86_64-linux.nix
-              ./modules/gpu.nix
-            ];
-            extraSpecialArgs = {
-              user = home;
-            };
-          };
-
-          "${home.handle}@aarch64-darwin" = home-manager.lib.homeManagerConfiguration {
-            pkgs = nixpkgs.legacyPackages.aarch64-darwin;
-            modules = [
-              ./modules/home.nix
-              ./modules/aarch64-darwin.nix
-            ];
-            extraSpecialArgs = {
-              user = home;
-            };
-          };
-
-          "${work.handle}@aarch64-darwin" = home-manager.lib.homeManagerConfiguration {
-            pkgs = nixpkgs.legacyPackages.aarch64-darwin;
-            modules = [
-              ./modules/home.nix
-              ./modules/aarch64-darwin.nix
-            ];
-            extraSpecialArgs = {
-              user = work;
-            };
+            inherit (self.checks.${system}.pre-commit-check) shellHook;
           };
         };
-
-      nixosConfigurations = {
-        t1 = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          modules = [
-            ./modules/nixos.nix
-            ./machines/t1/hardware-configuration.nix
-            ./machines/t1/configuration.nix
-          ];
-        };
-      };
-
-    } // flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system};
-        pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
-      in
-      rec {
-
-        checks = {
-          pre-commit-check = pre-commit-hooks.lib.${system}.run {
-            src = ./.;
-            hooks = {
-              actionlint.enable = true;
-              nixpkgs-fmt.enable = true;
-              prettier.enable = true;
-              shellcheck.enable = true;
-              shfmt.enable = true;
-              statix.enable = true;
-            };
-          };
-        };
-
-        packages = {
-          sklearn = import ./packages/sklearn.nix { pkgs = pkgs-unstable; };
-          jax = import ./packages/jax.nix { pkgs = pkgs-unstable; };
-          pytorch = import ./packages/pytorch.nix { pkgs = pkgs-unstable; };
-          tensorflow = import ./packages/tensorflow.nix { pkgs = pkgs-unstable; };
-        };
-
-        apps = {
-          default = import ./apps/update.nix { inherit pkgs; inherit self; };
-          switch-home = import ./apps/switch-home.nix { inherit pkgs; inherit self; };
-          switch-system = import ./apps/switch-system.nix { inherit pkgs; inherit self; };
-          sklearn = flake-utils.lib.mkApp { drv = packages.sklearn; name = "ipython"; };
-          jax = flake-utils.lib.mkApp { drv = packages.jax; name = "ipython"; };
-          pytorch = flake-utils.lib.mkApp { drv = packages.pytorch; name = "ipython"; };
-          tensorflow = flake-utils.lib.mkApp { drv = packages.tensorflow; name = "ipython"; };
-        };
-
-        formatter = pkgs.nixpkgs-fmt;
-
-        devShells.default = pkgs.mkShell {
-          name = "home-manager";
-          packages = with pkgs; [
-            act
-            cachix
-            git
-            nix-diff
-            nix-info
-            nixpkgs-fmt
-            pkgs.home-manager
-          ];
-          inherit (self.checks.${system}.pre-commit-check) shellHook;
-        };
-      });
+    in
+    flake-utils.lib.eachDefaultSystem mkSystem;
 }
