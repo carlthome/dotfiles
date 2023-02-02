@@ -61,6 +61,7 @@
       pdfgrep
       pipenv
       poetry
+      postgresql
       pre-commit
       python3Packages.tensorboard
       rclone
