@@ -12,12 +12,13 @@
     };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, flake-utils, pre-commit-hooks, home-manager }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-unstable, flake-utils, pre-commit-hooks, home-manager }:
     let
       mkSystem = system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
           pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
+          pre-commit = pre-commit-hooks.lib.${system};
 
           mkHome = name: home-manager.lib.homeManagerConfiguration {
             inherit pkgs;
@@ -42,7 +43,7 @@
             in pkgs.lib.genAttrs names f;
 
           callPackages = dir:
-            let f = name: pkgs.callPackage "${dir}/${name}" inputs;
+            let f = name: pkgs.callPackage "${dir}/${name}" { };
             in mapDir dir f;
         in
         {
@@ -52,9 +53,7 @@
           nixosConfigurations = mapDir ./machines mkNixos;
           formatter = pkgs.nixpkgs-fmt;
           checks = callPackages ./checks;
-          devShells.default = pkgs.callPackage ./shell.nix {
-            shellHook = self.checks.${system}.pre-commit-check.shellHook;
-          };
+          devShells.default = pkgs.callPackage ./shell.nix { inherit (self.checks.${system}.pre-commit-check) shellHook; };
         };
     in
     flake-utils.lib.eachDefaultSystem mkSystem;

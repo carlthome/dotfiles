@@ -1,4 +1,4 @@
-{ pre-commit-hooks, system, ... }: pre-commit-hooks.lib.${system}.run {
+{ pre-commit, ... }: pre-commit.run {
   src = ./.;
   hooks = {
     actionlint.enable = true;

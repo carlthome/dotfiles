@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> { }, shellHook ? "", ... }:
+{ pkgs, shellHook, ... }:
 pkgs.mkShell {
   name = "home-manager";
   inherit shellHook;
