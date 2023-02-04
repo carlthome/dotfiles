@@ -5,7 +5,7 @@ set -e
 git_root="$HOME/Repos"
 
 # Find local repos.
-repos=$(find "$git_root" -print0 -name .git | xargs dirname)
+repos=$(find "$git_root" -maxdepth 4 -name .git | xargs dirname)
 
 printf "Will run 'git fetch' for:\n%s\n\n" "$repos"
 
