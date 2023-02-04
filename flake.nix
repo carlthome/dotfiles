@@ -44,7 +44,7 @@
             in pkgs.lib.genAttrs names f;
 
           callPackages = dir:
-            let f = name: pkgs.callPackage "${dir}/${name}" { inherit shellHook; inherit pre-commit; };
+            let f = name: pkgs.callPackage "${dir}/${name}" { inherit self; inherit shellHook; inherit pre-commit; };
             in mapDir dir f;
         in
         {
