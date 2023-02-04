@@ -1,6 +1,6 @@
 { pkgs ? import <nixpkgs> { }, ... }:
 pkgs.buildEnv {
-  name = "jax";
+  name = "ipython";
   paths = [
     (pkgs.python3.withPackages (ps: with ps; [
       ipython

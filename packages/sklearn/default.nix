@@ -1,6 +1,6 @@
 { pkgs ? import <nixpkgs> { }, ... }:
 pkgs.buildEnv {
-  name = "sklearn";
+  name = "ipython";
   paths = [
     (pkgs.python3.withPackages (ps: with ps; [
       ipython
