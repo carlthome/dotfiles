@@ -2,6 +2,10 @@
 
   # TODO Set this if not NixOS but still Linux.
   # targets.genericLinux.enable = true;
+  nixpkgs.config = {
+    allowUnfree = true;
+    allowUnfreePredicate = pkg: true;
+  };
 
   home.packages = with pkgs; [
     caprine-bin
