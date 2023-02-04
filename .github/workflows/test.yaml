@@ -43,4 +43,4 @@ jobs:
         run: nix flake show
 
       - name: Check whether the flake evaluates and run its tests
-        run: nix flake check
+        run: nix flake check --keep-going
