@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> { } }: with pkgs;
+{ pkgs ? import <nixpkgs> { }, ... }:
 pkgs.buildEnv {
   name = "sklearn";
   paths = [
