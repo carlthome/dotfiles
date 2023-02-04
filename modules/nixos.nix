@@ -1,15 +1,10 @@
 { config, pkgs, ... }: {
-  # Enable Plex media server.
-  services.plex.enable = true;
 
   # Auto-update system packages periodically.
   system.autoUpgrade.enable = true;
 
   # Enable new nix CLI and flakes.
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-  # Enable flatpak as fallback.
-  services.flatpak.enable = true;
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -105,9 +100,6 @@
     packages = with pkgs; [ ];
   };
 
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
   # Set fish as default shell for all users.
   #users.defaultUserShell = pkgs.fish;
 
@@ -124,7 +116,6 @@
 
     ((vim_configurable.override { }).customize {
       name = "vim";
-      # Install plugins for example for syntax highlighting of nix files
       vimrcConfig.packages.myplugins = with pkgs.vimPlugins; {
         start = [ vim-nix vim-lastplace ];
         opt = [ ];
@@ -137,8 +128,7 @@
         syntax on
         " ...
       '';
-    }
-    )
+    })
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -150,6 +140,15 @@
   # };
 
   # List services that you want to enable:
+
+  # Auto upgrade nix package and the daemon service.
+  services.nix-daemon.enable = true;
+
+  # Enable Plex media server.
+  services.plex.enable = true;
+
+  # Enable flatpak as fallback.
+  services.flatpak.enable = true;
 
   # Enable Docker container runtime.
   virtualisation.docker = {
