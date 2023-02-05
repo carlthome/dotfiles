@@ -47,6 +47,7 @@
       gnupg
       google-cloud-sdk
       jq
+      jujutsu
       kind
       kubectl
       kubectx
