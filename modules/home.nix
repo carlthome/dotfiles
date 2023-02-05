@@ -147,6 +147,7 @@
       ] ++ (lib.optionals pkgs.config.allowUnfree [
         github.copilot
         ms-python.vscode-pylance
+        ms-vscode.cpptools
         ms-vsliveshare.vsliveshare
       ]);
       userSettings = {
