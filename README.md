@@ -1,6 +1,6 @@
 # dotfiles
 
-My personal [Home Manager](https://github.com/nix-community/home-manager) configuration that I wish to sync between machines.
+My personal computing configuration that I wish to sync between machines.
 
 ## Install
 
