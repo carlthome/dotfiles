@@ -29,6 +29,7 @@
     };
     packages = with pkgs; [
       act
+      asdf-vm
       awscli
       cachix
       cmake
