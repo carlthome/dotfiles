@@ -1,5 +1,5 @@
 {
-  description = "Carl Thomé's personal Home Manager config";
+  description = "Carl Thomé's personal computing configuration";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-22.11";
