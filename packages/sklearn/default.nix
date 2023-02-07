@@ -11,7 +11,6 @@ pkgs.buildEnv {
       pandas
       scikit-learn
       scipy
-      apache-beam
     ]))
   ];
 }
