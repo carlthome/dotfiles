@@ -32,6 +32,7 @@
       asdf-vm
       awscli
       cachix
+      clang-tools
       cmake
       cookiecutter
       coreutils-full
