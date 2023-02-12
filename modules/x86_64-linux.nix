@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, lib, ... }: {
 
   # TODO Set this if not NixOS but still Linux.
   # targets.genericLinux.enable = true;
