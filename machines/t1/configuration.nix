@@ -5,7 +5,6 @@
     cudaSupport = true;
     cudnnSupport = true;
     allowUnfree = true;
-    allowUnfreePredicate = pkg: true;
   };
 
   environment.systemPackages = with pkgs; [
