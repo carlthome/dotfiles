@@ -141,9 +141,6 @@
 
   # List services that you want to enable:
 
-  # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
-
   # Enable Plex media server.
   services.plex.enable = true;
 
