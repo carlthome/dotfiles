@@ -2,9 +2,22 @@
 
   # TODO Set this if not NixOS but still Linux.
   # targets.genericLinux.enable = true;
+
   nixpkgs.config = {
+    cudaSupport = true;
+    cudnnSupport = true;
     allowUnfree = true;
-    allowUnfreePredicate = pkg: true;
+    allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+      "cudatoolkit"
+      "discord"
+      "dropbox"
+      "google-chrome"
+      "reaper"
+      "slack"
+      "spotify"
+      "steam-original"
+      "steam"
+    ];
   };
 
   home.packages = with pkgs; [
