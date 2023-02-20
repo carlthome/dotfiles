@@ -122,8 +122,6 @@
       enable = true;
       package = if pkgs.config.allowUnfree then pkgs.vscode else pkgs.vscodium;
       extensions = with pkgs.vscode-extensions; [
-        arrterian.nix-env-selector
-        bbenoist.nix
         davidanson.vscode-markdownlint
         eamodio.gitlens
         esbenp.prettier-vscode
@@ -133,7 +131,6 @@
         hashicorp.terraform
         jnoortheen.nix-ide
         mikestead.dotenv
-        mkhl.direnv
         ms-azuretools.vscode-docker
         ms-kubernetes-tools.vscode-kubernetes-tools
         ms-python.python
