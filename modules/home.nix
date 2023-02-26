@@ -1,4 +1,4 @@
-{ config, pkgs, lib, user, ... }: {
+{ config, pkgs, lib, ... }: {
   fonts.fontconfig.enable = true;
   nix = {
     package = pkgs.nix;
