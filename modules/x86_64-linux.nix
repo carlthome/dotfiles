@@ -23,6 +23,7 @@
   home.packages = with pkgs; [
     caprine-bin
     chromium
+    deja-dup
     discord
     dropbox-cli
     element-desktop
