@@ -142,7 +142,7 @@
   # List services that you want to enable:
 
   # Enable Plex media server.
-  services.plex.enable = true;
+  services.plex.enable = false;
 
   # Enable flatpak as fallback.
   services.flatpak.enable = true;
