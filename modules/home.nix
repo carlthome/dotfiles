@@ -103,7 +103,7 @@
     };
     vscode = {
       enable = true;
-      package = if pkgs.config.allowUnfree then pkgs.vscode else pkgs.vscodium;
+      package = if pkgs.config.allowUnfreePredicate "vscode" then pkgs.vscode else pkgs.vscodium;
       extensions = with pkgs.vscode-extensions; [
         davidanson.vscode-markdownlint
         eamodio.gitlens
@@ -126,7 +126,7 @@
         stkb.rewrap
         svelte.svelte-vscode
         twxs.cmake
-      ] ++ (lib.optionals pkgs.config.allowUnfree [
+      ] ++ (lib.optionals (pkgs.config.allowUnfreePredicate "vscode") [
         github.copilot
         ms-python.vscode-pylance
         ms-vscode.cpptools
@@ -136,6 +136,7 @@
         "[dockercompose]" = { "editor.defaultFormatter" = "ms-azuretools.vscode-docker"; };
         "[python]" = { "editor.defaultFormatter" = "ms-python.python"; };
         "[yaml]" = { "editor.defaultFormatter" = "redhat.vscode-yaml"; };
+        "cloudcode.autoDependencies" = false;
         "cloudcode.enableTelemetry" = false;
         "cmake.configureOnOpen" = true;
         "debug.allowBreakpointsEverywhere" = true;
