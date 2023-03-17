@@ -154,9 +154,9 @@
         "jupyter.runStartupCommands" = [ "%load_ext autoreload" "%autoreload 2" ];
         "redhat.telemetry.enabled" = false;
         "telemetry.telemetryLevel" = "off";
-        "terminal.integrated.defaultProfile.linux" = "nu";
-        "terminal.integrated.defaultProfile.osx" = "nu";
-        "terminal.integrated.defaultProfile.windows" = "nu";
+        "terminal.integrated.defaultProfile.linux" = "fish";
+        "terminal.integrated.defaultProfile.osx" = "fish";
+        "terminal.integrated.defaultProfile.windows" = "fish";
         "terminal.integrated.enableMultiLinePasteWarning" = false;
         "update.mode" = "none";
         "window.autoDetectColorScheme" = true;
