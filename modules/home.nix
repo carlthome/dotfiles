@@ -134,6 +134,7 @@
       ]);
       userSettings = {
         "[dockercompose]" = { "editor.defaultFormatter" = "ms-azuretools.vscode-docker"; };
+        "[nix]" = { "editor.defaultFormatter" = "jnoortheen.nix-ide"; };
         "[python]" = { "editor.defaultFormatter" = "ms-python.python"; };
         "[yaml]" = { "editor.defaultFormatter" = "redhat.vscode-yaml"; };
         "cloudcode.autoDependencies" = "off";
