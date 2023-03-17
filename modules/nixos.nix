@@ -6,6 +6,9 @@
   # Enable new nix CLI and flakes.
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
+  # Save space by hardlinking store files.
+  nix.settings.auto-optimise-store = true;
+
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
