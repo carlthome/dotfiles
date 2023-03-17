@@ -136,7 +136,7 @@
         "[dockercompose]" = { "editor.defaultFormatter" = "ms-azuretools.vscode-docker"; };
         "[python]" = { "editor.defaultFormatter" = "ms-python.python"; };
         "[yaml]" = { "editor.defaultFormatter" = "redhat.vscode-yaml"; };
-        "cloudcode.autoDependencies" = false;
+        "cloudcode.autoDependencies" = "off";
         "cloudcode.enableTelemetry" = false;
         "cmake.configureOnOpen" = true;
         "debug.allowBreakpointsEverywhere" = true;
