@@ -1,4 +1,8 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, lib, ... }: {
+  nixpkgs.config = {
+    allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+    ];
+  };
   home.packages = with pkgs; [
     colima
   ];

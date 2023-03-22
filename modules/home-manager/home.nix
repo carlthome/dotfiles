@@ -160,6 +160,7 @@
         "terminal.integrated.defaultProfile.osx" = "fish";
         "terminal.integrated.defaultProfile.windows" = "fish";
         "terminal.integrated.enableMultiLinePasteWarning" = false;
+        "terminal.integrated.fontSize" = 14;
         "update.mode" = "none";
         "window.autoDetectColorScheme" = true;
         "window.commandCenter" = true;
