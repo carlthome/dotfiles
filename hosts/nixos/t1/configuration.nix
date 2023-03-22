@@ -1,6 +1,13 @@
 { config, pkgs, ... }: {
   networking.hostName = "t1";
 
+  users.users.carl = {
+    isNormalUser = true;
+    description = "Carl Thomé";
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    packages = with pkgs; [ ];
+  };
+
   nix = {
     settings = {
       substituters = [
