@@ -1,71 +1,72 @@
 { config, pkgs, lib, ... }: {
   fonts.fontconfig.enable = true;
 
-  home = {
-    stateVersion = "22.11";
-    enableNixpkgsReleaseCheck = true;
-    sessionVariables = {
-      DOCKER_BUILDKIT = true;
-    };
-    shellAliases = {
-      d = "docker run --rm -it";
-      k = "kubectl";
-      g = "gcloud beta interactive";
-    };
-    packages = with pkgs; [
-      act
-      asdf-vm
-      awscli
-      cachix
-      cmake
-      cookiecutter
-      coreutils-full
-      curl
-      dive
-      docker-client
-      # TODO Broken.
-      #dvc-with-remotes
-      fantasque-sans-mono
-      ffmpeg-full
-      gcc
-      gnumake
-      gnupg
-      google-cloud-sdk
-      jq
-      jujutsu
-      kind
-      kubectl
-      kubectx
-      kubernetes-helm
-      minikube
-      ninja
-      nixfmt
-      nixpkgs-fmt
-      nodejs
-      nodePackages.npm
-      nodePackages.prettier
-      pdfgrep
-      pipenv
-      poetry
-      postgresql
-      pre-commit
-      python3Packages.tensorboard
-      rclone
-      ripgrep
-      rsync
-      rustup
-      shellcheck
-      skaffold
-      sox
-      spr
-      sqlitebrowser
-      terraform
-      tree
-      wget
-      yarn
-    ];
+  home.stateVersion = "22.11";
+  home.enableNixpkgsReleaseCheck = true;
+  home.sessionVariables = {
+    DOCKER_BUILDKIT = true;
   };
-  programs = {
+
+  home.shellAliases = {
+    d = "docker run --rm -it";
+    k = "kubectl";
+    g = "gcloud beta interactive";
+  };
+
+  home.packages = with pkgs; [
+    act
+    asdf-vm
+    awscli
+    cachix
+    cmake
+    cookiecutter
+    coreutils-full
+    curl
+    dive
+    docker-client
+    # TODO Broken.
+    #dvc-with-remotes
+    fantasque-sans-mono
+    ffmpeg-full
+    gcc
+    gnumake
+    gnupg
+    google-cloud-sdk
+    jq
+    jujutsu
+    kind
+    kubectl
+    kubectx
+    kubernetes-helm
+    minikube
+    ninja
+    nixfmt
+    nixpkgs-fmt
+    nodejs
+    nodePackages.npm
+    nodePackages.prettier
+    pdfgrep
+    pipenv
+    poetry
+    postgresql
+    pre-commit
+    python3Packages.tensorboard
+    rclone
+    ripgrep
+    rsync
+    rustup
+    shellcheck
+    skaffold
+    sox
+    spr
+    sqlitebrowser
+    terraform
+    tree
+    wget
+    yarn
+  ];
+
+  home.programs = {
     home-manager.enable = true;
     man.enable = true;
     vim.enable = true;
