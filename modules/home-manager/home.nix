@@ -39,6 +39,7 @@
     kubectx
     kubernetes-helm
     minikube
+    ncdu
     ninja
     nixfmt
     nixpkgs-fmt
