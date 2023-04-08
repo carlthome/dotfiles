@@ -24,8 +24,7 @@
     curl
     dive
     docker-client
-    # TODO Broken.
-    #dvc-with-remotes
+    dvc-with-remotes
     fantasque-sans-mono
     ffmpeg-full
     gcc
