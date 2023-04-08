@@ -67,7 +67,7 @@
     yarn
   ];
 
-  home.programs = {
+  programs = {
     home-manager.enable = true;
     man.enable = true;
     vim.enable = true;
