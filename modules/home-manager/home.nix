@@ -180,6 +180,7 @@
         "workbench.preferredLightColorTheme" = "GitHub Light";
         "workbench.settings.enableNaturalLanguageSearch" = false;
         "github.copilot-labs.showBrushesLenses" = true;
+        "github.copilot-labs.showTestGenerationLenses" = true;
         "github.copilot.enable" = {
           "*" = true;
           "yaml" = true;
