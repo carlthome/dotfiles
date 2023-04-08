@@ -31,7 +31,10 @@
     gcc
     gnumake
     gnupg
-    google-cloud-sdk
+    (google-cloud-sdk.withExtraComponents (with google-cloud-sdk.components; [
+      gke-gcloud-auth-plugin
+      cloud-build-local
+    ]))
     jq
     jujutsu
     kind
