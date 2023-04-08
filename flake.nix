@@ -12,9 +12,13 @@
       url = "github:nix-community/home-manager/release-22.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    epidemic-sound = {
+      url = "git+ssh://git@github.com/epidemicsound/home-manager.git?ref=main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, darwin, flake-utils, pre-commit-hooks, home-manager }:
+  outputs = { self, nixpkgs, nixpkgs-unstable, darwin, flake-utils, pre-commit-hooks, home-manager, epidemic-sound }@inputs:
     let
       mapDir = d: f:
         let names = builtins.attrNames (builtins.readDir d);
@@ -44,6 +48,7 @@
           ./modules/home-manager/${system}.nix
           ./homes/${name}/home.nix
         ];
+        extraSpecialArgs = inputs;
       };
 
       mkSystem = system:

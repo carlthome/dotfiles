@@ -21,6 +21,27 @@
         "type": "github"
       }
     },
+    "epidemic-sound": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1680961009,
+        "narHash": "sha256-igX92gTYfyUSthmAXkWkxpr/kSacssCFsfH66yMxC+U=",
+        "ref": "main",
+        "rev": "abed51015572dc5581421b0ad210c89db5bcc2bc",
+        "revCount": 3,
+        "type": "git",
+        "url": "ssh://git@github.com/epidemicsound/home-manager.git"
+      },
+      "original": {
+        "ref": "main",
+        "type": "git",
+        "url": "ssh://git@github.com/epidemicsound/home-manager.git"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -197,6 +218,7 @@
     "root": {
       "inputs": {
         "darwin": "darwin",
+        "epidemic-sound": "epidemic-sound",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
