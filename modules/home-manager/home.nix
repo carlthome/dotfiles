@@ -158,6 +158,7 @@
         "git.suggestSmartCommit" = false;
         "jupyter.askForKernelRestart" = false;
         "jupyter.runStartupCommands" = [ "%load_ext autoreload" "%autoreload 2" ];
+        "notebook.formatOnSave.enabled" = true;
         "redhat.telemetry.enabled" = false;
         "telemetry.telemetryLevel" = "off";
         "terminal.integrated.defaultProfile.linux" = "fish";
