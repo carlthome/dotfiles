@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }: {
+{ config, pkgs, lib, ... }: rec {
   fonts.fontconfig.enable = true;
 
   home.stateVersion = "22.11";
@@ -189,5 +189,21 @@
         };
       };
     };
+  };
+
+  home.activation.beforeCheckLinkTargets = {
+    after = [ ];
+    before = [ "checkLinkTargets" ];
+    data = ''
+      rm ~/.config/Code/User/settings.json
+    '';
+  };
+
+  home.activation.afterWriteBoundary = {
+    after = [ "writeBoundary" ];
+    before = [ ];
+    data = ''
+      cat ${(pkgs.formats.json {}).generate "settings.json" programs.vscode.userSettings} > ~/.config/Code/User/settings.json
+    '';
   };
 }
