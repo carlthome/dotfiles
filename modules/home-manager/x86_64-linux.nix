@@ -44,9 +44,10 @@
     wineWowPackages.staging
     yabridge
     yabridgectl
+    zlib
   ];
 
   home.sessionVariables = with pkgs; {
-    LD_LIBRARY_PATH = "${stdenv.cc.cc.lib}/lib:$LD_LIBRARY_PATH";
+    LD_LIBRARY_PATH = "${zlib}/lib:${stdenv.cc.cc.lib}/lib:$LD_LIBRARY_PATH";
   };
 }
