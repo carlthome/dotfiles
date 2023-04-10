@@ -5,6 +5,7 @@
   home.enableNixpkgsReleaseCheck = true;
   home.sessionVariables = {
     DOCKER_BUILDKIT = true;
+    EDITOR = "code";
   };
 
   home.shellAliases = {
