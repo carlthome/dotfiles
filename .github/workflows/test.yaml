@@ -28,7 +28,7 @@ jobs:
 
       - name: Import Nix store cache
         if: steps.nix-cache.outputs.cache-hit == 'true'
-        run: nix copy --from /tmp/nix-cache ./#packages.x86_64-linux.default
+        run: nix copy --no-check-sigs --from /tmp/nix-cache ./#packages.x86_64-linux.default
 
       - name: Connect to Cachix binary cache
         uses: cachix/cachix-action@v12
