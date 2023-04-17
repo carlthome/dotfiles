@@ -6,6 +6,9 @@ on:
     branches:
       - main
 
+env:
+  NIX_CACHE: /tmp/nixcache
+
 jobs:
   test:
     runs-on: ubuntu-20.04
@@ -13,28 +16,29 @@ jobs:
       - name: Checkout merge commit
         uses: actions/checkout@v3
 
-      - name: Create nix store
-        run: |
-          sudo mkdir -p /nix/store
-          sudo chmod -R 777 /nix
-
-      - name: Cache nix store
-        uses: actions/cache@v3
+      - name: Cache Nix store
+        uses: actions/cache@v3.0.8
+        id: nix-cache
         with:
-          path: /nix/store/**
+          path: $NIX_CACHE
           key: ${{ runner.os }}-${{ hashFiles('flake.lock') }}
 
-      - name: Install nix
+      - name: Install Nix
         uses: cachix/install-nix-action@v20
         with:
+          install_url: https://releases.nixos.org/nix/nix-2.11.1/install
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
 
-      - name: Connect to binary cache
+      - name: Import Nix store cache
+        if: steps.nix-cache.outputs.cache-hit == 'true'
+        run: nix copy --from "$NIX_CACHE" ./#packages.x86_64-linux.default
+
+      - name: Connect to Cachix binary cache
         uses: cachix/cachix-action@v12
         with:
           name: carlthome
-          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
 
       - name: Show flake metadata
         run: nix flake metadata
@@ -44,3 +48,10 @@ jobs:
 
       - name: Check whether the flake evaluates and run its tests
         run: nix flake check --keep-going
+
+      - name: Build application
+        run: nix build --print-build-logs
+
+      - name: Export Nix store cache
+        if: steps.nix-cache.outputs.cache-hit != 'true'
+        run: nix copy --to "$NIX_CACHE" ./#packages.x86_64-linux.default
