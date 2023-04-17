@@ -54,4 +54,4 @@ jobs:
 
       - name: Export Nix store cache
         if: steps.nix-cache.outputs.cache-hit != 'true'
-        run: nix copy --to "$NIX_CACHE" ./#packages.x86_64-linux.default
+        run: nix copy --no-check-sigs --to "$NIX_CACHE" ./#packages.x86_64-linux.default
