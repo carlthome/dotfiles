@@ -22,11 +22,13 @@
     act
     asdf-vm
     awscli
+    black
     cachix
     cmake
     cookiecutter
     coreutils-full
     curl
+    distrobox
     dive
     docker-client
     # TODO Broken on macOS.
@@ -41,13 +43,16 @@
       # TODO Broken on macOS.
       # cloud-build-local
     ]))
+    isort
     jq
     jujutsu
+    jupyter
     kind
     kubectl
     kubectx
     kubernetes-helm
     minikube
+    mypy
     ncdu
     ninja
     nixfmt
@@ -61,7 +66,10 @@
     poetry
     postgresql
     pre-commit
+    python3
+    python3Packages.pip
     python3Packages.tensorboard
+    pyupgrade
     rclone
     ripgrep
     rsync
@@ -73,6 +81,7 @@
     sqlitebrowser
     terraform
     tree
+    visidata
     wget
     yarn
   ];
