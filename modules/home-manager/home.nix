@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }: rec {
+{ config, pkgs, lib, ... }: {
   imports = [
     ./vscode.nix
   ];
