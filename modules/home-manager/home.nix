@@ -52,6 +52,7 @@
     ninja
     nixfmt
     nixpkgs-fmt
+    nnn
     nodejs
     nodePackages.npm
     nodePackages.prettier
@@ -80,6 +81,7 @@
     home-manager.enable = true;
     man.enable = true;
     vim.enable = true;
+    emacs.enable = true;
     fish.enable = true;
     zsh.enable = true;
     nushell.enable = true;
@@ -95,6 +97,7 @@
       enable = true;
       nix-direnv.enable = true;
     };
+    gpg.enable = true;
     git = {
       enable = true;
       package = pkgs.gitFull;
