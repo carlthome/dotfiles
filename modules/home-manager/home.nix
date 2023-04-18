@@ -140,7 +140,10 @@
         ms-vsliveshare.vsliveshare
       ]);
       userSettings = {
+        "[css]" = { "editor.defaultFormatter" = "esbenp.prettier-vscode"; };
         "[dockercompose]" = { "editor.defaultFormatter" = "ms-azuretools.vscode-docker"; };
+        "[javascript]" = { "editor.defaultFormatter" = "esbenp.prettier-vscode"; };
+        "[jsonc]" = { "editor.defaultFormatter" = "vscode.json-language-features"; };
         "[nix]" = { "editor.defaultFormatter" = "jnoortheen.nix-ide"; };
         "[python]" = { "editor.defaultFormatter" = "ms-python.python"; };
         "[yaml]" = { "editor.defaultFormatter" = "redhat.vscode-yaml"; };
@@ -190,6 +193,7 @@
           "plaintext" = true;
           "markdown" = true;
         };
+        "githubPullRequests.pullBranch" = "never";
       };
     };
   };
