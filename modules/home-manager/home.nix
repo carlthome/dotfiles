@@ -198,8 +198,6 @@
     };
   };
 
-
-
   # Copy VS Code settings into the default location as a mutable copy.
   home.activation =
     let
