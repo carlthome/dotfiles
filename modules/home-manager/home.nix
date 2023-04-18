@@ -194,19 +194,31 @@
     };
   };
 
-  home.activation.beforeCheckLinkTargets = {
-    after = [ ];
-    before = [ "checkLinkTargets" ];
-    data = ''
-      rm ~/.config/Code/User/settings.json
-    '';
-  };
 
-  home.activation.afterWriteBoundary = {
-    after = [ "writeBoundary" ];
-    before = [ ];
-    data = ''
-      cat ${(pkgs.formats.json {}).generate "settings.json" programs.vscode.userSettings} > ~/.config/Code/User/settings.json
-    '';
-  };
+
+  # Copy VS Code settings into the default location as a mutable copy.
+  home.activation =
+    let
+      vscode-default-settings =
+        if pkgs.stdenv.hostPlatform.isDarwin
+        then "$HOME/Library/Application Support/Code/User/settings.json"
+        else "$HOME/.config/Code/User/settings.json";
+    in
+    {
+      beforeCheckLinkTargets = {
+        after = [ ];
+        before = [ "checkLinkTargets" ];
+        data = ''
+          rm "${vscode-default-settings}"
+        '';
+      };
+
+      afterWriteBoundary = {
+        after = [ "writeBoundary" ];
+        before = [ ];
+        data = ''
+          cat ${(pkgs.formats.json {}).generate "settings.json" programs.vscode.userSettings} > "${vscode-default-settings}"
+        '';
+      };
+    };
 }
