@@ -31,6 +31,7 @@
     firefox
     google-chrome
     keepassxc
+    logseq
     marker
     obs-studio
     okular
