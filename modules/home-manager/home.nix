@@ -47,6 +47,7 @@
     jq
     jujutsu
     jupyter
+    keepassxc
     kind
     kubectl
     kubectx
