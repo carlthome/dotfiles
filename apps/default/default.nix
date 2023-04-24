@@ -1,13 +1,16 @@
 { pkgs, self, ... }: {
   type = "app";
-  program = (pkgs.writeScript "update" ''
+  program = (pkgs.writeScript "update-and-switch" ''
     set -exuo pipefail
 
-    if [[ $(git rev-parse --is-inside-work-tree) ]]; then
+    if [[ $(nix flake show) ]]; then
       nix flake update --commit-lock-file .
+      flake='.'
+    else
+      flake=${self}
     fi
 
-    nix run ${self}#switch-system
-    nix run ${self}#switch-home
+    nix run $flake#switch-system
+    nix run $flake#switch-home
   '').outPath;
 }
