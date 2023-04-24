@@ -76,6 +76,7 @@
     rustup
     shellcheck
     skaffold
+    sops
     sox
     spr
     sqlitebrowser
