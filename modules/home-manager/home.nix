@@ -62,6 +62,7 @@
     nodePackages.npm
     nodePackages.prettier
     pdfgrep
+    pass
     pipenv
     poetry
     postgresql
