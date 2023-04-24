@@ -23,6 +23,7 @@
     asdf-vm
     awscli
     black
+    buildah
     cachix
     cmake
     cookiecutter
