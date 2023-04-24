@@ -65,6 +65,7 @@
     pass
     pdfgrep
     pipenv
+    podman
     poetry
     postgresql
     pre-commit
