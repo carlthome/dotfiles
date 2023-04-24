@@ -13,4 +13,7 @@ pkgs.buildEnv {
       scipy
     ]))
   ];
+  meta = {
+    description = "Python environment for data science exploration";
+  };
 }

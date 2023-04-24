@@ -11,4 +11,7 @@ pkgs.mkShell {
     nix-info
     nixpkgs-fmt
   ];
+  meta = {
+    description = "Development shell for home-manager";
+  };
 }
