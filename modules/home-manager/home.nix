@@ -16,6 +16,8 @@
     d = "docker run --rm -it";
     k = "kubectl";
     g = "gcloud beta interactive";
+    update = "nix flake update --commit-lock-file";
+    switch-home = "home-manager switch --flake .";
   };
 
   home.packages = with pkgs; [

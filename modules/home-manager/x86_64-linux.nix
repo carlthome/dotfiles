@@ -51,4 +51,8 @@
   home.sessionVariables = with pkgs; {
     LD_LIBRARY_PATH = "${zlib}/lib:${stdenv.cc.cc.lib}/lib:$LD_LIBRARY_PATH";
   };
+
+  home.shellAliases = {
+    switch-system = "nixos-rebuild switch --flake .";
+  };
 }
