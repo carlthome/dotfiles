@@ -42,6 +42,7 @@
       "cloudcode.enableTelemetry" = false;
       "cmake.configureOnOpen" = true;
       "debug.allowBreakpointsEverywhere" = true;
+      "debug.openExplorerOnEnd" = true;
       "editor.defaultFormatter" = "esbenp.prettier-vscode";
       "editor.fontFamily" = "Fantasque Sans Mono, monospace";
       "editor.fontLigatures" = true;
@@ -50,12 +51,26 @@
       "editor.inlineSuggest.enabled" = true;
       "editor.mouseWheelZoom" = true;
       "editor.suggestSelection" = "first";
+      "files.insertFinalNewline" = true;
+      "files.trimFinalNewlines" = true;
+      "files.trimTrailingWhitespace" = true;
+      "git.allowNoVerifyCommit" = true;
       "git.autofetch" = true;
       "git.confirmSync" = false;
       "git.suggestSmartCommit" = false;
+      "git.untrackedChanges" = "separate";
+      "github.copilot-labs.showBrushesLenses" = false;
+      "github.copilot-labs.showTestGenerationLenses" = true;
+      "github.copilot.enable" = { "*" = true; "yaml" = true; "plaintext" = true; "markdown" = true; };
+      "github.gitProtocol" = "ssh";
+      "githubPullRequests.pullBranch" = "always";
+      "githubPullRequests.pushBranch" = "always";
+      "githubPullRequests.setAutoMerge" = true;
       "jupyter.askForKernelRestart" = false;
       "jupyter.runStartupCommands" = [ "%load_ext autoreload" "%autoreload 2" ];
       "notebook.formatOnSave.enabled" = true;
+      "python.analysis.typeCheckingMode": "basic"
+      "python.formatting.provider" = "black";
       "redhat.telemetry.enabled" = false;
       "telemetry.telemetryLevel" = "off";
       "terminal.integrated.defaultProfile.linux" = "fish";
@@ -70,21 +85,15 @@
       "window.titleBarStyle" = "custom";
       "window.zoomLevel" = 0;
       "workbench.colorTheme" = "GitHub Light";
+      "workbench.editor.limit.enabled" = true;
+      "workbench.editor.limit.excludeDirty" = true;
       "workbench.enableExperiments" = false;
       "workbench.iconTheme" = "material-icon-theme";
       "workbench.layoutControl.enabled" = true;
       "workbench.preferredDarkColorTheme" = "GitHub Dark";
       "workbench.preferredLightColorTheme" = "GitHub Light";
       "workbench.settings.enableNaturalLanguageSearch" = false;
-      "github.copilot-labs.showBrushesLenses" = true;
-      "github.copilot-labs.showTestGenerationLenses" = true;
-      "github.copilot.enable" = {
-        "*" = true;
-        "yaml" = true;
-        "plaintext" = true;
-        "markdown" = true;
-      };
-      "githubPullRequests.pullBranch" = "never";
+      "workbench.startupEditor" = "readme";
     };
   };
 
