@@ -69,7 +69,7 @@
       "jupyter.askForKernelRestart" = false;
       "jupyter.runStartupCommands" = [ "%load_ext autoreload" "%autoreload 2" ];
       "notebook.formatOnSave.enabled" = true;
-      "python.analysis.typeCheckingMode": "basic"
+      "python.analysis.typeCheckingMode" = "basic";
       "python.formatting.provider" = "black";
       "redhat.telemetry.enabled" = false;
       "telemetry.telemetryLevel" = "off";
