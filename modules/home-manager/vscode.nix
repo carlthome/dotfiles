@@ -87,6 +87,7 @@
       "workbench.colorTheme" = "GitHub Light";
       "workbench.editor.limit.enabled" = true;
       "workbench.editor.limit.excludeDirty" = true;
+      "workbench.editor.limit.value" = 5;
       "workbench.enableExperiments" = false;
       "workbench.iconTheme" = "material-icon-theme";
       "workbench.layoutControl.enabled" = true;
