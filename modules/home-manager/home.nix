@@ -26,6 +26,7 @@
     awscli
     black
     buildah
+    buildkit
     cachix
     cmake
     cookiecutter
