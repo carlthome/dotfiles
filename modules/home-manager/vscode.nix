@@ -33,6 +33,7 @@
     userSettings = {
       "[css]" = { "editor.defaultFormatter" = "esbenp.prettier-vscode"; };
       "[dockercompose]" = { "editor.defaultFormatter" = "ms-azuretools.vscode-docker"; };
+      "[dockerfile]" = { "editor.defaultFormatter" = "ms-azuretools.vscode-docker"; };
       "[javascript]" = { "editor.defaultFormatter" = "esbenp.prettier-vscode"; };
       "[jsonc]" = { "editor.defaultFormatter" = "vscode.json-language-features"; };
       "[nix]" = { "editor.defaultFormatter" = "jnoortheen.nix-ide"; };
