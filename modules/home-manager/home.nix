@@ -46,6 +46,7 @@
       # TODO Broken on macOS.
       # cloud-build-local
     ]))
+    hadolint
     isort
     jq
     jujutsu
