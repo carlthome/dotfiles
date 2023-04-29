@@ -23,6 +23,7 @@
       redhat.vscode-yaml
       stkb.rewrap
       svelte.svelte-vscode
+      tamasfe.even-better-toml
       twxs.cmake
     ] ++ (lib.optionals (pkgs.config.allowUnfreePredicate "vscode") [
       github.copilot
@@ -38,6 +39,7 @@
       "[jsonc]" = { "editor.defaultFormatter" = "vscode.json-language-features"; };
       "[nix]" = { "editor.defaultFormatter" = "jnoortheen.nix-ide"; };
       "[python]" = { "editor.defaultFormatter" = "ms-python.python"; };
+      "[toml]" = { "editor.defaultFormatter" = "tamasfe.even-better-toml"; };
       "[yaml]" = { "editor.defaultFormatter" = "redhat.vscode-yaml"; };
       "cloudcode.autoDependencies" = "off";
       "cloudcode.enableTelemetry" = false;
