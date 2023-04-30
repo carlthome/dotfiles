@@ -1,6 +1,7 @@
 { config, pkgs, lib, ... }: {
   imports = [
     ./vscode.nix
+    ./vim.nix
   ];
 
   fonts.fontconfig.enable = true;
@@ -98,7 +99,6 @@
   programs = {
     home-manager.enable = true;
     man.enable = true;
-    vim.enable = true;
     emacs.enable = true;
     fish.enable = true;
     zsh.enable = true;
