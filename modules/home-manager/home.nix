@@ -64,7 +64,6 @@
     ninja
     nixfmt
     nixpkgs-fmt
-    nnn
     nodejs
     nodePackages.npm
     nodePackages.prettier
@@ -105,6 +104,7 @@
     nushell.enable = true;
     bash.enable = true;
     tmux.enable = true;
+    nnn.enable = true;
     starship = {
       enable = true;
       enableZshIntegration = true;
