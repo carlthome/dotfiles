@@ -61,6 +61,7 @@
       "git.autofetch" = true;
       "git.confirmSync" = false;
       "git.suggestSmartCommit" = false;
+      "git.terminalGitEditor" = true;
       "git.untrackedChanges" = "separate";
       "github.copilot-labs.showBrushesLenses" = false;
       "github.copilot-labs.showTestGenerationLenses" = true;
