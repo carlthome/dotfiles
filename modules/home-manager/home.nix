@@ -17,6 +17,13 @@
     d = "docker run --rm -it";
     k = "kubectl";
     g = "gcloud beta interactive";
+    commit = "git commit --patch";
+    clean = "git clean --interactive";
+    push = "git push";
+    pull = "git pull";
+    build = "nix build";
+    run = "nix run";
+    develop = "nix develop";
     update = "nix flake update --commit-lock-file";
     switch-home = "home-manager switch --flake .";
   };
