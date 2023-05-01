@@ -14,6 +14,7 @@
     };
     extraConfig = {
       core.editor = "vim";
+      help.autocorrect = 30;
       init.defaultBranch = "main";
       pull.ff = "only";
       push.autoSetupRemote = true;
