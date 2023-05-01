@@ -128,6 +128,7 @@
       package = pkgs.gitFull;
       lfs.enable = true;
       extraConfig = {
+        core.editor = "vim";
         init.defaultBranch = "main";
         pull.ff = "only";
         push.autoSetupRemote = true;
