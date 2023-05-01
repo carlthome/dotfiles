@@ -4,6 +4,7 @@
     packageConfigurable = pkgs.vim;
     plugins = with pkgs.vimPlugins; [
       vim-airline
+      vim-fugitive
       vim-nix
     ];
     settings = {
