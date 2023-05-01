@@ -25,6 +25,7 @@
     build = "nix build";
     run = "nix run";
     develop = "nix develop";
+    edit = "nix edit";
     update = "nix flake update --commit-lock-file";
     switch-home = "home-manager switch --flake .";
   };
