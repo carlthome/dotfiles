@@ -2,6 +2,7 @@
   imports = [
     ./vscode.nix
     ./vim.nix
+    ./git.nix
   ];
 
   fonts.fontconfig.enable = true;
@@ -123,27 +124,6 @@
       nix-direnv.enable = true;
     };
     gpg.enable = true;
-    git = {
-      enable = true;
-      package = pkgs.gitFull;
-      aliases = {
-        ci = "commit";
-        co = "checkout";
-        s = "status";
-        l = "log";
-      };
-      lfs = {
-        enable = true;
-        skipSmudge = true;
-      };
-      extraConfig = {
-        core.editor = "vim";
-        init.defaultBranch = "main";
-        pull.ff = "only";
-        push.autoSetupRemote = true;
-        user.useConfigOnly = true;
-      };
-    };
     gitui.enable = true;
     gh = {
       enable = true;
