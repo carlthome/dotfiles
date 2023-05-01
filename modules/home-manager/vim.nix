@@ -7,10 +7,11 @@
       vim-nix
     ];
     settings = {
+      copyindent = true;
       ignorecase = true;
+      mouse = "a";
+      number = true;
+      smartcase = true;
     };
-    extraConfig = ''
-      set mouse=a
-    '';
   };
 }
