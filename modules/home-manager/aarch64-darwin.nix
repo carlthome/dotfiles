@@ -9,8 +9,4 @@
   home.sessionVariables = {
     DOCKER_HOST = "unix://$HOME/.colima/default/docker.sock";
   };
-
-  home.shellAliases = {
-    switch-system = "darwin-rebuild switch --flake .";
-  };
 }

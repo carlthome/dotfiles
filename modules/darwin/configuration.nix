@@ -36,4 +36,10 @@
 
   # Enable sandboxing.
   nix.settings.sandbox = true;
+
+  # Global shell aliases for all users.
+  environment.shellAliases = {
+    switch-system = "darwin-rebuild switch --flake .";
+    list-generations = "nix-env --list-generations";
+  };
 }

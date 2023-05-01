@@ -126,6 +126,12 @@
     })
   ];
 
+  # Global shell aliases for all users.
+  environment.shellAliases = {
+    switch-system = "nixos-rebuild switch --flake .";
+    list-generations = "nix-env --list-generations";
+  };
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
