@@ -7,47 +7,7 @@ on:
       - main
 
 jobs:
-  test:
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout merge commit
-        uses: actions/checkout@v3
-
-      - name: Cache Nix store
-        uses: actions/cache@v3
-        id: nix-cache
-        with:
-          path: /tmp/nix-cache
-          key: ${{ runner.os }}-${{ hashFiles('flake.lock') }}
-
-      - name: Install Nix
-        uses: cachix/install-nix-action@v20
-        with:
-          install_url: https://releases.nixos.org/nix/nix-2.11.1/install
-          github_access_token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Import Nix store cache
-        if: steps.nix-cache.outputs.cache-hit == 'true'
-        run: nix copy --no-check-sigs --from /tmp/nix-cache ./#packages.x86_64-linux.default
-
-      - name: Connect to Cachix binary cache
-        uses: cachix/cachix-action@v12
-        with:
-          name: carlthome
-          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
-
-      - name: Show flake metadata
-        run: nix flake metadata
-
-      - name: Show the provided outputs
-        run: nix flake show
-
-      - name: Check whether the flake evaluates and run its tests
-        run: nix flake check --keep-going
-
-      - name: Build application
-        run: nix build --print-build-logs
-
-      - name: Export Nix store cache
-        if: steps.nix-cache.outputs.cache-hit != 'true'
-        run: nix copy --no-check-sigs --to /tmp/nix-cache ./#packages.x86_64-linux.default
+  call-workflow-passing-data:
+    uses: carlthome/workflows/.github/workflows/nix.yaml@main
+    secrets:
+      CACHIX_AUTH_ACTION: ${{ secrets.CACHIX_AUTH_ACTION }}
