@@ -95,8 +95,10 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
-  # Set fish as default shell for all users.
-  #users.defaultUserShell = pkgs.fish;
+  # Enable fish as default shell for all users.
+  programs.fish.enable = true;
+  environment.shells = [ pkgs.zsh ];
+  users.defaultUserShell = pkgs.fish;
 
   # Set default editor as vim for all users.
   environment.variables = { EDITOR = "vim"; };
