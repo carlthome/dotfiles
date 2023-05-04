@@ -9,5 +9,5 @@ on:
 jobs:
   test:
     uses: carlthome/workflows/.github/workflows/nix.yaml@main
-    with:
+    secrets:
       cachix-auth-action: ${{ secrets.CACHIX_AUTH_ACTION }}
