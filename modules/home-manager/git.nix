@@ -7,6 +7,7 @@
       co = "checkout";
       s = "status";
       l = "log";
+      d = "diff";
     };
     lfs = {
       enable = true;
