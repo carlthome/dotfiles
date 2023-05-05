@@ -17,7 +17,7 @@
   home.shellAliases = {
     d = "docker run --rm -it";
     k = "kubectl";
-    g = "gcloud beta interactive";
+    g = "git";
     commit = "git commit --patch";
     clean = "git clean --interactive";
     push = "git push";
