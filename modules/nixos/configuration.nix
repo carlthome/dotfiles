@@ -108,24 +108,7 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-
     gnomeExtensions.appindicator
-
-    ((vim_configurable.override { }).customize {
-      name = "vim";
-      vimrcConfig.packages.myplugins = with pkgs.vimPlugins; {
-        start = [ vim-nix vim-lastplace ];
-        opt = [ ];
-      };
-      vimrcConfig.customRC = ''
-        " your custom vimrc
-        set nocompatible
-        set backspace=indent,eol,start
-        " Turn on syntax highlighting by default
-        syntax on
-        " ...
-      '';
-    })
   ];
 
   # Global shell aliases for all users.
