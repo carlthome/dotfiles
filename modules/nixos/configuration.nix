@@ -1,39 +1,23 @@
 { config, pkgs, ... }: {
 
-  # Auto-update system packages periodically.
-  system.autoUpgrade.enable = true;
-
-  # Enable new nix CLI and flakes.
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-  # Save space by hardlinking store files.
-  nix.settings.auto-optimise-store = true;
-
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.efi.efiSysMountPoint = "/boot/efi";
-
-  # Setup keyfile
-  boot.initrd.secrets = {
-    "/crypto_keyfile.bin" = null;
+  # Configure Nix program itself.
+  nix.settings = {
+    experimental-features = [ "nix-command" "flakes" ];
+    auto-optimise-store = true;
   };
 
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  # Boot sequence settings.
+  boot = {
+    loader.systemd-boot.enable = true;
+    loader.efi.canTouchEfiVariables = true;
+    loader.efi.efiSysMountPoint = "/boot/efi";
+    initrd.secrets = { "/crypto_keyfile.bin" = null; };
+  };
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
-  networking.networkmanager.enable = true;
-
-  # Set your time zone.
+  # Select locale, time zone and default keyboard layout.
+  console.keyMap = "sv-latin1";
   time.timeZone = "Europe/Stockholm";
-
-  # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
-
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "sv_SE.UTF-8";
     LC_IDENTIFICATION = "sv_SE.UTF-8";
@@ -46,92 +30,67 @@
     LC_TIME = "sv_SE.UTF-8";
   };
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
+  # Enable networking.
+  networking.networkmanager.enable = true;
 
-  # Enable NVIDIA display driver.
-  services.xserver.videoDrivers = [ "nvidia" ];
+  # Enable OpenGL.
   hardware.opengl.enable = true;
 
-  # TODO https://github.com/NixOS/nixpkgs/issues/32580
-  environment.variables.WEBKIT_DISABLE_COMPOSITING_MODE = "1";
-
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-
-  # Skip GNOME programs.
-  #services.gnome.core-utilities.enable = false;
-
-  # Configure keymap in X11
-  services.xserver = {
-    layout = "se";
-    xkbVariant = "";
-  };
-
-  # Configure console keymap
-  console.keyMap = "sv-latin1";
-
-  # Enable CUPS to print documents.
-  services.printing.enable = false;
-
-  # Enable sound with pipewire.
+  # Enable real-time audio for PipeWire.
   sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
 
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
-  };
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
-
-  # Enable fish as default shell for all users.
-  programs.fish.enable = true;
-  environment.shells = [ pkgs.zsh ];
+  # Set default shell for all users.
   users.defaultUserShell = pkgs.fish;
 
-  # Set default editor as vim for all users.
-  environment.variables = { EDITOR = "vim"; };
-
-  services.udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    gnomeExtensions.appindicator
-  ];
-
-  # Global shell aliases for all users.
-  environment.shellAliases = {
-    switch-system = "nixos-rebuild switch --flake .";
-    list-generations = "nix-env --list-generations";
+  # Set a basic default environment for all users.
+  environment = {
+    systemPackages = with pkgs; [
+      vim
+      gnomeExtensions.appindicator
+    ];
+    shellAliases = {
+      switch-system = "nixos-rebuild switch --flake .";
+      list-generations = "nix-env --list-generations";
+    };
+    shells = [ pkgs.fish ];
+    variables = {
+      EDITOR = "vim";
+      # TODO https://github.com/NixOS/nixpkgs/issues/32580
+      WEBKIT_DISABLE_COMPOSITING_MODE = "1";
+    };
   };
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
+  # Add programs available for all users.
+  programs = {
+    command-not-found.enable = true;
+    fish.enable = true;
+    steam.enable = true;
+  };
 
-  # List services that you want to enable:
-
-  # Enable Plex media server.
-  services.plex.enable = false;
-
-  # Enable flatpak as fallback.
-  services.flatpak.enable = true;
+  # Enable system-wide services.
+  services = {
+    xserver = {
+      enable = true;
+      videoDrivers = [ "nvidia" ];
+      displayManager.gdm.enable = true;
+      desktopManager.gnome.enable = true;
+      layout = "se";
+    };
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+      jack.enable = false;
+    };
+    flatpak.enable = true;
+    openssh.enable = false;
+    plex.enable = false;
+    printing.enable = false;
+    udev.packages = [ pkgs.gnome.gnome-settings-daemon ];
+  };
 
   # Enable Docker container runtime.
   virtualisation.docker = {
@@ -139,14 +98,11 @@
     enableNvidia = true;
   };
 
-  # Enable Steam games.
-  programs.steam.enable = true;
-
-  # Provide suggestions of packages to install.
-  programs.command-not-found.enable = true;
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  # Auto-update system packages periodically.
+  system.autoUpgrade = {
+    enable = true;
+    flake = "nixpkgs";
+  };
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
