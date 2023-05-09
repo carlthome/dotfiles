@@ -67,6 +67,7 @@
     sox
     spr
     sqlitebrowser
+    syft
     terraform
     tree
     visidata
