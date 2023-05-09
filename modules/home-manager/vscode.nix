@@ -74,6 +74,7 @@
       "jupyter.runStartupCommands" = [ "%load_ext autoreload" "%autoreload 2" ];
       "nix.enableLanguageServer" = true;
       "nix.serverPath" = "nil";
+      "nix.serverSettings" = { "nil" = { "formatting" = { "command" = [ "nixpkgs-fmt" ]; }; }; };
       "notebook.formatOnSave.enabled" = true;
       "python.analysis.typeCheckingMode" = "basic";
       "python.formatting.provider" = "black";
