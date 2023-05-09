@@ -109,6 +109,12 @@
     man.enable = true;
     emacs.enable = true;
     fish.enable = true;
+    fzf = {
+      enable = true;
+      enableBashIntegration = true;
+      enableZshIntegration = true;
+      enableFishIntegration = true;
+    };
     zsh.enable = true;
     nushell.enable = true;
     bash.enable = true;
