@@ -70,6 +70,7 @@
     minikube
     mypy
     ncdu
+    nil
     ninja
     nixfmt
     nixpkgs-fmt

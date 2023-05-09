@@ -72,6 +72,8 @@
       "githubPullRequests.setAutoMerge" = true;
       "jupyter.askForKernelRestart" = false;
       "jupyter.runStartupCommands" = [ "%load_ext autoreload" "%autoreload 2" ];
+      "nix.enableLanguageServer" = true;
+      "nix.serverPath" = "nil";
       "notebook.formatOnSave.enabled" = true;
       "python.analysis.typeCheckingMode" = "basic";
       "python.formatting.provider" = "black";
