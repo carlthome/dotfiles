@@ -19,6 +19,7 @@
 
   # Enable fingerprint scanner for authentication.
   security.pam.enableSudoTouchIdAuth = true;
+
   # Create /etc/bashrc that loads the nix-darwin environment.
   programs.bash.enable = true;
   programs.bash.enableCompletion = false;
