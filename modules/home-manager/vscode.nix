@@ -40,6 +40,8 @@ let
     "github.copilot-labs.showBrushesLenses" = false;
     "github.copilot-labs.showTestGenerationLenses" = true;
     "gitlens.hovers.enabled" = false;
+    "gitlens.showWelcomeOnInstall" = false;
+    "gitlens.plusFeatures.enabled" = false;
     "github.copilot.enable" = { "*" = true; "yaml" = true; "plaintext" = true; "markdown" = true; };
     "github.gitProtocol" = "ssh";
     "githubPullRequests.pullBranch" = "always";
