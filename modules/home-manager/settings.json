@@ -1,0 +1,104 @@
+{
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[dockercompose]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+  },
+  "[dockerfile]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[nix]": {
+    "editor.defaultFormatter": "jnoortheen.nix-ide"
+  },
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.python"
+  },
+  "[toml]": {
+    "editor.defaultFormatter": "tamasfe.even-better-toml"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "cloudcode.autoDependencies": "off",
+  "cloudcode.enableTelemetry": false,
+  "cmake.configureOnOpen": true,
+  "debug.allowBreakpointsEverywhere": true,
+  "debug.openExplorerOnEnd": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.fontFamily": "Fantasque Sans Mono, monospace",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 14,
+  "editor.formatOnSave": true,
+  "editor.inlineSuggest.enabled": true,
+  "editor.mouseWheelZoom": true,
+  "editor.suggestSelection": "first",
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  "git.allowNoVerifyCommit": true,
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "git.suggestSmartCommit": false,
+  "git.terminalGitEditor": true,
+  "git.untrackedChanges": "separate",
+  "github.copilot-labs.showBrushesLenses": false,
+  "github.copilot-labs.showTestGenerationLenses": true,
+  "gitlens.hovers.enabled": false,
+  "gitlens.showWelcomeOnInstall": false,
+  "gitlens.plusFeatures.enabled": false,
+  "github.copilot.enable": {
+    "*": true,
+    "yaml": true,
+    "plaintext": true,
+    "markdown": true
+  },
+  "github.gitProtocol": "ssh",
+  "githubPullRequests.pullBranch": "always",
+  "githubPullRequests.pushBranch": "always",
+  "githubPullRequests.setAutoMerge": true,
+  "jupyter.askForKernelRestart": false,
+  "jupyter.runStartupCommands": ["%load_ext autoreload", "%autoreload 2"],
+  "nix.enableLanguageServer": true,
+  "nix.serverPath": "nil",
+  "nix.serverSettings": {
+    "nil": {
+      "formatting": {
+        "command": ["nixpkgs-fmt"]
+      }
+    }
+  },
+  "notebook.formatOnSave.enabled": true,
+  "python.analysis.typeCheckingMode": "basic",
+  "python.formatting.provider": "black",
+  "redhat.telemetry.enabled": false,
+  "telemetry.telemetryLevel": "off",
+  "terminal.integrated.defaultProfile.linux": "fish",
+  "terminal.integrated.defaultProfile.osx": "fish",
+  "terminal.integrated.defaultProfile.windows": "fish",
+  "terminal.integrated.enableMultiLinePasteWarning": false,
+  "terminal.integrated.fontSize": 14,
+  "update.mode": "none",
+  "window.autoDetectColorScheme": true,
+  "window.commandCenter": true,
+  "window.restoreWindows": "none",
+  "window.titleBarStyle": "custom",
+  "window.zoomLevel": 0,
+  "workbench.colorTheme": "Noctis",
+  "workbench.editor.limit.enabled": true,
+  "workbench.editor.limit.excludeDirty": true,
+  "workbench.editor.limit.value": 5,
+  "workbench.enableExperiments": false,
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.layoutControl.enabled": true,
+  "workbench.preferredDarkColorTheme": "GitHub Dark",
+  "workbench.preferredLightColorTheme": "GitHub Light",
+  "workbench.settings.enableNaturalLanguageSearch": false,
+  "workbench.startupEditor": "readme"
+}
