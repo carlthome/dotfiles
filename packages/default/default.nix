@@ -4,6 +4,7 @@ pkgs.mkShell {
   inherit shellHook;
   packages = with pkgs; [
     act
+    actionlint
     cachix
     git
     home-manager
