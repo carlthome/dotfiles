@@ -44,6 +44,7 @@
     ninja
     nixfmt
     nixpkgs-fmt
+    nixpkgs-review
     nodejs
     nodePackages.npm
     nodePackages.prettier
