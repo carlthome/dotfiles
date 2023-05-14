@@ -2,6 +2,7 @@
   imports = [
     ./vscode.nix
     ./vim.nix
+    ./neovim.nix
     ./git.nix
     ./packages.nix
   ];
