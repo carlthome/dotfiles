@@ -6,6 +6,7 @@
       vim-airline
       vim-fugitive
       vim-nix
+      vim-startify
     ];
     settings = {
       copyindent = true;
