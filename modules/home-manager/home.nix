@@ -19,6 +19,7 @@
     clean = "git clean --interactive";
     commit = "git commit --patch";
     rebase = "git rebase --interactive";
+    restore = "git restore --patch --source";
     push = "git push";
     pull = "git pull";
     build = "nix build";
