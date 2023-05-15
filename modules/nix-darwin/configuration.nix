@@ -20,9 +20,10 @@
   # Enable fingerprint scanner for authentication.
   security.pam.enableSudoTouchIdAuth = true;
 
-  # Create /etc/bashrc that loads the nix-darwin environment.
-  programs.bash.enable = true;
-  programs.bash.enableCompletion = false;
+  # Let nix-darwin create /etc/zprofile etc. to load itself.
+  programs.zsh.enable = true;
+  programs.zsh.enableCompletion = true;
+  programs.zsh.enableSyntaxHighlighting = true;
 
   # Recreate /run/current-system symlink after boot.
   services.activate-system.enable = true;
