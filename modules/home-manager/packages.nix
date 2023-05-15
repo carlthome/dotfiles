@@ -1,6 +1,7 @@
 { pkgs, ... }: {
   home.packages = with pkgs; [
     act
+    actionlint
     asdf-vm
     awscli
     black
