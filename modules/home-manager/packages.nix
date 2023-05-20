@@ -11,6 +11,7 @@
     cmake
     cookiecutter
     coreutils-full
+    ctags
     curl
     distrobox
     dive
