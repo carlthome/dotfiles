@@ -7,6 +7,7 @@
       vim-fugitive
       vim-nix
       vim-startify
+      ctrlp
     ];
     settings = {
       copyindent = true;
