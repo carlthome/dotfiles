@@ -33,6 +33,7 @@
     element-desktop
     firefox
     google-chrome
+    helvum
     keepassxc
     logseq
     marker
