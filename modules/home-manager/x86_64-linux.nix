@@ -39,6 +39,7 @@
     marker
     obs-studio
     okular
+    peek
     reaper
     signal-desktop
     slack
