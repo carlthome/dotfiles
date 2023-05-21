@@ -19,6 +19,9 @@
       "vscode-extension-ms-vscode-cpptools"
       "vscode-extension-ms-vsliveshare-vsliveshare"
     ];
+    permittedInsecurePackages = [
+      "electron-20.3.11"
+    ];
   };
 
   home.packages = with pkgs; [
