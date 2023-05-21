@@ -6,6 +6,13 @@
     auto-optimise-store = true;
   };
 
+  # Enable automatic garbage collection.
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 30d";
+  };
+
   # Boot sequence settings.
   boot = {
     loader.systemd-boot.enable = true;
