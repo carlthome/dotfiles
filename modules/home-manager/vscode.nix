@@ -37,6 +37,24 @@ let
       version = "10.40.0";
       sha256 = "UbGWorOVeitE9Q6tZ18h9K4Noz5Y3oaiuYaJtPzcwOc=";
     }
+    {
+      name = "black-formatter";
+      publisher = "ms-python";
+      version = "2022.6.0";
+      sha256 = "HXRXQ/SalEKW5c7SmN57bWRhE/7SPlWNvCHKTHoFNQs=";
+    }
+    {
+      name = "flake8";
+      publisher = "ms-python";
+      version = "2023.4.0";
+      sha256 = "Qskh2MiBg0eT8PS2Osc7wXggD1nOkreHiUyeFItvNik=";
+    }
+    {
+      name = "isort";
+      publisher = "ms-python";
+      version = "2022.8.0";
+      sha256 = "l7mXTKdAE56DdnSaY1cs7sajhG6Yzz0XlZLtHY2saB0=";
+    }
   ] ++ lib.optionals (pkgs.config.allowUnfreePredicate "vscode") [
     github.copilot
     ms-python.vscode-pylance

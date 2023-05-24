@@ -18,7 +18,7 @@
     "editor.defaultFormatter": "jnoortheen.nix-ide"
   },
   "[python]": {
-    "editor.defaultFormatter": "ms-python.python"
+    "editor.defaultFormatter": "ms-python.black-formatter"
   },
   "[toml]": {
     "editor.defaultFormatter": "tamasfe.even-better-toml"
