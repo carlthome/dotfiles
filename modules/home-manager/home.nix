@@ -8,7 +8,7 @@
   ];
 
   home.sessionVariables = {
-    DOCKER_BUILDKIT = true;
+    DOCKER_BUILDKIT = "1";
     EDITOR = "code";
   };
 
