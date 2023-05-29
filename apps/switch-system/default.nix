@@ -7,7 +7,7 @@
       nix-env --delete-generations 30d
       nixos-version
     elif [[ ${pkgs.system} == "aarch64-darwin" ]]; then
-      nix build ${self}#darwinConfigurations.$(hostname -s).system 
+      nix build ${self}#darwinConfigurations.$(scutil --get LocalHostName).system
       ./result/sw/bin/darwin-rebuild switch --flake ${self}
     fi
   '').outPath;
