@@ -49,6 +49,7 @@
 
   system.defaults = {
     trackpad.Clicking = false;
+    dock.autohide = true;
   };
 
 }
