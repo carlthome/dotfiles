@@ -46,4 +46,9 @@
     switch-system = "darwin-rebuild switch --flake .";
     list-generations = "nix-env --list-generations";
   };
+
+  system.defaults = {
+    trackpad.Clicking = false;
+  };
+
 }
