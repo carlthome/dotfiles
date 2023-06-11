@@ -1,1 +1,3 @@
-{ pkgs, ... }: { }
+{ pkgs, ... }: {
+  networking.hostName = "Betty";
+}
