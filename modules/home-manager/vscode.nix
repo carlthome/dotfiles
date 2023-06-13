@@ -75,7 +75,9 @@ in
       after = [ ];
       before = [ "checkLinkTargets" ];
       data = ''
-        rm "${settings-path}"
+        if [ -f "${settings-path}" ]; then
+          rm "${settings-path}"
+        fi
       '';
     };
 
