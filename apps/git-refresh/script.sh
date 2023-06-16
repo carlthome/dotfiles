@@ -11,19 +11,15 @@ printf "Will run 'git fetch' for:\n%s\n\n" "$repos"
 
 # Go through every repo, fetch remote changes and warn on local changes not found remotely.
 for repo in $repos; do
-	cwd=$(pwd)
-	cd "$repo"
 
 	# Download remote changes.
-	git fetch
+	git -C "$repo" fetch
 
 	# Display local changes.
-	status=$(git status --porcelain)
+	status=$(git -C "$repo" status --porcelain)
 	if [ -n "$status" ]; then
 		printf "%s has local changes:\n%s\n\n" "$repo" "$status"
 	else
 		printf "%s is up-to-date with remote\n\n" "$repo"
 	fi
-
-	cd "$cwd"
 done
