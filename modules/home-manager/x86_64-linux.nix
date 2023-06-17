@@ -44,7 +44,7 @@
     stdenv.cc.cc.lib
     steam
     tdesktop
-    transmission
+    transmission-gtk
     wineWowPackages.staging
     yabridge
     yabridgectl
