@@ -1,18 +1,17 @@
 #!/bin/sh
-set -ex
+set -e
 
-# TODO Tabulate number of reviews conducted, landed PRs in a given time period.
+# Only include repo activity for the current year.
+year=$(date +%Y)
 
-owner='carlthome'
-author='carlthome'
+# Extract pull request information.
+num_reviewed=$(gh search prs --reviewed-by=@me --created=$year --limit=1000 --json title --jq '.[].title' | wc --lines)
+num_created=$(gh search prs --author=@me --created=$year --limit=1000 --json title --jq '.[].title' | wc --lines)
+num_landed=$(gh search prs --author=@me --merged --created=$year --limit=1000 --json title --jq '.[].title' | wc --lines)
+num_involved=$(gh search prs --involves=@me --created=$year --limit=1000 --json title --jq '.[].title' | wc --lines)
 
-# List all source repos on GitHub.com for chosen owner.
-repos=$(gh repo list "$owner" --json nameWithOwner --limit 1000 --source | jq -r '.[].nameWithOwner')
-
-# Go through all repos for PRs created by chosen author.
-for repo in $repos; do
-	prs=$(gh pr list --author="$author" --repo="$repo")
-	for pr in $prs; do
-		echo $pr
-	done
-done
+# Print results.
+echo "Number of PRs reviewed: $num_reviewed"
+echo "Number of PRs created: $num_created"
+echo "Number of PRs landed: $num_landed"
+echo "Number of PRs involved in: $num_involved"
