@@ -1,5 +1,5 @@
 #!/bin/sh
-set -e
+set -ex
 
 # TODO Tabulate number of reviews conducted, landed PRs in a given time period.
 
@@ -11,7 +11,7 @@ repos=$(gh repo list "$owner" --json nameWithOwner --limit 1000 --source | jq -r
 
 # Go through all repos for PRs created by chosen author.
 for repo in $repos; do
-	prs=$(gh repo list --author="$author" $repo)
+	prs=$(gh pr list --author="$author" --repo="$repo")
 	for pr in $prs; do
 		echo $pr
 	done
