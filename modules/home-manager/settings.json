@@ -36,7 +36,6 @@
   "editor.fontLigatures": true,
   "editor.fontSize": 14,
   "editor.formatOnSave": true,
-  "editor.formatOnSaveMode": "modificationsIfAvailable",
   "editor.inlineSuggest.enabled": true,
   "editor.mouseWheelZoom": true,
   "editor.suggestSelection": "first",
