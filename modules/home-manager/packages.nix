@@ -9,6 +9,7 @@
     buildkit
     cachix
     cmake
+    comma
     cookiecutter
     coreutils-full
     ctags

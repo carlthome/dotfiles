@@ -7,11 +7,12 @@
     flake-utils.url = "github:numtide/flake-utils";
     home-manager = { url = "github:nix-community/home-manager/release-23.05"; inputs.nixpkgs.follows = "nixpkgs"; };
     nix-darwin = { url = "github:lnl7/nix-darwin/master"; inputs.nixpkgs.follows = "nixpkgs"; };
+    nix-index-database = { url = "github:Mic92/nix-index-database"; inputs.nixpkgs.follows = "nixpkgs"; };
     pre-commit-hooks = { url = "github:cachix/pre-commit-hooks.nix"; inputs.nixpkgs.follows = "nixpkgs"; };
     epidemic-sound = { url = "git+ssh://git@github.com/epidemicsound/home-manager.git?ref=main"; inputs.nixpkgs.follows = "nixpkgs"; };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, flake-utils, home-manager, nix-darwin, pre-commit-hooks, epidemic-sound }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-unstable, flake-utils, home-manager, nix-darwin, nix-index-database, pre-commit-hooks, epidemic-sound }@inputs:
     let
       mapDir = d: f:
         let names = builtins.attrNames (builtins.readDir d);
@@ -40,6 +41,7 @@
           ./modules/home-manager/home.nix
           ./modules/home-manager/${system}.nix
           ./homes/${name}/home.nix
+          nix-index-database.hmModules.nix-index
         ];
         extraSpecialArgs = inputs;
       };
