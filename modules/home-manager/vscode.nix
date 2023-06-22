@@ -60,6 +60,7 @@ let
   ] ++ lib.optionals (pkgs.config.allowUnfreePredicate "vscode") [
     github.copilot
     ms-python.vscode-pylance
+    ms-vscode-remote.remote-ssh
     ms-vscode.cpptools
     ms-vsliveshare.vsliveshare
   ];
