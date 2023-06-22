@@ -21,6 +21,7 @@ let
     ms-kubernetes-tools.vscode-kubernetes-tools
     ms-python.python
     ms-toolsai.jupyter
+    ms-toolsai.vscode-jupyter-slideshow
     ms-vscode.cmake-tools
     ms-vscode.makefile-tools
     njpwerner.autodocstring
