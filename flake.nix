@@ -19,7 +19,7 @@
         in nixpkgs.lib.genAttrs names f;
 
       mkNixos = name: nixpkgs.lib.nixosSystem {
-        system = (import ./hosts/nixos/${name}/system.nix).system;
+        system = import ./hosts/nixos/${name}/system.nix;
         modules = [
           ./modules/nixos/configuration.nix
           ./hosts/nixos/${name}/hardware-configuration.nix
@@ -28,7 +28,7 @@
       };
 
       mkDarwin = name: nix-darwin.lib.darwinSystem {
-        system = (import ./hosts/darwin/${name}/system.nix).system;
+        system = import ./hosts/darwin/${name}/system.nix;
         modules = [
           ./modules/nix-darwin/configuration.nix
           ./hosts/darwin/${name}/configuration.nix
@@ -36,7 +36,7 @@
       };
 
       mkHome = system: name: home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.${system};
+        pkgs = import nixpkgs { inherit system; overlays = [ ]; };
         modules = [
           ./modules/home-manager/home.nix
           ./modules/home-manager/${system}.nix
