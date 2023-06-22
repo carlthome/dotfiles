@@ -12,6 +12,7 @@ let
     eamodio.gitlens
     esbenp.prettier-vscode
     github.github-vscode-theme
+    github.vscode-github-actions
     github.vscode-pull-request-github
     gitlab.gitlab-workflow
     hashicorp.terraform
