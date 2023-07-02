@@ -39,7 +39,7 @@
   nix.settings.auto-optimise-store = true;
 
   # Enable sandboxing.
-  nix.settings.sandbox = true;
+  nix.settings.sandbox = false;
 
   # Global shell aliases for all users.
   environment.shellAliases = {

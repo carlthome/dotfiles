@@ -12,59 +12,18 @@
     epidemic-sound = { url = "git+ssh://git@github.com/epidemicsound/home-manager.git?ref=main"; inputs.nixpkgs.follows = "nixpkgs"; };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, flake-utils, home-manager, nix-darwin, nix-index-database, pre-commit-hooks, epidemic-sound }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-unstable, flake-utils, home-manager, nix-darwin, nix-index-database, pre-commit-hooks, epidemic-sound }:
     let
-      mapDir = d: f:
-        let names = builtins.attrNames (builtins.readDir d);
-        in nixpkgs.lib.genAttrs names f;
-
-      mkNixos = name: nixpkgs.lib.nixosSystem {
-        system = import ./hosts/nixos/${name}/system.nix;
-        modules = [
-          ./modules/nixos/configuration.nix
-          ./hosts/nixos/${name}/hardware-configuration.nix
-          ./hosts/nixos/${name}/configuration.nix
-        ];
+      mkSystem = system: {
+        legacyPackages.homeConfigurations = import ./homes { inherit nixpkgs; inherit home-manager; inherit nix-index-database; inherit system; inherit epidemic-sound; inherit self; };
+        packages = import ./packages { inherit nixpkgs; inherit system; inherit self; };
+        checks = import ./pre-commit.nix { inherit pre-commit-hooks; inherit system; };
+        formatter = nixpkgs.legacyPackages.${system}.nixpkgs-fmt;
+        devShells.default = import ./shell.nix { pkgs = nixpkgs.legacyPackages.${system}; inherit (self.checks.${system}.pre-commit-check) shellHook; };
       };
-
-      mkDarwin = name: nix-darwin.lib.darwinSystem {
-        system = import ./hosts/darwin/${name}/system.nix;
-        modules = [
-          ./modules/nix-darwin/configuration.nix
-          ./hosts/darwin/${name}/configuration.nix
-        ];
-      };
-
-      mkHome = system: name: home-manager.lib.homeManagerConfiguration {
-        pkgs = import nixpkgs { inherit system; overlays = [ ]; };
-        modules = [
-          ./modules/home-manager/home.nix
-          ./modules/home-manager/${system}.nix
-          ./homes/${name}/home.nix
-          nix-index-database.hmModules.nix-index
-        ];
-        extraSpecialArgs = inputs;
-      };
-
-      mkSystem = system:
-        let
-          pkgs = nixpkgs.legacyPackages.${system};
-          pre-commit = pre-commit-hooks.lib.${system};
-          shellHook = self.checks.${system}.pre-commit-check.shellHook;
-          callPackages = dir:
-            let f = name: pkgs.callPackage "${dir}/${name}" { inherit self; inherit shellHook; inherit pre-commit; };
-            in mapDir dir f;
-        in
-        {
-          checks = callPackages ./checks;
-          packages = callPackages ./packages;
-          apps = callPackages ./apps;
-          formatter = pkgs.nixpkgs-fmt;
-          legacyPackages.homeConfigurations = mapDir ./homes (mkHome system);
-        };
     in
     flake-utils.lib.eachDefaultSystem mkSystem // {
-      nixosConfigurations = mapDir ./hosts/nixos mkNixos;
-      darwinConfigurations = mapDir ./hosts/darwin mkDarwin;
+      nixosConfigurations = import ./hosts/nixos { inherit nixpkgs; };
+      darwinConfigurations = import ./hosts/darwin { inherit nixpkgs; inherit nix-darwin; };
     };
 }

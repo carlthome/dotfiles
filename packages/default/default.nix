@@ -1,18 +1,13 @@
-{ pkgs ? import <nixpkgs> { }, shellHook, ... }:
-pkgs.mkShell {
-  name = "home-manager";
-  inherit shellHook;
-  packages = with pkgs; [
-    act
-    actionlint
-    cachix
-    git
-    home-manager
-    nix-diff
-    nix-info
-    nixpkgs-fmt
-  ];
-  meta = {
-    description = "Development shell for home-manager";
-  };
-}
+{ pkgs, self, ... }: pkgs.writeScriptBin "update-and-switch" ''
+  set -exuo pipefail
+
+  if [[ $(nix flake show) ]]; then
+    nix flake update --commit-lock-file .
+    flake='.'
+  else
+    flake=${self}
+  fi
+
+  nix run $flake#switch-system
+  nix run $flake#switch-home
+''
