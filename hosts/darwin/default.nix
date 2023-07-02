@@ -1,4 +1,4 @@
-{ nix-darwin, nixpkgs }:
+{ nix-darwin, nixpkgs, ... }:
 let
   names = builtins.attrNames (nixpkgs.lib.filterAttrs (n: v: v == "directory") (builtins.readDir ./.));
   mkDarwin = name: nix-darwin.lib.darwinSystem {

@@ -1,4 +1,4 @@
-{ nixpkgs }:
+{ nixpkgs, ... }:
 let
   names = builtins.attrNames (nixpkgs.lib.filterAttrs (n: v: v == "directory") (builtins.readDir ./.));
   mkNixos = name: nixpkgs.lib.nixosSystem {
