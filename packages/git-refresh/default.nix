@@ -1,1 +1,1 @@
-{ pkgs, ... }: pkgs.writeScriptBin "script" (builtins.readFile ./script.sh)
+{ pkgs, ... }: pkgs.writeScriptBin "git-refresh" (builtins.readFile ./script.sh)
