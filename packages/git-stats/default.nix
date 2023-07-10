@@ -1,1 +1,5 @@
-{ pkgs, ... }: pkgs.writeScriptBin "git-stats" (builtins.readFile ./script.sh)
+{ pkgs, gh, ... }: pkgs.writeShellApplication {
+  name = "git-stats";
+  runtimeInputs = [ gh ];
+  text = builtins.readFile ./script.sh;
+}
