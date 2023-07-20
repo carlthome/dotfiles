@@ -60,6 +60,8 @@
     postgresql
     pre-commit
     python3
+    pipx
+    pdm
     python3Packages.pip
     python3Packages.tensorboard
     pyupgrade
