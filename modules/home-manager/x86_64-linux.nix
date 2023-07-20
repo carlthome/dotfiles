@@ -26,6 +26,7 @@
     chromium
     deja-dup
     discord
+    distrobox
     maestral
     maestral-gui
     element-desktop

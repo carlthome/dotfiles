@@ -14,7 +14,6 @@
     coreutils-full
     ctags
     curl
-    distrobox
     dive
     docker-client
     docker-slim
