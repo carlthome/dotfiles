@@ -30,6 +30,7 @@
       # cloud-build-local
     ]))
     hadolint
+    htop
     isort
     jq
     jujutsu
