@@ -3,6 +3,7 @@
     act
     actionlint
     asdf-vm
+    autoflake
     awscli
     black
     buildah
