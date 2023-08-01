@@ -21,6 +21,7 @@
     # TODO Broken on macOS.
     #dvc-with-remotes
     fantasque-sans-mono
+    fdupes
     ffmpeg-full
     gcc
     gnumake
