@@ -6,6 +6,7 @@
   nixpkgs.config = {
     allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
       "discord"
+      "dropbox"
       "google-chrome"
       "reaper"
       "slack"
@@ -27,14 +28,15 @@
     deja-dup
     discord
     distrobox
-    maestral
-    maestral-gui
+    dropbox
     element-desktop
     firefox
     google-chrome
     helvum
     keepassxc
     logseq
+    maestral
+    maestral-gui
     marker
     obs-studio
     okular
