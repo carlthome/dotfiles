@@ -35,8 +35,6 @@
     helvum
     keepassxc
     logseq
-    maestral
-    maestral-gui
     marker
     obs-studio
     okular
