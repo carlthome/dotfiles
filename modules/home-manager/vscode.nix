@@ -43,20 +43,20 @@ let
     {
       name = "black-formatter";
       publisher = "ms-python";
-      version = "2022.6.0";
-      sha256 = "HXRXQ/SalEKW5c7SmN57bWRhE/7SPlWNvCHKTHoFNQs=";
+      version = "2023.4.1";
+      sha256 = "sha256-IJaLke0WF1rlKTiuwJHAXDQB1SS39AoQhc4iyqqlTyY=";
     }
     {
       name = "flake8";
       publisher = "ms-python";
-      version = "2023.4.0";
-      sha256 = "Qskh2MiBg0eT8PS2Osc7wXggD1nOkreHiUyeFItvNik=";
+      version = "2023.6.0";
+      sha256 = "sha256-Hk7rioPvrxV0zMbwdighBAlGZ43rN4DLztTyiHqO6o4=";
     }
     {
       name = "isort";
       publisher = "ms-python";
-      version = "2022.8.0";
-      sha256 = "l7mXTKdAE56DdnSaY1cs7sajhG6Yzz0XlZLtHY2saB0=";
+      version = "2023.10.1";
+      sha256 = "sha256-NRsS+mp0pIhGZiqxAMXNZ7SwLno9Q8pj+RS1WB92HzU=";
     }
   ] ++ lib.optionals (pkgs.config.allowUnfreePredicate "vscode") [
     github.copilot
