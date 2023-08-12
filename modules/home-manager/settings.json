@@ -39,6 +39,7 @@
   "editor.inlineSuggest.enabled": true,
   "editor.mouseWheelZoom": true,
   "editor.suggestSelection": "first",
+  "extensions.autoUpdate": false,
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
   "files.trimTrailingWhitespace": true,
