@@ -7,6 +7,7 @@
     colima
   ];
   home.sessionVariables = {
-    DOCKER_HOST = "unix://$HOME/.colima/default/docker.sock";
+    # TODO Uncomment once done with trying OrbStack.
+    #DOCKER_HOST = "unix://$HOME/.colima/default/docker.sock";
   };
 }
