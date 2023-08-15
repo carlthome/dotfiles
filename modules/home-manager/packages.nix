@@ -28,8 +28,6 @@
     gnupg
     (google-cloud-sdk.withExtraComponents (with google-cloud-sdk.components; [
       gke-gcloud-auth-plugin
-      # TODO Broken on macOS.
-      # cloud-build-local
     ]))
     hadolint
     htop
