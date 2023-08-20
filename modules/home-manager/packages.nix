@@ -52,14 +52,14 @@
     nodePackages.prettier
     pass
     pdfgrep
+    pdm
     pipenv
+    pipx
     podman
     poetry
     postgresql
     pre-commit
     python3
-    pipx
-    pdm
     python3Packages.pip
     python3Packages.tensorboard
     pyupgrade
