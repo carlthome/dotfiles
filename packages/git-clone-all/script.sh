@@ -13,5 +13,5 @@ for repo in $repos; do
 		printf "Skipping %s, already exists locally\n" "$repo"
 		continue
 	fi
-	git clone git@github.com:$repo $path
+	git clone "git@github.com:$repo" "$path"
 done
