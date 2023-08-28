@@ -16,6 +16,7 @@
     d = "docker run --rm -it";
     k = "kubectl";
     g = "git";
+    ll = "ls -al";
     clean = "git clean --interactive";
     commit = "git commit --patch";
     rebase = "git rebase --interactive";
