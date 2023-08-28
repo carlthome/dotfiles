@@ -3,6 +3,7 @@
     ./vscode.nix
     ./vim.nix
     ./neovim.nix
+    ./emacs.nix
     ./git.nix
     ./packages.nix
   ];
@@ -34,7 +35,6 @@
   programs = {
     home-manager.enable = true;
     man.enable = true;
-    emacs.enable = true;
     fish.enable = true;
     fzf = {
       enable = true;
