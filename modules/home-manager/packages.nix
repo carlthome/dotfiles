@@ -64,6 +64,7 @@
     python3Packages.tensorboard
     pyupgrade
     rclone
+    restic
     ripgrep
     rsync
     rustup
