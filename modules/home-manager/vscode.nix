@@ -1,11 +1,13 @@
 { config, pkgs, lib, self, ... }:
 let
-  settings-path =
+  settings-directory =
     if pkgs.stdenv.hostPlatform.isDarwin
-    then "$HOME/Library/Application Support/Code/User/settings.json"
-    else "$HOME/.config/Code/User/settings.json";
+    then "$HOME/Library/Application Support/Code/User"
+    else "$HOME/.config/Code/User";
 
   userSettings = builtins.fromJSON (builtins.readFile "${self}/modules/home-manager/settings.json");
+
+  keybindings = builtins.fromJSON (builtins.readFile "${self}/modules/home-manager/keybindings.json");
 
   extensions = with pkgs.vscode-extensions; [
     davidanson.vscode-markdownlint
@@ -68,7 +70,7 @@ let
 in
 {
   programs.vscode = {
-    inherit userSettings extensions;
+    inherit userSettings extensions keybindings;
     enable = true;
     package = if pkgs.config.allowUnfreePredicate "vscode" then pkgs.vscode else pkgs.vscodium;
   };
@@ -79,8 +81,11 @@ in
       after = [ ];
       before = [ "checkLinkTargets" ];
       data = ''
-        if [ -f "${settings-path}" ]; then
-          rm "${settings-path}"
+        if [ -f "${settings-directory}/settings.json" ]; then
+          rm "${settings-directory}/settings.json"
+        fi
+        if [ -f "${settings-directory}/keybindings.json" ]; then
+          rm "${settings-directory}/keybindings.json"
         fi
       '';
     };
@@ -89,7 +94,8 @@ in
       after = [ "writeBoundary" ];
       before = [ ];
       data = ''
-        cat ${(pkgs.formats.json {}).generate "settings.json" userSettings} > "${settings-path}"
+        cat ${(pkgs.formats.json {}).generate "settings.json" userSettings} > "${settings-directory}/settings.json"
+        cat ${(pkgs.formats.json {}).generate "keybindings.json" keybindings} > "${settings-directory}/keybindings.json"
       '';
     };
   };

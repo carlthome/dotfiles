@@ -1,0 +1,7 @@
+[
+  {
+    "key": "shift+cmd+enter",
+    "command": "editor.debug.action.selectionToRepl",
+    "when": "editorTextFocus"
+  }
+]
