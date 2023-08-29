@@ -97,7 +97,7 @@
   "python.analysis.inlayHints.pytestParameters": true,
   "python.analysis.inlayHints.variableTypes": true,
   "python.analysis.typeCheckingMode": "basic",
-  "python.formatting.provider": "black",
+  "python.formatting.provider": "none",
   "redhat.telemetry.enabled": false,
   "telemetry.telemetryLevel": "off",
   "terminal.integrated.defaultProfile.linux": "fish",
