@@ -12,7 +12,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[jsonc]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[nix]": {
     "editor.defaultFormatter": "jnoortheen.nix-ide"
@@ -73,18 +73,13 @@
   "githubPullRequests.pushBranch": "always",
   "githubPullRequests.setAutoMerge": true,
   "jupyter.askForKernelRestart": false,
-  "jupyter.runStartupCommands": [
-    "%load_ext autoreload",
-    "%autoreload 2"
-  ],
+  "jupyter.runStartupCommands": ["%load_ext autoreload", "%autoreload 2"],
   "nix.enableLanguageServer": true,
   "nix.serverPath": "nil",
   "nix.serverSettings": {
     "nil": {
       "formatting": {
-        "command": [
-          "nixpkgs-fmt"
-        ]
+        "command": ["nixpkgs-fmt"]
       },
       "nix": {
         "flake": {
