@@ -33,7 +33,7 @@
   "debug.console.acceptSuggestionOnEnter": "on",
   "debug.console.closeOnEnd": true,
   "debug.console.fontSize": 14,
-  "debug.inlineValues": true,
+  "debug.inlineValues": "on",
   "debug.internalConsoleOptions": "openOnSessionStart",
   "debug.openDebug": "openOnSessionStart",
   "debug.openExplorerOnEnd": false,
@@ -73,13 +73,18 @@
   "githubPullRequests.pushBranch": "always",
   "githubPullRequests.setAutoMerge": true,
   "jupyter.askForKernelRestart": false,
-  "jupyter.runStartupCommands": ["%load_ext autoreload", "%autoreload 2"],
+  "jupyter.runStartupCommands": [
+    "%load_ext autoreload",
+    "%autoreload 2"
+  ],
   "nix.enableLanguageServer": true,
   "nix.serverPath": "nil",
   "nix.serverSettings": {
     "nil": {
       "formatting": {
-        "command": ["nixpkgs-fmt"]
+        "command": [
+          "nixpkgs-fmt"
+        ]
       },
       "nix": {
         "flake": {
