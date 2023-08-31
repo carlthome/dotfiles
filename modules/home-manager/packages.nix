@@ -44,6 +44,7 @@
     ncdu
     nil
     ninja
+    nix-init
     nixfmt
     nixpkgs-fmt
     nixpkgs-review
