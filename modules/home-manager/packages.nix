@@ -45,6 +45,7 @@
     nil
     ninja
     nix-init
+    nix-tree
     nixfmt
     nixpkgs-fmt
     nixpkgs-review
