@@ -4,10 +4,10 @@ let
   mkHome = name: home-manager.lib.homeManagerConfiguration {
     pkgs = import nixpkgs { inherit system; overlays = [ ]; };
     modules = [
-      ../modules/home-manager/home.nix
-      ../modules/home-manager/${system}.nix
       ./${name}/home.nix
       nix-index-database.hmModules.nix-index
+      self.homeModules.default
+      self.homeModules.${system}
     ];
     extraSpecialArgs = { inherit self; inherit epidemic-sound; };
   };

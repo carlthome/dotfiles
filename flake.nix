@@ -19,14 +19,17 @@
         packages = import ./packages (inputs // { inherit system; });
         checks = import ./pre-commit.nix (inputs // { inherit system; });
         formatter = nixpkgs.legacyPackages.${system}.nixpkgs-fmt;
-        devShells.default = import ./shell.nix {
+          devShells.default = import ./shell.nix {
           pkgs = nixpkgs.legacyPackages.${system};
-          shellHook = self.checks.${system}.pre-commit-check.shellHook;
+            shellHook = self.checks.${system}.pre-commit-check.shellHook;
+          };
         };
-      };
     in
     flake-utils.lib.eachDefaultSystem mkSystem // {
       nixosConfigurations = import ./hosts/nixos inputs;
       darwinConfigurations = import ./hosts/darwin inputs;
+      nixosModules = import ./modules/nixos inputs;
+      darwinModules = import ./modules/nix-darwin inputs;
+      homeModules = import ./modules/home-manager inputs;
     };
 }

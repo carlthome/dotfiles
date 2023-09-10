@@ -1,0 +1,3 @@
+{ ... }: {
+  default = import ./configuration.nix;
+}
