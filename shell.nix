@@ -5,7 +5,6 @@ pkgs.mkShell {
   packages = with pkgs; [
     act
     actionlint
-    cachix
     git
     home-manager
     nix-diff
