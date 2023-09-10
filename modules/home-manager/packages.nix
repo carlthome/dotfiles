@@ -47,6 +47,7 @@
     nix-init
     nix-tree
     nix-diff
+    nix-info
     nixfmt
     nixpkgs-fmt
     nixpkgs-review
