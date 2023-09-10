@@ -12,7 +12,7 @@
     epidemic-sound = { url = "git+ssh://git@github.com/epidemicsound/home-manager.git?ref=main"; inputs.nixpkgs.follows = "nixpkgs"; };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, flake-utils, home-manager, nix-darwin, nix-index-database, pre-commit-hooks, epidemic-sound }@inputs:
+  outputs = { self, nixpkgs, flake-utils, ... }@inputs:
     let
       mkSystem = system: {
         legacyPackages.homeConfigurations = import ./homes (inputs // { inherit system; });
