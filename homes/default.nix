@@ -1,4 +1,4 @@
-{ home-manager, nixpkgs, nix-index-database, system, self, epidemic-sound, ... }:
+{ home-manager, nixpkgs, nix-index-database, system, self, ... }@inputs:
 let
   names = builtins.attrNames (builtins.readDir ./.);
   mkHome = name: home-manager.lib.homeManagerConfiguration {
@@ -9,7 +9,7 @@ let
       self.homeModules.default
       self.homeModules.${system}
     ];
-    extraSpecialArgs = { inherit self; inherit epidemic-sound; };
+    extraSpecialArgs = inputs;
   };
 in
 nixpkgs.lib.genAttrs names mkHome
