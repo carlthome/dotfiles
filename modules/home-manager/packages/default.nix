@@ -18,6 +18,7 @@
     dive
     docker-client
     docker-slim
+    duckdb
     fantasque-sans-mono
     fdupes
     ffmpeg-full
