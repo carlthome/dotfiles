@@ -5,9 +5,9 @@ let
     then "$HOME/Library/Application Support/Code/User"
     else "$HOME/.config/Code/User";
 
-  userSettings = builtins.fromJSON (builtins.readFile "${self}/modules/home-manager/settings.json");
+  userSettings = builtins.fromJSON (builtins.readFile "${self}/modules/home-manager/vscode/settings.json");
 
-  keybindings = builtins.fromJSON (builtins.readFile "${self}/modules/home-manager/keybindings.json");
+  keybindings = builtins.fromJSON (builtins.readFile "${self}/modules/home-manager/vscode/keybindings.json");
 
   extensions = with pkgs.vscode-extensions; [
     davidanson.vscode-markdownlint

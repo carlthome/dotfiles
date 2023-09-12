@@ -1,13 +1,4 @@
 { config, pkgs, lib, ... }: {
-  imports = [
-    ./vscode.nix
-    ./vim.nix
-    ./neovim.nix
-    ./emacs.nix
-    ./git.nix
-    ./packages.nix
-  ];
-
   home.sessionVariables = {
     DOCKER_BUILDKIT = "1";
     EDITOR = "code";

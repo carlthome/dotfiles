@@ -1,5 +1,6 @@
-{ ... }: {
-  default = import ./home.nix;
-  aarch64-darwin = import ./aarch64-darwin.nix;
-  x86_64-linux = import ./x86_64-linux.nix;
-}
+{ nixpkgs, ... }:
+let
+  names = builtins.attrNames (nixpkgs.lib.filterAttrs (n: v: v == "directory") (builtins.readDir ./.));
+  importModule = name: import ./${name};
+in
+nixpkgs.lib.genAttrs names importModule
