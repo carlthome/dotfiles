@@ -14,4 +14,3 @@ jobs:
       - uses: DeterminateSystems/flake-checker-action@v4
       - uses: DeterminateSystems/nix-installer-action@v3
       - uses: DeterminateSystems/magic-nix-cache-action@main
-      - run: nix build
