@@ -9,11 +9,17 @@
       l = "log";
       d = "diff";
     };
+    signing = {
+      signByDefault = true;
+      key = "~/.ssh/id_ed25519";
+    };
     lfs = {
       enable = true;
       skipSmudge = true;
     };
     extraConfig = {
+      gpg.format = "ssh";
+      gpg.ssh.allowedSignersFile = "~/.ssh/allowed_signers";
       core.editor = "vim";
       diff.guitool = "vscode";
       diff.tool = "vimdiff";
