@@ -1,4 +1,10 @@
-{ config, pkgs, lib, ... }: {
+{ config, pkgs, lib, nixpkgs, nixpkgs-unstable, ... }: {
+
+  nix = {
+    registry.nixpkgs.flake = nixpkgs;
+    registry.nixpkgs-unstable.flake = nixpkgs-unstable;
+  };
+
   home.sessionVariables = {
     DOCKER_BUILDKIT = "1";
     EDITOR = "code";
