@@ -6,7 +6,7 @@ let
     modules = [
       ./${name}/home.nix
       nix-index-database.hmModules.nix-index
-      self.homeModules.default
+      self.homeModules.home
       self.homeModules.${system}
     ];
     extraSpecialArgs = inputs;
