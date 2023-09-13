@@ -12,6 +12,9 @@
     "carlthome.cachix.org-1:BHerYg0J5Qv/Yw/SsxqPBlTY+cttA9axEsmrK24R15w="
   ];
 
+  # Link old commands (nix-shell, nix-build, etc.) to use the same nixpkgs as the flake.
+  nix.nixPath = [ "nixpkgs=${pkgs.path}" ];
+
   # Install packages in system profile.
   environment.systemPackages = [
     pkgs.vim
