@@ -11,6 +11,7 @@ let
 
   extensions = with pkgs.vscode-extensions; [
     davidanson.vscode-markdownlint
+    dbaeumer.vscode-eslint
     esbenp.prettier-vscode
     github.github-vscode-theme
     github.vscode-github-actions
