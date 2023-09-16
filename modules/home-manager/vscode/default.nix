@@ -60,6 +60,12 @@ let
       version = "2023.10.1";
       sha256 = "sha256-NRsS+mp0pIhGZiqxAMXNZ7SwLno9Q8pj+RS1WB92HzU=";
     }
+    {
+      name = "git-line-blame";
+      publisher = "carlthome";
+      version = "0.1.1";
+      sha256 = "dXOsekOOphuQlAV6B0zLlI6TVx/YzzIVN95F29+vUjY=";
+    }
   ] ++ lib.optionals (pkgs.config.allowUnfreePredicate "vscode") [
     github.copilot
     ms-python.vscode-pylance
