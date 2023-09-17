@@ -12,5 +12,3 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/flake-checker-action@v5
-      - uses: DeterminateSystems/nix-installer-action@v4
-      - uses: DeterminateSystems/magic-nix-cache-action@main
