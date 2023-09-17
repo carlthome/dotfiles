@@ -8,4 +8,4 @@ on:
 
 jobs:
   build:
-    uses: "carlthome/workflows/.github/workflows/nix.yaml@carlthome-patch-1"
+    uses: "carlthome/workflows/.github/workflows/nix.yaml@main"
