@@ -9,5 +9,3 @@ on:
 jobs:
   build:
     uses: "carlthome/workflows/.github/workflows/nix.yaml@carlthome-patch-1"
-    secrets:
-      CACHIX_AUTH_TOKEN: "${{ secrets.CACHIX_AUTH_ACTION }}"
