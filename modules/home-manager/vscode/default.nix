@@ -63,8 +63,8 @@ let
     {
       name = "git-line-blame";
       publisher = "carlthome";
-      version = "0.2.1";
-      sha256 = "fyyG1k0GxrmaX31+kVhHB1wlLVWFy8dKd1dOHl6EZB4=";
+      version = "0.3.0";
+      sha256 = "l6BhfFwzbP9aWOKbqdn9OCpFVNu73b+OCn7YvcLwjXw=";
     }
   ] ++ lib.optionals (pkgs.config.allowUnfreePredicate "vscode") [
     github.copilot
