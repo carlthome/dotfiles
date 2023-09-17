@@ -1,13 +1,11 @@
 on:
   push:
     branches:
-      - main
+      - "main"
   pull_request:
     branches:
-      - main
+      - "main"
 
 jobs:
   build:
-    uses: carlthome/workflows/.github/workflows/nix.yaml@main
-    secrets:
-      CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_ACTION }}
+    uses: "carlthome/workflows/.github/workflows/nix.yaml@main"

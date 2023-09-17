@@ -4,8 +4,8 @@ on:
     - cron: "0 0 * * 0"
 
 permissions:
-  contents: write
+  contents: "write"
 
 jobs:
   update:
-    uses: carlthome/workflows/.github/workflows/flake-update.yaml@main
+    uses: "carlthome/workflows/.github/workflows/flake-update.yaml@main"
