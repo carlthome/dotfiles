@@ -10,7 +10,10 @@ on:
         type: "string"
         required: true
 jobs:
-  flakehub-publish:
+  publish:
+    environment:
+      name: "flakehub"
+      url: "https://flakehub.com/flake/carlthome/dotfiles"
     runs-on: "ubuntu-latest"
     permissions:
       id-token: "write"
