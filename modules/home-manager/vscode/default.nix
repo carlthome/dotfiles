@@ -70,8 +70,9 @@ let
     github.copilot
     ms-python.vscode-pylance
     ms-vscode-remote.remote-ssh
-    ms-vscode.cpptools
-    ms-vsliveshare.vsliveshare
+    #TODO Broken on darwin.
+    #ms-vscode.cpptools
+    #ms-vsliveshare.vsliveshare
   ];
 in
 {
