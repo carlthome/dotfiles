@@ -1,5 +1,5 @@
 { pkgs, self, ... }: pkgs.writeShellApplication {
-  name = "update-and-switch";
+  name = "sync";
   text = ''
     set -e
 
@@ -9,6 +9,11 @@
       flake='.'
     else
       flake=${self}
+    fi
+
+    # Pull remote repository.
+    if [[ $flake == '.' ]]; then
+      git pull
     fi
 
     # Switch system and home configuration.
