@@ -40,4 +40,38 @@
   networking.extraHosts = ''
     127.0.0.1 kubernetes.default.svc.cluster.local
   '';
+
+  services.grafana = {
+    enable = true;
+    settings = {
+      server = {
+        http_addr = "127.0.0.1";
+        http_port = 80;
+        domain = "localhost";
+      };
+    };
+  };
+
+  services.prometheus = {
+    enable = true;
+    port = 9001;
+    exporters = {
+      node = {
+        enable = true;
+        enabledCollectors = [ "systemd" ];
+        port = 9002;
+      };
+    };
+    scrapeConfigs = [
+      {
+        job_name = "hosts";
+        static_configs = [{
+          targets = [
+            "127.0.0.1:${toString config.services.prometheus.exporters.node.port}"
+            "192.168.0.71:9100"
+          ];
+        }];
+      }
+    ];
+  };
 }
