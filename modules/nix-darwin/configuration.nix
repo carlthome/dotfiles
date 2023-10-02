@@ -16,8 +16,9 @@
   nix.nixPath = [ "nixpkgs=${pkgs.path}" ];
 
   # Install packages in system profile.
-  environment.systemPackages = [
-    pkgs.vim
+  environment.systemPackages = with pkgs; [
+    vim
+    git
   ];
 
   # Enable fingerprint scanner for authentication.
