@@ -79,11 +79,16 @@
   };
 
   virtualisation.oci-containers.containers = {
-    home_assistant = {
+    home-assistant = {
       image = "ghcr.io/home-assistant/home-assistant:stable";
-      volumes = [ "/etc/home-assistant:/config" ];
-      environment = { TZ = "Europe/Stockholm"; };
-      ports = [ "127.0.0.1:8123:8123" ];
+      volumes = [
+        "/etc/home-assistant:/config"
+        "/etc/localtime:/etc/localtime:ro"
+      ];
+      extraOptions = [
+        "--network=host"
+        "--privileged"
+      ];
     };
   };
 
