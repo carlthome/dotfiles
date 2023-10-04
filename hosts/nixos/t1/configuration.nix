@@ -45,12 +45,15 @@
     enable = true;
     settings = {
       server = {
-        http_addr = "127.0.0.1";
+        http_addr = "0.0.0.0";
         http_port = 80;
         domain = "localhost";
       };
     };
   };
+
+  # TODO Consider letting Grafana be accessible from the outside.
+  #networking.firewall.allowedTCPPorts = [ config.services.grafana.settings.server.http_port ];
 
   services.prometheus = {
     enable = true;
