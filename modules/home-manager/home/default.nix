@@ -1,8 +1,9 @@
-{ config, pkgs, lib, nixpkgs, nixpkgs-unstable, ... }: {
+{ config, pkgs, lib, self, nixpkgs, nixpkgs-unstable, ... }: {
 
   nix = {
     registry.nixpkgs.flake = nixpkgs;
     registry.nixpkgs-unstable.flake = nixpkgs-unstable;
+    registry.dotfiles.flake = self;
   };
 
   home.sessionVariables = {
