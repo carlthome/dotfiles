@@ -1,13 +1,13 @@
-{ config, pkgs, lib, self, ... }:
+{ config, pkgs, lib, ... }:
 let
   settings-directory =
     if pkgs.stdenv.hostPlatform.isDarwin
     then "$HOME/Library/Application Support/Code/User"
     else "$HOME/.config/Code/User";
 
-  userSettings = builtins.fromJSON (builtins.readFile "${self}/modules/home-manager/vscode/settings.json");
+  userSettings = builtins.fromJSON (builtins.readFile ./settings.json);
 
-  keybindings = builtins.fromJSON (builtins.readFile "${self}/modules/home-manager/vscode/keybindings.json");
+  keybindings = builtins.fromJSON (builtins.readFile ./keybindings.json);
 
   extensions = with pkgs.vscode-extensions; [
     davidanson.vscode-markdownlint
