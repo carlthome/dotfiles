@@ -52,9 +52,6 @@
     };
   };
 
-  # TODO Consider letting Grafana be accessible from the outside.
-  #networking.firewall.allowedTCPPorts = [ config.services.grafana.settings.server.http_port ];
-
   services.prometheus = {
     enable = true;
     port = 9001;
@@ -92,4 +89,6 @@
     };
   };
 
+  # Grafana and Home Assistant
+  networking.firewall.allowedTCPPorts = [ 80 8123 9001 ];
 }
