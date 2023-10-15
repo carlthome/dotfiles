@@ -28,7 +28,7 @@
     edit = "nix edit";
     update = "nix flake update --commit-lock-file";
     switch-home = "home-manager switch --flake .";
-    list-open-ports = "sudo netstat --tcp --udp --listening --program | grep LISTEN";
+    list-open-ports = "sudo netstat --tcp --udp --listening --program --numeric | grep LISTEN";
   };
 
   programs = {
