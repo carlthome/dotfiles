@@ -38,7 +38,7 @@
   "debug.openDebug": "openOnSessionStart",
   "debug.openExplorerOnEnd": false,
   "debug.terminal.clearBeforeReusing": true,
-  "debug.toolBarLocation": "docked",
+  "debug.toolBarLocation": "commandCenter",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.fontFamily": "Fantasque Sans Mono, monospace",
   "editor.fontLigatures": true,
