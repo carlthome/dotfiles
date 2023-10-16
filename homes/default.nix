@@ -1,8 +1,27 @@
-{ home-manager, nixpkgs, nix-index-database, system, self, ... }@inputs:
+{ home-manager, nixpkgs, nixpkgs-unstable, nix-index-database, system, self, ... }@inputs:
 let
+  overlays = [
+    (self: super:
+      let
+        pkgs = import nixpkgs-unstable {
+          inherit super system;
+          config.allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) [
+            "vscode"
+          ];
+        };
+      in
+      {
+        vscode = pkgs.vscode;
+      }
+    )
+  ];
+
   names = builtins.attrNames (builtins.readDir ./.);
   mkHome = name: home-manager.lib.homeManagerConfiguration {
-    pkgs = import nixpkgs { inherit system; overlays = [ ]; };
+    pkgs = import nixpkgs {
+      inherit system;
+      inherit overlays;
+    };
     modules = [
       ./${name}/home.nix
       nix-index-database.hmModules.nix-index
