@@ -5,7 +5,9 @@ let
     then "$HOME/Library/Application Support/Code/User"
     else "$HOME/.config/Code/User";
 
-  userSettings = builtins.fromJSON (builtins.readFile ./settings.json);
+  defaultExtensions = { "remote.SSH.defaultExtensions" = map (x: x.vscodeExtUniqueId) extensions; };
+
+  userSettings = (builtins.fromJSON (builtins.readFile ./settings.json)) // defaultExtensions;
 
   keybindings = builtins.fromJSON (builtins.readFile ./keybindings.json);
 
@@ -55,6 +57,12 @@ let
       publisher = "carlthome";
       version = "0.4.0";
       sha256 = "rEhx50/OMi3glrhhC3hPhqXHEzPaTskGFvZ06CjzFkQ=";
+    }
+    {
+      name = "copilot-chat";
+      publisher = "github";
+      version = "0.8.0";
+      sha256 = "IJ75gqsQj0Ukjlrqevum5AoaeZ5vOfxX/4TceXe+EIg=";
     }
   ] ++ lib.optionals (pkgs.config.allowUnfreePredicate "vscode") [
     github.copilot
