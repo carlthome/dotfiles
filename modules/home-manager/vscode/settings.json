@@ -99,6 +99,7 @@
   "python.analysis.typeCheckingMode": "basic",
   "python.formatting.provider": "none",
   "redhat.telemetry.enabled": false,
+  "remote.downloadExtensionsLocally": true,
   "editor.find.autoFindInSelection": "multiline",
   "telemetry.telemetryLevel": "off",
   "terminal.integrated.enableMultiLinePasteWarning": true,
