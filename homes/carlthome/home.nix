@@ -1,6 +1,6 @@
 { config, pkgs, lib, epidemic-sound, self, ... }: {
   imports = [
-    "${epidemic-sound}/modules/home.nix"
+    epidemic-sound.homeManagerModules.default
     self.homeModules.vscode
     self.homeModules.vim
     self.homeModules.neovim
