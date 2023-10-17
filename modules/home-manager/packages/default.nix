@@ -40,6 +40,7 @@
     kubectx
     kubernetes-helm
     lame
+    mdcat
     minikube
     mypy
     ncdu
