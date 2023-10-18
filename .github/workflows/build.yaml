@@ -12,4 +12,4 @@ jobs:
     with:
       cachix-cache: carlthome
     secrets:
-      cachix-token: ${{ secrets.CACHIX_TOKEN }}
+      cachix-token: ${{ secrets.CACHIX_AUTH_TOKEN }}
