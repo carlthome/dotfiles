@@ -80,7 +80,6 @@
   services = {
     xserver = {
       enable = true;
-      videoDrivers = [ "nvidia" ];
       displayManager.gdm.enable = true;
       desktopManager.gnome.enable = true;
       layout = "se";
@@ -100,10 +99,7 @@
   };
 
   # Enable Docker container runtime.
-  virtualisation.docker = {
-    enable = true;
-    enableNvidia = true;
-  };
+  virtualisation.docker.enable = true;
 
   # Auto-update system packages periodically.
   system.autoUpgrade = {

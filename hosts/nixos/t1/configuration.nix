@@ -28,6 +28,11 @@
     allowUnfree = true;
   };
 
+  services.xserver = {
+    enable = true;
+    videoDrivers = [ "nvidia" ];
+  };
+
   environment.systemPackages = with pkgs; [
     cudatoolkit
     cudaPackages.cudnn
@@ -75,6 +80,13 @@
     ];
   };
 
+  # Enable container runtime.
+  virtualisation.docker = {
+    enable = true;
+    enableNvidia = true;
+  };
+
+  # Set up Home Assistant within a container.
   virtualisation.oci-containers.containers = {
     home-assistant = {
       image = "ghcr.io/home-assistant/home-assistant:stable";
