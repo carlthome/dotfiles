@@ -68,6 +68,7 @@ let
     github.copilot
     ms-python.vscode-pylance
     ms-vscode-remote.remote-ssh
+    ms-vscode-remote.remote-containers
     #TODO Broken on darwin.
     #ms-vscode.cpptools
     #ms-vsliveshare.vsliveshare
