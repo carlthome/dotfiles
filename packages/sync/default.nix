@@ -1,8 +1,6 @@
 { pkgs, self, ... }: pkgs.writeShellApplication {
   name = "sync";
   text = ''
-    set -e
-
     # Check if flake is checked out locally.
     if [[ $(nix flake show) ]]; then
       nix flake update --commit-lock-file .
