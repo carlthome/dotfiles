@@ -74,6 +74,7 @@
   "githubPullRequests.pushBranch": "always",
   "githubPullRequests.setAutoMerge": true,
   "jupyter.askForKernelRestart": false,
+  "jupyter.debugJustMyCode": false,
   "jupyter.runStartupCommands": ["%load_ext autoreload", "%autoreload 2"],
   "nix.enableLanguageServer": true,
   "nix.serverPath": "nil",
