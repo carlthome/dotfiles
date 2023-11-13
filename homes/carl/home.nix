@@ -5,7 +5,6 @@
     self.homeModules.neovim
     self.homeModules.emacs
     self.homeModules.git
-    self.homeModules.packages
   ];
 
   home.username = "carl";
