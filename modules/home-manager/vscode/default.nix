@@ -53,6 +53,12 @@ let
       sha256 = "Hk7rioPvrxV0zMbwdighBAlGZ43rN4DLztTyiHqO6o4=";
     }
     {
+      name = "debugpy";
+      publisher = "ms-python";
+      version = "2023.3.13121011";
+      sha256 = "owYUEyQl2FQytApfuI97N4y9p7/dL0lu6EBk/AzSMjw=";
+    }
+    {
       name = "git-line-blame";
       publisher = "carlthome";
       version = "0.4.0";
