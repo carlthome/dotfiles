@@ -19,6 +19,7 @@
   environment.systemPackages = with pkgs; [
     vim
     git
+    clang
   ];
 
   # Enable fingerprint scanner for authentication.
