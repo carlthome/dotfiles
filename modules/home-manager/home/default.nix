@@ -99,7 +99,8 @@
     isort
     jq
     jujutsu
-    jupyter
+    # TODO Jupyter is currently broken.
+    #jupyter
     k9s
     keepassxc
     kind
