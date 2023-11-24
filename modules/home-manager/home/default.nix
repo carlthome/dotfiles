@@ -78,6 +78,7 @@
     cmake
     comma
     cookiecutter
+    copier
     coreutils-full
     ctags
     curl
