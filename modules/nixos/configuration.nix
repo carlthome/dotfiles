@@ -64,8 +64,6 @@
     shells = [ pkgs.fish ];
     variables = {
       EDITOR = "vim";
-      # TODO https://github.com/NixOS/nixpkgs/issues/32580
-      WEBKIT_DISABLE_COMPOSITING_MODE = "1";
     };
   };
 
