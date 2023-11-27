@@ -46,6 +46,17 @@
     127.0.0.1 kubernetes.default.svc.cluster.local
   '';
 
+  services.restic.backups = {
+    datasets = {
+      repository = "rclone:gdrive:/Datasets";
+      # TODO Populate secrets automatically.
+      passwordFile = "/etc/nixos/secrets/restic/Datasets";
+      rcloneConfigFile = "/etc/nixos/secrets/restic/rclone.conf";
+      paths = [ "/home/carl/Datasets" ];
+      timerConfig = { OnCalendar = "weekly"; Persistent = true; };
+    };
+  };
+
   services.grafana = {
     enable = true;
     settings = {
