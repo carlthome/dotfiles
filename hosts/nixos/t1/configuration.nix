@@ -50,9 +50,9 @@
     datasets = {
       repository = "rclone:gdrive:/Datasets";
       # TODO Populate secrets automatically.
-      passwordFile = "/etc/nixos/secrets/restic/Datasets";
+      passwordFile = "/etc/nixos/secrets/restic/datasets";
       rcloneConfigFile = "/etc/nixos/secrets/restic/rclone.conf";
-      paths = [ "/home/carl/Datasets" ];
+      paths = [ "/usr/share/datasets" ];
       timerConfig = { OnCalendar = "weekly"; Persistent = true; };
     };
   };
