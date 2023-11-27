@@ -92,7 +92,7 @@
       pulse.enable = true;
       jack.enable = false;
     };
-    flatpak.enable = true;
+    flatpak.enable = false;
     openssh.enable = false;
     plex.enable = false;
     printing.enable = false;
