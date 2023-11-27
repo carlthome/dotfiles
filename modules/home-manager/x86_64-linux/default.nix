@@ -57,7 +57,7 @@
     ]);
 
   home.sessionVariables = with pkgs; {
-    # TODO Think this through better.
+    # TODO Think this through better. Currently using `steam-run` on-demand.
     # LD_LIBRARY_PATH = "${zlib}/lib:${stdenv.cc.cc.lib}/lib:$LD_LIBRARY_PATH";
   };
 
@@ -71,7 +71,6 @@
         "blur-my-shell@aunetx"
         "caffeine@patapon.info"
         "hue-lights@chlumskyvaclav.gmail.com"
-        "nightthemeswitcher@romainvigier.fr"
         "places-menu@gnome-shell-extensions.gcampax.github.com"
         "rounded-window-corners@yilozt"
       ];
