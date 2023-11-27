@@ -74,6 +74,7 @@
     command-not-found.enable = true;
     fish.enable = true;
     steam.enable = true;
+    firefox.enable = true;
   };
 
   # Enable system-wide services.
