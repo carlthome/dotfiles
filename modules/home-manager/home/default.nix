@@ -1,10 +1,7 @@
-{ config, pkgs, lib, self, nixpkgs, nixpkgs-unstable, ... }: {
+{ config, pkgs, lib, ... }@inputs: {
 
-  nix = {
-    registry.nixpkgs.flake = nixpkgs;
-    registry.nixpkgs-unstable.flake = nixpkgs-unstable;
-    registry.dotfiles.flake = self;
-  };
+  # Add each flake input to registry.
+  nix.registry = (lib.mapAttrs (_: flake: { inherit flake; })) ((lib.filterAttrs (_: lib.isType "flake")) inputs);
 
   home.sessionVariables = {
     DOCKER_BUILDKIT = "1";
