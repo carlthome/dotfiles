@@ -14,4 +14,9 @@ My personal computing configuration that I wish to sync between machines.
 1. Clone this flake to the current working directory by `nix flake clone github:carlthome/dotfiles --dest .`
 1. Stage declarative changes (in [flake.nix](./flake.nix) etc.) as needed
 1. Check with `nix flake check`
-1. Pull remote, update and switch both system and home configuration, and push updated flake.lock with `nix run .#sync`
+1. Apply changes with `nix run .#sync` which will:
+   1. Pull currently tracked remote branch
+   1. Update flake inputs and commit any flake.lock changes
+   1. Build and switch system configuration
+   1. Build and switch home configuration
+   1. Push newly committed flake.lock to currently tracked remote branch (but only if the build and switch steps succeeded)
