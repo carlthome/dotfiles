@@ -58,6 +58,7 @@
     list-generations = "nix-env --list-generations";
   };
 
+  # Configure macOS settings.
   system.defaults = {
     trackpad.Clicking = false;
     dock.autohide = true;
