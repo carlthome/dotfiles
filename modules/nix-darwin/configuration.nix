@@ -36,9 +36,6 @@
     enableSyntaxHighlighting = true;
   };
 
-  # Set allowed login shells.
-  environment.shells = with pkgs; [ bashInteractive fish zsh ];
-
   # Recreate /run/current-system symlink after boot.
   services.activate-system.enable = true;
 
