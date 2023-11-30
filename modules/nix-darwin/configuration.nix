@@ -20,6 +20,8 @@
     vim
     git
     clang
+    gcc-unwrapped
+    gnumake
   ];
 
   # Enable fingerprint scanner for authentication.
