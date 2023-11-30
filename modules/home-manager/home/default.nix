@@ -16,7 +16,7 @@
     k = "kubectl";
     g = "git";
     ll = "ls -al";
-    clean = "git clean --interactive";
+    clean = "git clean -xd --interactive";
     commit = "git commit --patch";
     rebase = "git rebase --interactive";
     restore = "git restore --patch --source";
