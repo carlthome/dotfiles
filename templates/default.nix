@@ -11,6 +11,6 @@
       url = "https://github.com/carlthome/poetry2nix-example/archive/refs/heads/main.tar.gz";
       sha256 = "sha256:0qi02klhpxbknv9cy79jmvb77cyg1qn2xf6hxz4kf6b9vm8pgzgs";
     });
-    description = "An example of using poetry with Nix";
+    description = "An example of using Poetry with Nix";
   };
 }
