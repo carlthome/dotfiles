@@ -2,15 +2,22 @@
   nix-jax-mnist = {
     path = (builtins.fetchTarball {
       url = "https://github.com/carlthome/nix-jax-mnist/archive/refs/heads/main.tar.gz";
-      sha256 = "sha256:16pn51kc39c6ifvabr0mpgpvg4qnpr4j303g66jbr61ifk7ybyz5";
+      sha256 = "1dd058mpjyzq9krc81prchl0gcvwd0al1s1shd1wi8pabg6mpim1";
     });
     description = "A minimal example of using JAX with Nix";
   };
   poetry2nix-example = {
     path = (builtins.fetchTarball {
       url = "https://github.com/carlthome/poetry2nix-example/archive/refs/heads/main.tar.gz";
-      sha256 = "sha256:0qi02klhpxbknv9cy79jmvb77cyg1qn2xf6hxz4kf6b9vm8pgzgs";
+      sha256 = "1pi9rjg820rik66q13aq1hb0kvklpchbfkiqhaf9za6ap2lkgv6n";
     });
     description = "An example of using Poetry with Nix";
+  };
+  nix-pip-flake = {
+    path = (builtins.fetchTarball {
+      url = "https://github.com/carlthome/nix-pip-flake/archive/refs/heads/main.tar.gz";
+      sha256 = "03kd0iif4ckqdav8y1cpvm31ysg0sg0lhq1gf7l3ac813n9q5zx8";
+    });
+    description = "An example of using a Nix flake around a regular Python virtual environment";
   };
 }
