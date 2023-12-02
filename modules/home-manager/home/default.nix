@@ -28,6 +28,7 @@
     update = "nix flake update --commit-lock-file";
     switch-home = "home-manager switch --flake .";
     list-open-ports = "sudo netstat --tcp --udp --listening --program --numeric | grep LISTEN";
+    py = "steam-run $(which python)";
   };
 
   # Enable user programs.
