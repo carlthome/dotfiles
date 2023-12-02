@@ -1,22 +1,21 @@
-{ config, pkgs, lib, self, nixpkgs, nixpkgs-unstable, ... }: {
+{ config, pkgs, lib, ... }@inputs: {
 
-  nix = {
-    registry.nixpkgs.flake = nixpkgs;
-    registry.nixpkgs-unstable.flake = nixpkgs-unstable;
-    registry.dotfiles.flake = self;
-  };
+  # Add each flake input to registry.
+  nix.registry = (lib.mapAttrs (_: flake: { inherit flake; })) ((lib.filterAttrs (_: lib.isType "flake")) inputs);
 
+  # Set environment variables.
   home.sessionVariables = {
     DOCKER_BUILDKIT = "1";
     EDITOR = "code";
   };
 
+  # Register shell aliases.
   home.shellAliases = {
     d = "docker run --rm -it";
     k = "kubectl";
     g = "git";
     ll = "ls -al";
-    clean = "git clean --interactive";
+    clean = "git clean -xd --interactive";
     commit = "git commit --patch";
     rebase = "git rebase --interactive";
     restore = "git restore --patch --source";
@@ -31,6 +30,7 @@
     list-open-ports = "sudo netstat --tcp --udp --listening --program --numeric | grep LISTEN";
   };
 
+  # Enable user programs.
   programs = {
     home-manager.enable = true;
     man.enable = true;
@@ -65,6 +65,7 @@
     };
   };
 
+  # Include additional user packages.
   home.packages = with pkgs; [
     act
     actionlint
@@ -157,7 +158,19 @@
     yarn
   ];
 
+
+  # Discover fonts installed through home.packages.
   fonts.fontconfig.enable = true;
+
+  # Check for release version mismatch between Home Manager and nixpkgs.
   home.enableNixpkgsReleaseCheck = true;
-  home.stateVersion = "22.11";
+
+  # This value determines the Home Manager release that your configuration is
+  # compatible with. This helps avoid breakage when a new Home Manager release
+  # introduces backwards incompatible changes.
+  #
+  # You should not change this value, even if you update Home Manager. If you do
+  # want to update the value, then make sure to first check the Home Manager
+  # release notes.
+  home.stateVersion = "22.11"; # Please read the comment before changing.
 }
