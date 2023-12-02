@@ -158,7 +158,6 @@
     yarn
   ];
 
-
   # Discover fonts installed through home.packages.
   fonts.fontconfig.enable = true;
 
