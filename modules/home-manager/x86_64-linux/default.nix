@@ -14,6 +14,7 @@
       "steam-original"
       "steam"
       "vscode"
+      "terraform"
     ];
   };
 
