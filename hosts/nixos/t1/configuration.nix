@@ -38,10 +38,6 @@
     cudaPackages.cudnn
   ];
 
-  environment.sessionVariables = with pkgs; {
-    LD_LIBRARY_PATH = "${cudaPackages.cudnn}/lib:${cudatoolkit}/lib:${cudatoolkit.lib}/lib:$LD_LIBRARY_PATH";
-  };
-
   networking.extraHosts = ''
     127.0.0.1 kubernetes.default.svc.cluster.local
   '';
@@ -114,4 +110,18 @@
 
   # Grafana and Home Assistant
   networking.firewall.allowedTCPPorts = [ 80 8123 9001 ];
+
+  # For running pre-compiled executables as per https://blog.thalheim.io/2022/12/31/nix-ld-a-clean-solution-for-issues-with-pre-compiled-executables-on-nixos/
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = with pkgs; [
+    stdenv.cc.cc
+    zlib
+    fuse3
+    icu
+    zlib
+    nss
+    openssl
+    curl
+    expat
+  ];
 }
