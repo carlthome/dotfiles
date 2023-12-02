@@ -1,9 +1,9 @@
 { nixpkgs-unstable, ... }:
 
-self: super:
+final: prev:
 let
   pkgs = import nixpkgs-unstable {
-    system = super.system;
+    system = prev.system;
     config.allowUnfreePredicate = pkg: builtins.elem (nixpkgs-unstable.lib.getName pkg) [
       "vscode"
       "vscode-extension-github-copilot"
