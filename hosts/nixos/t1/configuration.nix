@@ -91,6 +91,7 @@
   virtualisation.docker = {
     enable = true;
     enableNvidia = true;
+    autoPrune.enable = true;
   };
 
   # Set up Home Assistant within a container.
