@@ -145,6 +145,7 @@
     restic
     ripgrep
     rsync
+    runme
     rustup
     shellcheck
     skaffold
