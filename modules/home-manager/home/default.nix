@@ -91,6 +91,7 @@
     fantasque-sans-mono
     fdupes
     ffmpeg-full
+    fx
     gcc
     gnumake
     gnupg
