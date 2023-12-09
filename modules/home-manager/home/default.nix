@@ -27,7 +27,6 @@
     edit = "nix edit";
     update = "nix flake update --commit-lock-file";
     switch-home = "home-manager switch --flake .";
-    list-open-ports = "sudo netstat --tcp --udp --listening --program --numeric | grep LISTEN";
     py = "steam-run $(which python)";
   };
 
@@ -118,13 +117,14 @@
     ncdu
     nil
     ninja
-    nix-init
-    nix-tree
     nix-diff
     nix-info
+    nix-init
+    nix-tree
     nixfmt
     nixpkgs-fmt
     nixpkgs-review
+    nmap
     nodejs
     nodePackages.npm
     nodePackages.prettier
