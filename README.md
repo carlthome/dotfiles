@@ -16,7 +16,7 @@ My personal computing configuration that I wish to sync between machines.
 1. Stage declarative changes (in [flake.nix](./flake.nix) etc.) as needed
 1. Lint source with `nix flake check`
 1. Build all packages with `nix build`
-1. Apply changes with `nix run .#sync` which will:
+1. Apply changes with `nix run .#update-and-switch` which will:
    1. Pull currently tracked remote branch
    1. Update flake inputs and commit any flake.lock changes
    1. Build and switch system configuration
