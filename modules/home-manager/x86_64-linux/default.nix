@@ -43,7 +43,7 @@
     steam
     tdesktop
     transmission-gtk
-    wineWowPackages.staging
+    wineWowPackages.full
     yabridge
     yabridgectl
     zlib
