@@ -1,4 +1,15 @@
 { config, pkgs, ... }: {
+  nix.settings.substituters = [
+    "https://nixpkgs-unfree.cachix.org"
+    "https://numtide.cachix.org"
+    "https://carlthome.cachix.org"
+  ];
+
+  nix.settings.trusted-public-keys = [
+    "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nj6rs="
+    "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
+    "carlthome.cachix.org-1:BHerYg0J5Qv/Yw/SsxqPBlTY+cttA9axEsmrK24R15w="
+  ];
 
   # Configure Nix program itself.
   nix.settings = {
@@ -13,12 +24,10 @@
     options = "--delete-older-than 30d";
   };
 
-  # Boot sequence settings.
-  boot = {
-    loader.systemd-boot.enable = true;
-    loader.efi.canTouchEfiVariables = true;
-    loader.efi.efiSysMountPoint = "/boot/efi";
-    initrd.secrets = { "/crypto_keyfile.bin" = null; };
+  # Auto-update system packages periodically.
+  system.autoUpgrade = {
+    enable = true;
+    flake = "nixpkgs";
   };
 
   # Select locale, time zone and default keyboard layout.
@@ -37,26 +46,13 @@
     LC_TIME = "sv_SE.UTF-8";
   };
 
-  # Enable networking.
-  networking.networkmanager.enable = true;
-
-  # Enable OpenGL.
-  hardware.opengl.enable = true;
-
-  # Enable real-time audio for PipeWire.
-  sound.enable = true;
-  hardware.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-
   # Set default shell for all users.
   users.defaultUserShell = pkgs.fish;
+  programs.fish.enable = true;
 
   # Set a basic default environment for all users.
   environment = {
-    systemPackages = with pkgs; [
-      vim
-      gnomeExtensions.appindicator
-    ];
+    systemPackages = with pkgs; [ vim ];
     shellAliases = {
       switch-system = "nixos-rebuild switch --flake .";
       list-generations = "nix-env --list-generations";
@@ -66,51 +62,4 @@
       EDITOR = "vim";
     };
   };
-
-  # Add programs available for all users.
-  programs = {
-    command-not-found.enable = true;
-    fish.enable = true;
-    steam.enable = true;
-    firefox.enable = true;
-  };
-
-  # Enable system-wide services.
-  services = {
-    xserver = {
-      enable = true;
-      displayManager.gdm.enable = true;
-      desktopManager.gnome.enable = true;
-      layout = "se";
-    };
-    pipewire = {
-      enable = true;
-      alsa.enable = true;
-      alsa.support32Bit = true;
-      pulse.enable = true;
-      jack.enable = false;
-    };
-    flatpak.enable = false;
-    openssh.enable = false;
-    plex.enable = false;
-    printing.enable = false;
-    udev.packages = [ pkgs.gnome.gnome-settings-daemon ];
-  };
-
-  # Enable Docker container runtime.
-  virtualisation.docker.enable = true;
-
-  # Auto-update system packages periodically.
-  system.autoUpgrade = {
-    enable = true;
-    flake = "nixpkgs";
-  };
-
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "22.11"; # Did you read the comment?
 }
