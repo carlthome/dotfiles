@@ -5,7 +5,7 @@ My personal computing configuration that I wish to sync between machines.
 ## Install
 
 1. Install `nix` on the system (with [flakes enabled](https://nixos.wiki/wiki/Flakes#Enable_flakes)) by running [bootstrap.sh](./bootstrap.sh)
-1. See available packages by `nix flake show github:carlthome/dotfiles`
+1. See available output attributes by `nix flake show github:carlthome/dotfiles`
 1. Create system-wide configuration with `nix run github:carlthome/dotfiles#switch-system`
 1. Create home user configuration with `nix run github:carlthome/dotfiles#switch-home`
 1. Install all packages with `nix profile install github:carlthome/dotfiles`
