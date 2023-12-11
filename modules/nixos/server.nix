@@ -1,5 +1,6 @@
 { config, pkgs, ... }: {
   services.openssh.enable = true;
   services.openssh.settings.PermitRootLogin = "no";
-  #users.mutableUsers = false;
+  services.openssh.settings.PasswordAuthentication = false;
+  users.mutableUsers = false;
 }
