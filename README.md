@@ -8,7 +8,7 @@ My personal computing configuration that I wish to sync between machines.
 1. See available packages by `nix flake show github:carlthome/dotfiles`
 1. Create system-wide configuration with `nix run github:carlthome/dotfiles#switch-system`
 1. Create home user configuration with `nix run github:carlthome/dotfiles#switch-home`
-1. Install all included utility scripts with `nix profile install`
+1. Install all packages with `nix profile install github:carlthome/dotfiles`
 
 ## Develop
 
