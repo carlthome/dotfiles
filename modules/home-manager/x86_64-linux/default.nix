@@ -14,6 +14,7 @@
       "steam-original"
       "steam"
       "vscode"
+      "terraform"
     ];
   };
 
@@ -42,7 +43,7 @@
     steam
     tdesktop
     transmission-gtk
-    wineWowPackages.staging
+    wineWowPackages.full
     yabridge
     yabridgectl
     zlib
@@ -55,11 +56,6 @@
       night-theme-switcher
       rounded-window-corners
     ]);
-
-  home.sessionVariables = with pkgs; {
-    # TODO Think this through better. Currently using `steam-run` on-demand.
-    # LD_LIBRARY_PATH = "${zlib}/lib:${stdenv.cc.cc.lib}/lib:$LD_LIBRARY_PATH";
-  };
 
   # Use `dconf watch /` to track stateful changes you are doing, then set them here.
   dconf.settings = {

@@ -1,13 +1,25 @@
-{ nixpkgs, self, ... }:
-let
-  names = builtins.attrNames (nixpkgs.lib.filterAttrs (n: v: v == "directory") (builtins.readDir ./.));
-  mkNixos = name: nixpkgs.lib.nixosSystem {
-    system = import ./${name}/system.nix;
+{ nixpkgs, self, ... }: {
+  t1 = nixpkgs.lib.nixosSystem {
+    system = "x86_64-linux";
     modules = [
-      ./${name}/hardware-configuration.nix
-      ./${name}/configuration.nix
+      ./t1/configuration.nix
+      ./t1/hardware-configuration.nix
       self.nixosModules.default
+      self.nixosModules.desktop
+      self.nixosModules.cuda
     ];
   };
-in
-nixpkgs.lib.genAttrs names mkNixos
+
+  pi = nixpkgs.lib.nixosSystem {
+    system = "aarch64-linux";
+    modules = [
+      "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
+      { sdImage.compressImage = false; }
+      { nixpkgs.overlays = [ self.overlays.modules-closure ]; }
+      ./pi/configuration.nix
+      ./pi/hardware-configuration.nix
+      self.nixosModules.default
+      self.nixosModules.server
+    ];
+  };
+}

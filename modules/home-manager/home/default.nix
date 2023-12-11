@@ -27,7 +27,7 @@
     edit = "nix edit";
     update = "nix flake update --commit-lock-file";
     switch-home = "home-manager switch --flake .";
-    list-open-ports = "sudo netstat --tcp --udp --listening --program --numeric | grep LISTEN";
+    py = "steam-run $(which python)";
   };
 
   # Enable user programs.
@@ -61,7 +61,7 @@
     gh = {
       enable = true;
       settings.git_protocol = "ssh";
-      enableGitCredentialHelper = false;
+      gitCredentialHelper.enable = false;
     };
   };
 
@@ -90,6 +90,7 @@
     fantasque-sans-mono
     fdupes
     ffmpeg-full
+    fx
     gcc
     gnumake
     gnupg
@@ -116,13 +117,14 @@
     ncdu
     nil
     ninja
-    nix-init
-    nix-tree
     nix-diff
     nix-info
+    nix-init
+    nix-tree
     nixfmt
     nixpkgs-fmt
     nixpkgs-review
+    nmap
     nodejs
     nodePackages.npm
     nodePackages.prettier
@@ -143,6 +145,7 @@
     restic
     ripgrep
     rsync
+    runme
     rustup
     shellcheck
     skaffold

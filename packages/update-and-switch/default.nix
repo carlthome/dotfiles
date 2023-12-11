@@ -1,5 +1,5 @@
 { pkgs, git, ... }: pkgs.writeShellApplication {
-  name = "sync";
+  name = "update-and-switch";
   runtimeInputs = [ git ];
   text = builtins.readFile ./script.sh;
 }

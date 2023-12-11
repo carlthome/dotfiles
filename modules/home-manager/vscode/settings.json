@@ -26,6 +26,9 @@
   "[yaml]": {
     "editor.defaultFormatter": "redhat.vscode-yaml"
   },
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer"
+  },
   "cloudcode.autoDependencies": "off",
   "cloudcode.enableTelemetry": false,
   "cmake.configureOnOpen": true,
