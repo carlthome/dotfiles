@@ -4,8 +4,7 @@ pkgs.buildEnv {
   paths = [
     (pkgs.python3.withPackages (ps: with ps; [
       ipython
-      # TODO Jupyter is currently broken.
-      #jupyter
+      jupyter
       librosa
       matplotlib
       numpy
