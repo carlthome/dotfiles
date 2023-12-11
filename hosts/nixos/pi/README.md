@@ -1,6 +1,9 @@
 # Raspberry Pi with NixOS
 
 ```sh
+# Preconfigure Wi-Fi access.
+echo '{ networking.wireless.networks."My Network".psk = "My Password"; }' > hosts/nixos/pi/wifi.nix
+
 # Build OS image.
 nix build .#nixosConfigurations.pi.config.system.build.sdImage
 
