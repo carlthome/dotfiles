@@ -136,8 +136,7 @@
     poetry
     postgresql
     pre-commit
-    python3
-    python3Packages.pip
+    pyenv
     python3Packages.tensorboard
     pyupgrade
     rclone
