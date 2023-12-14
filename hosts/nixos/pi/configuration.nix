@@ -1,4 +1,6 @@
 { config, pkgs, lib, ... }: {
+  nix.settings.trusted-users = [ "root" "carl" ];
+
   networking.hostName = "pi";
 
   users.users = {
