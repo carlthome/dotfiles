@@ -68,7 +68,6 @@
             "127.0.0.1:${toString config.services.prometheus.exporters.node.port}"
             "192.168.0.19:9100"
             "192.168.0.71:9100"
-            "192.168.0.75:9100"
           ];
         }];
       }
