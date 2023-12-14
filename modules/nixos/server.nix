@@ -3,4 +3,5 @@
   services.openssh.settings.PermitRootLogin = "no";
   services.openssh.settings.PasswordAuthentication = false;
   users.mutableUsers = false;
+  documentation.man.enable = false;
 }
