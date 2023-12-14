@@ -12,6 +12,6 @@ image=$(find result/sd-image -type f -name "*.img")
 device=/dev/sdb
 sudo dd if=$image of=$device bs=4096 conv=fsync status=progress
 
-# TODO Remote update and switch.
-nixos-rebuild --flake . --target-host
+# Plug the SD card (or USB drive) into the Raspberry Pi and power it up. Then rebuild the configuration remotely as needed by running:
+nixos-rebuild --flake . --target-host pi switch
 ```
