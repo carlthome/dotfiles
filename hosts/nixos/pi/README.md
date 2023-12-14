@@ -8,7 +8,7 @@ echo '{ networking.wireless.networks."My Network".psk = "My Password"; }' > host
 nix build .#nixosConfigurations.pi.config.system.build.sdImage
 
 # Write image to SD card (or USB drive).
-image=result/sd-image/nixos-sd-image-*.img
+image=$(find result/sd-image -type f -name "*.img")
 device=/dev/sdb
 sudo dd if=$image of=$device bs=4096 conv=fsync status=progress
 
