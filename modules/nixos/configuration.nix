@@ -60,4 +60,7 @@
       EDITOR = "vim";
     };
   };
+
+  # Provide suggestions of packages to install when a command is not found.
+  programs.command-not-found.enable = true;
 }
