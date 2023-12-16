@@ -1,18 +1,17 @@
 { config, pkgs, ... }: {
-  nix.settings.substituters = [
-    "https://carlthome.cachix.org"
-    "https://numtide.cachix.org"
-  ];
-
-  nix.settings.trusted-public-keys = [
-    "carlthome.cachix.org-1:BHerYg0J5Qv/Yw/SsxqPBlTY+cttA9axEsmrK24R15w="
-    "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
-  ];
 
   # Configure Nix program itself.
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
     auto-optimise-store = true;
+    substituters = [
+      "https://carlthome.cachix.org"
+      "https://numtide.cachix.org"
+    ];
+    trusted-public-keys = [
+      "carlthome.cachix.org-1:BHerYg0J5Qv/Yw/SsxqPBlTY+cttA9axEsmrK24R15w="
+      "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
+    ];
   };
 
   # Enable automatic garbage collection.
