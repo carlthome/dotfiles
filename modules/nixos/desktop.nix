@@ -1,13 +1,5 @@
 { config, pkgs, ... }: {
 
-  # Boot sequence settings.
-  boot = {
-    loader.systemd-boot.enable = true;
-    loader.efi.canTouchEfiVariables = true;
-    loader.efi.efiSysMountPoint = "/boot/efi";
-    initrd.secrets = { "/crypto_keyfile.bin" = null; };
-  };
-
   # Configure graphics settings.
   hardware.opengl.enable = true;
   services.xserver = {

@@ -1,6 +1,13 @@
 { config, pkgs, lib, ... }: {
   networking.hostName = "t1";
 
+  boot = {
+    loader.systemd-boot.enable = true;
+    loader.efi.canTouchEfiVariables = true;
+    loader.efi.efiSysMountPoint = "/boot/efi";
+    initrd.secrets = { "/crypto_keyfile.bin" = null; };
+  };
+
   users.users = {
     carl = {
       isNormalUser = true;
