@@ -1,7 +1,6 @@
 import numpy as np
 
-# TODO
-# import onnxruntime
+import onnxruntime
 
 
 def main():
