@@ -154,6 +154,7 @@
     syft
     terraform
     tree
+    typst
     visidata
     wget
     yarn
