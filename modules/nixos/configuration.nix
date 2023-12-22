@@ -24,7 +24,7 @@
   # Auto-update system packages periodically.
   system.autoUpgrade = {
     enable = true;
-    flake = "nixpkgs";
+    flake = "github:carlthome/dotfiles";
   };
 
   # Select locale, time zone and default keyboard layout.
