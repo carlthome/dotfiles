@@ -6,4 +6,6 @@
   security.pam.services.sudo.sshAgentAuth = true;
   users.mutableUsers = false;
   documentation.man.enable = false;
+  nix.settings.cores = 1;
+  nix.settings.max-jobs = 1;
 }
