@@ -49,7 +49,7 @@
 
   # Set a basic default environment for all users.
   environment = {
-    systemPackages = with pkgs; [ vim ];
+    systemPackages = with pkgs; [ vim htop ];
     shellAliases = {
       switch-system = "nixos-rebuild switch --flake .";
       list-generations = "nix-env --list-generations";
