@@ -24,6 +24,10 @@
       grub.enable = false;
       generic-extlinux-compatible.enable = true;
     };
+    tmp = {
+      cleanOnBoot = true;
+      useTmpfs = true;
+    };
   };
 
   fileSystems = {
