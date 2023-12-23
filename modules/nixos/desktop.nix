@@ -47,4 +47,9 @@
   nix.settings.cores = 1;
   nix.settings.max-jobs = 1;
 
+  # Auto-update system packages periodically.
+  system.autoUpgrade = {
+    enable = true;
+    flake = "github:carlthome/dotfiles";
+  };
 }
