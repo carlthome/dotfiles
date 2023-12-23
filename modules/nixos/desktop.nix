@@ -39,4 +39,8 @@
 
   # Add default web browser for all users.
   programs.firefox.enable = true;
+
+  # Make sure packages share files by scanning for duplicates.
+  nix.settings.auto-optimise-store = true;
+
 }

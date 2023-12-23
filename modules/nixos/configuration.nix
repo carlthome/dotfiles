@@ -3,7 +3,6 @@
   # Configure Nix program itself.
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
-    auto-optimise-store = true;
     substituters = [
       "https://carlthome.cachix.org"
       "https://numtide.cachix.org"
