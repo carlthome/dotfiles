@@ -17,4 +17,7 @@ printf 'network={\n  ssid="My Network"\n  psk="My Password"\n}\n' | sudo tee /ru
 
 # Plug the SD card (or USB drive) into the Raspberry Pi and power it up. Then rebuild the configuration remotely as needed by running:
 nixos-rebuild --flake .#pi --target-host pi --use-remote-sudo switch
+
+# Or build on the remote device (e.g. if the local machine is macOS):
+nixos-rebuild --flake .#pi --fast --build-host pi --target-host pi --use-remote-sudo switch
 ```
