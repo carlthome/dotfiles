@@ -20,6 +20,12 @@
     options = "--delete-older-than 30d";
   };
 
+  # Auto-update system packages periodically.
+  system.autoUpgrade = {
+    enable = true;
+    flake = "github:carlthome/dotfiles";
+  };
+
   # Select locale, time zone and default keyboard layout.
   console.keyMap = "sv-latin1";
   time.timeZone = "Europe/Stockholm";

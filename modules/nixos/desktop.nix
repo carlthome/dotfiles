@@ -46,10 +46,4 @@
   # Limit resources used by Nix to not make the system irresponsive during upgrades.
   nix.settings.cores = 1;
   nix.settings.max-jobs = 1;
-
-  # Auto-update system packages periodically.
-  system.autoUpgrade = {
-    enable = true;
-    flake = "github:carlthome/dotfiles";
-  };
 }
