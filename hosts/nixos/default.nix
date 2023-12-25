@@ -18,7 +18,6 @@
       { nixpkgs.overlays = [ self.overlays.modules-closure ]; }
       ./pi/configuration.nix
       ./pi/hardware-configuration.nix
-      ./pi/wifi.nix
       self.nixosModules.default
       self.nixosModules.server
     ];
