@@ -121,6 +121,7 @@
     nix-init
     nix-tree
     nixfmt
+    nixos-rebuild
     nixpkgs-fmt
     nixpkgs-review
     nmap
