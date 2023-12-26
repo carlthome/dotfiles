@@ -85,6 +85,7 @@
     volumes = [
       "/etc/home-assistant:/config"
       "/etc/localtime:/etc/localtime:ro"
+      "/run/dbus:/run/dbus:ro"
     ];
     extraOptions = [
       "--network=host"
