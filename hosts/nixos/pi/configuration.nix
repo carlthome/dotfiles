@@ -27,6 +27,7 @@
     tmp = {
       cleanOnBoot = true;
       useTmpfs = true;
+      tmpfsSize = "1G";
     };
   };
 
