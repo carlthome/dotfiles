@@ -37,6 +37,11 @@
       fsType = "ext4";
       options = [ "noatime" ];
     };
+
+    "/var/lib/prometheus2/data" = {
+      fsType = "tmpfs";
+      options = [ "size=1G" ];
+    };
   };
 
   networking.wireless = {
