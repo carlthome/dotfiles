@@ -49,6 +49,8 @@
     interfaces = [ "wlan0" ];
   };
 
+  services.journald.storage = "volatile";
+
   services.grafana = {
     enable = true;
     settings = {
