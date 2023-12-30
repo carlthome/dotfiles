@@ -20,7 +20,7 @@
     options = "--delete-older-than 30d";
   };
 
-  # Auto-update system packages periodically.
+  # Auto-upgrade system periodically.
   system.autoUpgrade = {
     enable = true;
     flake = "github:carlthome/dotfiles";
