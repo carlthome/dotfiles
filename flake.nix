@@ -25,8 +25,8 @@
       };
     in
     flake-utils.lib.eachDefaultSystem mkSystem // {
-      nixosConfigurations = import ./hosts/nixos inputs;
-      darwinConfigurations = import ./hosts/darwin inputs;
+      nixosConfigurations = import ./hosts inputs;
+      darwinConfigurations = import ./hosts inputs;
       nixosModules = import ./modules/nixos inputs;
       darwinModules = import ./modules/nix-darwin inputs;
       homeModules = import ./modules/home-manager inputs;

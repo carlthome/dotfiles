@@ -39,11 +39,4 @@
 
   # Add default web browser for all users.
   programs.firefox.enable = true;
-
-  # Make sure packages share files by scanning for duplicates.
-  nix.settings.auto-optimise-store = true;
-
-  # Limit resources used by Nix to not make the system irresponsive during upgrades.
-  nix.settings.cores = 1;
-  nix.settings.max-jobs = 1;
 }

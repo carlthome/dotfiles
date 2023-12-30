@@ -1,17 +1,13 @@
 { pkgs, ... }: {
 
-  nix.settings.substituters = [
-    "https://carlthome.cachix.org"
-    "https://numtide.cachix.org"
-  ];
-
-  nix.settings.trusted-public-keys = [
-    "carlthome.cachix.org-1:BHerYg0J5Qv/Yw/SsxqPBlTY+cttA9axEsmrK24R15w="
-    "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
-  ];
-
-  # Link old commands (nix-shell, nix-build, etc.) to use the same nixpkgs as the flake.
-  nix.nixPath = [ "nixpkgs=${pkgs.path}" ];
+  # Auto-upgrade macOS hosts periodically.
+  launchd.user.agents.auto-upgrade = {
+    command = "darwin-rebuild switch --refresh --flake github:carlthome/dotfiles";
+    serviceConfig.KeepAlive = false;
+    serviceConfig.RunAtLoad = true;
+    serviceConfig.ProcessType = "Background";
+    serviceConfig.StartCalendarInterval = [{ Hour = 0; Minute = 0; }];
+  };
 
   # Install packages in system profile.
   environment.systemPackages = with pkgs; [
@@ -40,21 +36,6 @@
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
   nix.package = pkgs.nix;
-
-  # Enable automatic garbage collection.
-  nix.gc.automatic = true;
-
-  # Automatically deduplicate files.
-  nix.settings.auto-optimise-store = true;
-
-  # Auto-upgrade system periodically.
-  launchd.user.agents.auto-upgrade = {
-    command = "darwin-rebuild switch --refresh --flake github:carlthome/dotfiles";
-    serviceConfig.KeepAlive = false;
-    serviceConfig.RunAtLoad = true;
-    serviceConfig.ProcessType = "Background";
-    serviceConfig.StartCalendarInterval = [{ Hour = 0; Minute = 0; }];
-  };
 
   # Enable sandboxing.
   nix.settings.sandbox = false;

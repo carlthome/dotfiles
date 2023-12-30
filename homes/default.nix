@@ -9,6 +9,7 @@ let
       ];
     };
     modules = [
+      ./home.nix
       ./${name}/home.nix
       nix-index-database.hmModules.nix-index
       self.homeModules.home
