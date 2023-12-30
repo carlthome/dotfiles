@@ -1,26 +1,6 @@
 { config, pkgs, ... }: {
 
-  # Configure Nix program itself.
-  nix.settings = {
-    experimental-features = [ "nix-command" "flakes" ];
-    substituters = [
-      "https://carlthome.cachix.org"
-      "https://numtide.cachix.org"
-    ];
-    trusted-public-keys = [
-      "carlthome.cachix.org-1:BHerYg0J5Qv/Yw/SsxqPBlTY+cttA9axEsmrK24R15w="
-      "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
-    ];
-  };
-
-  # Enable automatic garbage collection.
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 30d";
-  };
-
-  # Auto-upgrade system periodically.
+  # Auto-upgrade NixOS hosts periodically.
   system.autoUpgrade = {
     enable = true;
     flake = "github:carlthome/dotfiles";
