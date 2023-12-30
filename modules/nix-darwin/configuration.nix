@@ -49,7 +49,7 @@
 
   # Auto-upgrade system periodically.
   launchd.user.agents.auto-upgrade = {
-    command = "darwin-rebuild switch --flake github:carlthome/dotfiles";
+    command = "darwin-rebuild switch --refresh --flake github:carlthome/dotfiles";
     serviceConfig.KeepAlive = false;
     serviceConfig.RunAtLoad = true;
     serviceConfig.ProcessType = "Background";
