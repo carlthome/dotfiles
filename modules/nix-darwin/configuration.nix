@@ -47,6 +47,15 @@
   # Automatically deduplicate files.
   nix.settings.auto-optimise-store = true;
 
+  # Auto-upgrade system periodically.
+  launchd.user.agents.auto-upgrade = {
+    command = "darwin-rebuild switch --flake github:carlthome/dotfiles";
+    serviceConfig.KeepAlive = false;
+    serviceConfig.RunAtLoad = true;
+    serviceConfig.ProcessType = "Background";
+    serviceConfig.StartCalendarInterval = [{ Hour = 0; Minute = 0; }];
+  };
+
   # Enable sandboxing.
   nix.settings.sandbox = false;
 
