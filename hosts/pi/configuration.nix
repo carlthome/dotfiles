@@ -84,6 +84,7 @@
         }];
       }
     ];
+    alertmanager.enable = true;
   };
 
   virtualisation.oci-containers.backend = "docker";
@@ -105,6 +106,7 @@
     80 # Grafana
     8123 # Home Assistant
     9001 # Prometheus
+    9093 # Alertmanager
   ];
 
   # This value determines the NixOS release from which the default
