@@ -78,6 +78,14 @@ let
     #TODO Broken on darwin.
     #ms-vscode.cpptools
     #ms-vsliveshare.vsliveshare
+  ] ++ [
+    ((pkgs.vscode-utils.extensionFromVscodeMarketplace
+      {
+        name = "cloudcode";
+        publisher = "googlecloudtools";
+        version = "2.2.1";
+        sha256 = "sha256-PRGtxcN98DisCPAoRdgDQYFwYo/LEPflx55YDe08C+k=";
+      }).overrideAttrs (_: { sourceRoot = "extension"; }))
   ];
 in
 {
