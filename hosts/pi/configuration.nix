@@ -84,7 +84,10 @@
         }];
       }
     ];
-    alertmanager.enable = true;
+    alertmanager = {
+      enable = true;
+      configText = builtins.readFile ./alertmanager.yml;
+    };
   };
 
   virtualisation.oci-containers.backend = "docker";
