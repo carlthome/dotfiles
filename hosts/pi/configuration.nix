@@ -53,10 +53,16 @@
 
   services.loki = {
     enable = true;
-    configuration = {
-      server = {
-        http_listen_port = 3100;
-      };
+    configFile = ./loki/config.yml;
+  };
+
+  systemd.services.promtail = {
+    description = "Promtail service for Loki";
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      ExecStart = ''
+        ${pkgs.grafana-loki}/bin/promtail --config.file ${./loki/promtail.yml}
+      '';
     };
   };
 
@@ -82,7 +88,7 @@
         name = "Loki";
         type = "loki";
         access = "proxy";
-        url = "http://127.0.0.1:${toString config.services.loki.configuration.server.http_listen_port}";
+        url = "http://127.0.0.1:3100";
       }
     ];
     provision.dashboards.settings.providers = [
@@ -153,6 +159,7 @@
     config.services.grafana.settings.server.http_port
     config.services.prometheus.port
     config.services.prometheus.alertmanager.port
+    3100 # Loki
     8123 # Home Assistant
   ];
 
