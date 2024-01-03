@@ -8,8 +8,8 @@ pkgs.python3Packages.buildPythonApplication {
   src = pkgs.fetchFromGitHub {
     owner = "carlthome";
     repo = "stable-diffusion";
-    rev = "33e258e2aba132d5314abb3580ebe4c97f3aacc8";
-    hash = "sha256-NJBajRupDJJupwFoY6zFgodel4fKNXqZgzF7vKC5seE=";
+    rev = "ac5a74677c6bc1a631aa844e8e826e8a20763ffd";
+    hash = "sha256-amgWyAtR8JLrSMWDhsX4cv0sMrvyBW+vm4AzahjH+Ts=";
   };
 
   nativeBuildInputs = with pkgs.python3Packages; [
