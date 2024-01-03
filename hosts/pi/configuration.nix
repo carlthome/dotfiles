@@ -164,7 +164,8 @@
     config.services.grafana.settings.server.http_port
     config.services.prometheus.port
     config.services.prometheus.alertmanager.port
-    3100 # Loki
+    # TODO Expose Loki after adding authentication.
+    #3100 # Loki
     8123 # Home Assistant
   ];
 
