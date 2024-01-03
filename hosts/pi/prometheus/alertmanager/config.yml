@@ -42,3 +42,26 @@ receivers:
     slack_configs:
       - channel: $SLACK_CHANNEL
         send_resolved: true
+        title: '{{ template "slack.monzo.title" . }}'
+        icon_emoji: '{{ template "slack.monzo.icon_emoji" . }}'
+        color: '{{ template "slack.monzo.color" . }}'
+        text: '{{ template "slack.monzo.text" . }}'
+        actions:
+          - type: button
+            name: mutebutton
+            text: "Mute :prometheus:"
+            value: "text"
+            url: "https://{{ (index .Alerts 0).Labels.alertManagerUrl }}" # just a link for our internal alert manager, with added https://
+          - type: button
+            name: readmebutton
+            text: "README :green_book:"
+            value: "text"
+            url: "{{ (index .Alerts 0).Labels.readmeUrl }}" # just a link for our internal readme, it comes with https:// so no need to add
+          - type: button
+            name: grafana
+            text: "Grafana :grafana:"
+            value: "text"
+            url: "https://{{ (index .Alerts 0).Labels.grafanaAlertUrl }}" # same as first button
+
+templates:
+  - "/etc/alertmanager/templates/*.tmpl"

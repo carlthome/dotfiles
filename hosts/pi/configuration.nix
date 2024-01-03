@@ -94,19 +94,10 @@
     provision.dashboards.settings.providers = [
       {
         name = "My Dashboards";
-        options.path = "/etc/grafana-dashboards";
+        options.path = "/etc/grafana/dashboards";
       }
     ];
   };
-
-  # Add all dashboards in the grafana/dashboards directory to /etc/grafana-dashboards.
-  environment.etc = lib.mapAttrs'
-    (name: value: lib.nameValuePair ("grafana-dashboards/" + name) {
-      source = ./grafana/dashboards/${name};
-      group = "grafana";
-      user = "grafana";
-    })
-    (builtins.readDir ./grafana/dashboards);
 
   services.prometheus = {
     enable = true;
@@ -132,7 +123,7 @@
       path_prefix = "";
       static_configs = [{
         targets = [
-          "127.0.0.1:9093"
+          "127.0.0.1:${toString config.services.prometheus.alertmanager.port}"
         ];
       }];
     }];
@@ -145,7 +136,7 @@
 
   services.prometheus.alertmanager = {
     enable = true;
-    configText = builtins.readFile ./prometheus/alertmanager.yml;
+    configText = builtins.readFile ./prometheus/alertmanager/config.yml;
     environmentFile = "/etc/nixos/secrets/alertmanager.env";
     checkConfig = false;
   };
@@ -165,10 +156,30 @@
     ];
   };
 
+  # Add all Grafana dashboards and Alertmanager templates to /etc.
+  environment.etc =
+    let
+      dashboards = lib.mapAttrs'
+        (name: value: lib.nameValuePair ("grafana/dashboards/" + name) {
+          source = ./grafana/dashboards/${name};
+          group = "grafana";
+          user = "grafana";
+        })
+        (builtins.readDir ./grafana/dashboards);
+      templates = lib.mapAttrs'
+        (name: value: lib.nameValuePair ("alertmanager/templates/" + name) {
+          source = ./prometheus/alertmanager/templates/${name};
+          group = "grafana";
+          user = "grafana";
+        })
+        (builtins.readDir ./prometheus/alertmanager/templates);
+    in
+    dashboards // templates;
+
   networking.firewall.allowedTCPPorts = [
     config.services.grafana.settings.server.http_port
     config.services.prometheus.port
-    9093 # Alertmanager
+    config.services.prometheus.alertmanager.port
     # TODO Expose Loki after adding authentication.
     #3100 # Loki
     8123 # Home Assistant
