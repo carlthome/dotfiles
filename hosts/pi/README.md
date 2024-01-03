@@ -21,3 +21,8 @@ nixos-rebuild --flake .#pi --target-host pi --use-remote-sudo switch
 # Or build on the remote device (e.g. if the local machine is macOS):
 nixos-rebuild --flake .#pi --fast --build-host pi --target-host pi --use-remote-sudo switch
 ```
+
+## References
+
+- https://xeiaso.net/blog/prometheus-grafana-loki-nixos-2020-11-20/
+- https://discourse.nixos.org/t/how-to-use-exported-grafana-dashboard/27739/2?u=carlthome
