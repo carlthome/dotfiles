@@ -105,6 +105,11 @@
       group = "grafana";
       user = "grafana";
     };
+    "grafana-dashboards/13639_rev2.json" = {
+      source = ./grafana/dashboards/13639_rev2.json;
+      group = "grafana";
+      user = "grafana";
+    };
   };
 
   services.prometheus = {
