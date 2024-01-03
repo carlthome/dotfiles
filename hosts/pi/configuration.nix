@@ -51,6 +51,15 @@
 
   services.journald.storage = "volatile";
 
+  services.loki = {
+    enable = true;
+    configuration = {
+      server = {
+        http_listen_port = 3100;
+      };
+    };
+  };
+
   services.grafana = {
     enable = true;
     settings = {
@@ -60,33 +69,68 @@
         domain = "localhost";
       };
     };
+    provision.enable = true;
+    provision.datasources.settings.datasources = [
+      {
+        name = "Prometheus";
+        type = "prometheus";
+        access = "proxy";
+        url = "http://127.0.0.1:${toString config.services.prometheus.port}";
+        isDefault = true;
+      }
+      {
+        name = "Loki";
+        type = "loki";
+        access = "proxy";
+        url = "http://127.0.0.1:${toString config.services.loki.configuration.server.http_listen_port}";
+      }
+    ];
+    provision.dashboards.settings.providers = [
+      {
+        name = "My Dashboards";
+        options.path = "/etc/grafana-dashboards";
+      }
+    ];
+  };
+
+  environment.etc = {
+    "grafana-dashboards/1860_rev33.json" = {
+      source = ./grafana/dashboards/1860_rev33.json;
+      group = "grafana";
+      user = "grafana";
+    };
   };
 
   services.prometheus = {
     enable = true;
-    port = 9001;
     exporters = {
       node = {
         enable = true;
         enabledCollectors = [ "systemd" ];
-        port = 9002;
       };
+    };
+    globalConfig = {
+      scrape_interval = "15s";
+      scrape_timeout = "10s";
+      evaluation_interval = "15s";
     };
     scrapeConfigs = [
       {
-        job_name = "hosts";
+        job_name = "node_exporter";
         static_configs = [{
           targets = [
             "127.0.0.1:${toString config.services.prometheus.exporters.node.port}"
-            "192.168.0.19:9100"
             "192.168.0.71:9100"
           ];
         }];
       }
     ];
+    ruleFiles = [ ./prometheus/rules.yml ];
     alertmanager = {
       enable = true;
-      configText = builtins.readFile ./alertmanager.yml;
+      configText = builtins.readFile ./prometheus/alertmanager.yml;
+      environmentFile = "/etc/nixos/secrets/alertmanager.env";
+      checkConfig = false;
     };
   };
 
@@ -106,10 +150,10 @@
   };
 
   networking.firewall.allowedTCPPorts = [
-    80 # Grafana
+    config.services.grafana.settings.server.http_port
+    config.services.prometheus.port
+    config.services.prometheus.alertmanager.port
     8123 # Home Assistant
-    9001 # Prometheus
-    9093 # Alertmanager
   ];
 
   # This value determines the NixOS release from which the default

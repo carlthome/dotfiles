@@ -1,0 +1,44 @@
+global:
+  resolve_timeout: 1m
+  slack_api_url: $SLACK_API_URL
+
+route:
+  receiver: slack
+  group_by: [alertname]
+
+  # When a new group of alerts is created by an incoming alert, wait at
+  # least 'group_wait' to send the initial notification.
+  # This way ensures that you get multiple alerts for the same group that start
+  # firing shortly after another are batched together on the first
+  # notification.
+  group_wait: 30s
+
+  # When the first notification was sent, wait 'group_interval' to send a batch
+  # of new alerts that started firing for that group.
+  group_interval: 5m
+
+  # If an alert has successfully been sent, wait 'repeat_interval' to
+  # resend them.
+  repeat_interval: 3h
+
+# Inhibition rules allow to mute a set of alerts given that another alert is
+# firing.
+# We use this to mute any warning-level notifications if the same alert is
+# already critical.
+inhibit_rules:
+  - source_matchers:
+      - severity="critical"
+    target_matchers:
+      - severity="warning"
+    # Apply inhibition if the alertname is the same.
+    # CAUTION:
+    #   If all label names listed in `equal` are missing
+    #   from both the source and target alerts,
+    #   the inhibition rule will apply!
+    equal: ["alertname"]
+
+receivers:
+  - name: slack
+    slack_configs:
+      - channel: $SLACK_CHANNEL
+        send_resolved: true
