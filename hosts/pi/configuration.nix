@@ -114,12 +114,6 @@
 
   services.prometheus = {
     enable = true;
-    exporters = {
-      node = {
-        enable = true;
-        enabledCollectors = [ "systemd" ];
-      };
-    };
     globalConfig = {
       scrape_interval = "15s";
       scrape_timeout = "10s";
@@ -137,12 +131,27 @@
       }
     ];
     ruleFiles = [ ./prometheus/rules.yml ];
-    alertmanager = {
-      enable = true;
-      configText = builtins.readFile ./prometheus/alertmanager.yml;
-      environmentFile = "/etc/nixos/secrets/alertmanager.env";
-      checkConfig = false;
-    };
+    alertmanagers = [{
+      scheme = "http";
+      path_prefix = "";
+      static_configs = [{
+        targets = [
+          "127.0.0.1:9093"
+        ];
+      }];
+    }];
+  };
+
+  services.prometheus.exporters.node = {
+    enable = true;
+    enabledCollectors = [ "systemd" "processes" ];
+  };
+
+  services.prometheus.alertmanager = {
+    enable = true;
+    configText = builtins.readFile ./prometheus/alertmanager.yml;
+    environmentFile = "/etc/nixos/secrets/alertmanager.env";
+    checkConfig = false;
   };
 
   virtualisation.oci-containers.backend = "docker";
@@ -163,7 +172,7 @@
   networking.firewall.allowedTCPPorts = [
     config.services.grafana.settings.server.http_port
     config.services.prometheus.port
-    config.services.prometheus.alertmanager.port
+    9093 # Alertmanager
     # TODO Expose Loki after adding authentication.
     #3100 # Loki
     8123 # Home Assistant
