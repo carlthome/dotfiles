@@ -99,18 +99,14 @@
     ];
   };
 
-  environment.etc = {
-    "grafana-dashboards/1860_rev33.json" = {
-      source = ./grafana/dashboards/1860_rev33.json;
+  # Add all dashboards in the grafana/dashboards directory to /etc/grafana-dashboards.
+  environment.etc = lib.mapAttrs'
+    (name: value: lib.nameValuePair ("grafana-dashboards/" + name) {
+      source = ./grafana/dashboards/${name};
       group = "grafana";
       user = "grafana";
-    };
-    "grafana-dashboards/13639_rev2.json" = {
-      source = ./grafana/dashboards/13639_rev2.json;
-      group = "grafana";
-      user = "grafana";
-    };
-  };
+    })
+    (builtins.readDir ./grafana/dashboards);
 
   services.prometheus = {
     enable = true;
