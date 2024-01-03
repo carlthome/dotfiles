@@ -1,5 +1,7 @@
 # Raspberry Pi with NixOS
 
+## Usage
+
 ```sh
 # Build OS image.
 nix build .#nixosConfigurations.pi.config.system.build.sdImage
