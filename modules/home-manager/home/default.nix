@@ -161,6 +161,9 @@
     yarn
   ];
 
+  # Enable pyenv integration.
+  programs.pyenv.enable = true;
+
   # Discover fonts installed through home.packages.
   fonts.fontconfig.enable = true;
 
