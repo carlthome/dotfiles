@@ -2,7 +2,7 @@
 
   # Auto-upgrade macOS hosts periodically.
   launchd.user.agents.auto-upgrade = {
-    command = "darwin-rebuild switch --refresh --flake github:carlthome/dotfiles";
+    command = "/run/current-system/sw/bin/darwin-rebuild switch --refresh --flake github:carlthome/dotfiles";
     serviceConfig = {
       KeepAlive = false;
       RunAtLoad = true;
