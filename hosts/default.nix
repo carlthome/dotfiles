@@ -12,6 +12,7 @@ let
         "carlthome.cachix.org-1:BHerYg0J5Qv/Yw/SsxqPBlTY+cttA9axEsmrK24R15w="
         "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
       ];
+      # TODO https://github.com/NixOS/nix/issues/7273
       auto-optimise-store = true;
       cores = 1;
       max-jobs = 1;
