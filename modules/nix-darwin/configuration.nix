@@ -3,10 +3,14 @@
   # Auto-upgrade macOS hosts periodically.
   launchd.user.agents.auto-upgrade = {
     command = "darwin-rebuild switch --refresh --flake github:carlthome/dotfiles";
-    serviceConfig.KeepAlive = false;
-    serviceConfig.RunAtLoad = true;
-    serviceConfig.ProcessType = "Background";
-    serviceConfig.StartCalendarInterval = [{ Hour = 0; Minute = 0; }];
+    serviceConfig = {
+      KeepAlive = false;
+      RunAtLoad = true;
+      ProcessType = "Background";
+      StartCalendarInterval = [{ Hour = 0; Minute = 0; }];
+      StandardErrorPath = "/tmp/auto-upgrade.err";
+      StandardOutPath = "/tmp/auto-upgrade.out";
+    };
   };
 
   # Install packages in system profile.
