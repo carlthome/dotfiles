@@ -170,6 +170,47 @@
   # Check for release version mismatch between Home Manager and nixpkgs.
   home.enableNixpkgsReleaseCheck = true;
 
+  # TODO Remove after testing.
+  launchd.agents.good-afternoon = {
+    enable = true;
+    config = {
+      ProgramArguments = [ "/usr/bin/say" "Good afternoon" ];
+      StandardErrorPath = "/tmp/good-afternoon.err";
+      StandardOutPath = "/tmp/good-afternoon.out";
+      StartCalendarInterval = [
+        {
+          Hour = 12;
+          Minute = 0;
+        }
+      ];
+    };
+  };
+
+  # Auto-upgrade home configuration periodically.
+  launchd.agents.auto-upgrade = {
+    enable = true;
+    config = {
+      KeepAlive = {
+        Crashed = true;
+        SuccessfulExit = false;
+      };
+      RunAtLoad = true;
+      ProgramArguments = [
+        ((pkgs.writeShellApplication
+          {
+            name = "auto-upgrade";
+            runtimeInputs = with pkgs; [ nix home-manager ];
+            text = "home-manager switch --refresh --flake github:carlthome/dotfiles";
+          }
+        ).outPath + "/bin/auto-upgrade")
+      ];
+      ProcessType = "Background";
+      StartCalendarInterval = [{ Hour = 0; Minute = 0; }];
+      StandardErrorPath = "/tmp/auto-upgrade-home.err";
+      StandardOutPath = "/tmp/auto-upgrade-home.out";
+    };
+  };
+
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
   # introduces backwards incompatible changes.
