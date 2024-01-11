@@ -19,6 +19,7 @@ let
     github.vscode-github-actions
     github.vscode-pull-request-github
     gitlab.gitlab-workflow
+    golang.go
     hashicorp.terraform
     jnoortheen.nix-ide
     mikestead.dotenv
