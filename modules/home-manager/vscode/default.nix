@@ -39,6 +39,7 @@ let
     stkb.rewrap
     svelte.svelte-vscode
     tamasfe.even-better-toml
+    tomoki1207.pdf
     twxs.cmake
   ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
     {
