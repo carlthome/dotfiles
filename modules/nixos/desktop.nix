@@ -39,4 +39,7 @@
 
   # Add default web browser for all users.
   programs.firefox.enable = true;
+
+  # Auto-build and reload shell.nix in the background.
+  services.lorri.enable = true;
 }
