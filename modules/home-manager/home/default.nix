@@ -197,7 +197,7 @@
         SuccessfulExit = false;
       };
       RunAtLoad = true;
-      ProgramArguments = [ import ./auto-upgrade.nix { inherit pkgs; } ];
+      ProgramArguments = [ (import ./auto-upgrade.nix { inherit pkgs; }) ];
       ProcessType = "Background";
       StartCalendarInterval = [{ Hour = 0; Minute = 0; }];
       StandardErrorPath = "/tmp/auto-upgrade-home.err";
