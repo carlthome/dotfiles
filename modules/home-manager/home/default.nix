@@ -75,6 +75,7 @@
     black
     buildah
     buildkit
+    bun
     cachix
     cmake
     comma
