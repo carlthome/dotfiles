@@ -151,6 +151,7 @@
     rustup
     shellcheck
     skaffold
+    snyk
     sops
     sox
     spr
