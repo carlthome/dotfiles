@@ -18,11 +18,13 @@ sudo dd if=$image of=$device bs=4096 conv=fsync status=progress
 printf 'network={\n  ssid="My Network"\n  psk="My Password"\n}\n' | sudo tee /run/media/$USER/NIXOS_SD/etc/wpa_supplicant.conf
 
 # Plug the SD card (or USB drive) into the Raspberry Pi and power it up. Then rebuild the configuration remotely as needed by running:
-nixos-rebuild --flake .#pi --target-host pi --use-remote-sudo switch
+nixos-rebuild --flake .#pi --target-host pi --use-remote-sudo test
 
 # Or build on the remote device (e.g. if the local machine is macOS):
-nixos-rebuild --flake .#pi --fast --build-host pi --target-host pi --use-remote-sudo switch
+nixos-rebuild --flake .#pi --fast --build-host pi --target-host pi --use-remote-sudo test
 ```
+
+Replace `test` with `switch` to apply the new configuration on reboot. Note that this can lead to permanent lock out without physical access. To recover, access the SD card on another machine and edit NIXOS_SD/boot/extlinux/extlinux.conf to temporarily boot into the last known working configuration.
 
 ## References
 
