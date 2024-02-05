@@ -42,6 +42,18 @@
       fsType = "tmpfs";
       options = [ "size=1G" ];
     };
+
+    "/mnt/datasets" = {
+      device = "/dev/disk/by-uuid/1409bcc2-5b89-4d7e-ac96-c1db331053d8";
+      fsType = "btrfs";
+      options = [ "nofail" "compress=zstd" "subvol=datasets" ];
+    };
+
+    "/mnt/media" = {
+      device = "/dev/disk/by-uuid/1409bcc2-5b89-4d7e-ac96-c1db331053d8";
+      fsType = "btrfs";
+      options = [ "nofail" "subvol=media" ];
+    };
   };
 
   networking.wireless = {
@@ -50,6 +62,15 @@
   };
 
   services.journald.storage = "volatile";
+
+  services.btrfs.autoScrub = {
+    enable = true;
+    interval = "monthly";
+    fileSystems = [
+      "/mnt/datasets"
+      "/mnt/media"
+    ];
+  };
 
   services.loki = {
     enable = true;
