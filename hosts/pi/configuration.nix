@@ -160,6 +160,10 @@
     enabledCollectors = [ "systemd" "processes" ];
   };
 
+  services.prometheus.exporters.systemd = {
+    enable = true;
+  };
+
   services.prometheus.alertmanager = {
     enable = true;
     configText = builtins.readFile ./prometheus/alertmanager/config.yml;
