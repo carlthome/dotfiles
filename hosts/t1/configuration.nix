@@ -8,6 +8,12 @@
     initrd.secrets = { "/crypto_keyfile.bin" = null; };
   };
 
+  fileSystems."/mnt/datasets" = {
+    device = "192.168.0.75:/mnt/datasets";
+    fsType = "nfs";
+    options = [ "x-systemd.automount" "x-systemd.idle-timeout=600" ];
+  };
+
   users.users = {
     carl = {
       isNormalUser = true;
