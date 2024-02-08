@@ -186,6 +186,12 @@
     ];
   };
 
+  services.nfs.server.enable = true;
+  services.nfs.server.exports = ''
+    /mnt/datasets 192.168.0.19(rw,sync)
+    /mnt/media 192.168.0.19(rw,sync)
+  '';
+
   # Add all Grafana dashboards and Alertmanager templates to /etc.
   environment.etc =
     let
@@ -213,6 +219,7 @@
     # TODO Expose Loki after adding authentication.
     #3100 # Loki
     8123 # Home Assistant
+    2049 # NFS
   ];
 
   # This value determines the NixOS release from which the default
