@@ -72,6 +72,11 @@
     ];
   };
 
+  services.jellyfin = {
+    enable = true;
+    openFirewall = true;
+  };
+
   services.loki = {
     enable = true;
     configFile = ./loki/config.yml;
