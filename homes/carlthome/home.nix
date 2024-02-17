@@ -1,10 +1,11 @@
 { config, pkgs, lib, self, ... }: {
-  imports = [
-    self.homeModules.vscode
-    self.homeModules.vim
-    self.homeModules.neovim
-    self.homeModules.emacs
-    self.homeModules.git
+  imports = with self.homeModules; [
+    vscode
+    vim
+    neovim
+    emacs
+    git
+    auto-upgrade
   ];
 
   home.username = "carlthome";

@@ -190,38 +190,6 @@
     };
   };
 
-  # Auto-upgrade home configuration periodically.
-  launchd.agents.auto-upgrade = {
-    enable = true;
-    config = {
-      KeepAlive = {
-        Crashed = true;
-        SuccessfulExit = false;
-      };
-      RunAtLoad = true;
-      ProgramArguments = [ (import ./auto-upgrade.nix { inherit pkgs; }) ];
-      ProcessType = "Background";
-      StartCalendarInterval = [{ Hour = 0; Minute = 0; }];
-      StandardErrorPath = "/tmp/auto-upgrade-home.err";
-      StandardOutPath = "/tmp/auto-upgrade-home.out";
-    };
-  };
-  systemd.user = {
-    timers.home-manager-auto-upgrade = {
-      Unit.Description = "Home Manager upgrade timer";
-      Install.WantedBy = [ "timers.target" ];
-      Timer = {
-        OnCalendar = "daily";
-        Unit = "home-manager-auto-upgrade.service";
-        Persistent = true;
-      };
-    };
-    services.home-manager-auto-upgrade = {
-      Unit.Description = "Home Manager upgrade";
-      Service.ExecStart = toString (import ./auto-upgrade.nix { inherit pkgs; });
-    };
-  };
-
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
   # introduces backwards incompatible changes.
