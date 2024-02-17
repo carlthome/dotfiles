@@ -6,6 +6,7 @@
     emacs
     git
     auto-upgrade
+    git-refresh
   ];
 
   home.username = "carl";
