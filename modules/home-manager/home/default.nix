@@ -63,6 +63,7 @@
       settings.git_protocol = "ssh";
       gitCredentialHelper.enable = false;
     };
+    pyenv.enable = true;
   };
 
   # Include additional user packages.
@@ -164,9 +165,6 @@
     wget
     yarn
   ];
-
-  # Enable pyenv integration.
-  programs.pyenv.enable = true;
 
   # Discover fonts installed through home.packages.
   fonts.fontconfig.enable = true;
