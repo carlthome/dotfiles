@@ -3,7 +3,7 @@ let
   program = self.packages.${pkgs.system}.git-refresh.outPath + "/bin/git-refresh";
 in
 {
-  launchd.agents.auto-upgrade = {
+  launchd.agents.git-refresh = {
     enable = true;
     config = {
       KeepAlive = {
