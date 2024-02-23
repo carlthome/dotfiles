@@ -72,6 +72,24 @@ let
       version = "0.8.0";
       sha256 = "IJ75gqsQj0Ukjlrqevum5AoaeZ5vOfxX/4TceXe+EIg=";
     }
+    {
+      name = "andromeda";
+      publisher = "EliverLara";
+      version = "1.8.1";
+      sha256 = "sha256-O0WIewAExQTLlwstAglx1/6ukLntAqXxOEKRzw/5wKA=";
+    }
+    {
+      name = "datawrangler";
+      publisher = "ms-toolsai";
+      version = "0.26.0";
+      sha256 = "sha256-9Diu3mb7VjB4MXWb5+gYnEjXJiAzSww4Ij3VDb4l77w=";
+    }
+    {
+      name = "python-environment-manager";
+      publisher = "donjayamanne";
+      version = "1.2.4";
+      sha256 = "sha256-1jvuoaP+bn8uR7O7kIDZiBKuG3VwMTQMjCJbSlnC7Qo=";
+    }
   ] ++ lib.optionals (pkgs.config.allowUnfreePredicate "vscode") [
     github.copilot
     ms-python.vscode-pylance
