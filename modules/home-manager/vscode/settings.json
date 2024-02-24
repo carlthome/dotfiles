@@ -110,6 +110,7 @@
   "window.restoreWindows": "none",
   "window.titleBarStyle": "custom",
   "window.zoomLevel": 0,
+  "workbench.colorTheme": "Andromeda Italic",
   "workbench.editor.limit.enabled": true,
   "workbench.editor.limit.excludeDirty": true,
   "workbench.editor.limit.value": 5,
