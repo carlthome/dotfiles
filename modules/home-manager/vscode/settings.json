@@ -64,9 +64,6 @@
   "git.untrackedChanges": "separate",
   "github.copilot-labs.showBrushesLenses": false,
   "github.copilot-labs.showTestGenerationLenses": true,
-  "gitlens.hovers.enabled": false,
-  "gitlens.showWelcomeOnInstall": false,
-  "gitlens.plusFeatures.enabled": false,
   "github.copilot.enable": {
     "*": true,
     "yaml": true,
