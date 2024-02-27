@@ -20,7 +20,7 @@ pkgs.python3Packages.buildPythonApplication {
     torchaudio
     torchmetrics
     torchvision
-    (pytorch-lightning.override { tensorboardx = tensorboard; })
+    pytorch-lightning
     onnxruntime
   ];
 }
