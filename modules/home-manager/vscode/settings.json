@@ -60,6 +60,7 @@
   "git.allowNoVerifyCommit": true,
   "git.autofetch": true,
   "git.confirmSync": false,
+  "git.rebaseWhenSync": true,
   "git.suggestSmartCommit": false,
   "git.terminalGitEditor": true,
   "git.untrackedChanges": "separate",
