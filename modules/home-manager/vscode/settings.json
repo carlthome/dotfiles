@@ -59,6 +59,7 @@
   "files.trimTrailingWhitespace": true,
   "git.allowNoVerifyCommit": true,
   "git.autofetch": true,
+  "git.autoStash": true,
   "git.confirmSync": false,
   "git.rebaseWhenSync": true,
   "git.suggestSmartCommit": false,
