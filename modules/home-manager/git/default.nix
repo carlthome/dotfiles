@@ -35,6 +35,7 @@
       mergetool.vscode.cmd = "code --wait $MERGED";
       pull.ff = "only";
       push.autoSetupRemote = true;
+      rerere.enabled = true;
       user.useConfigOnly = true;
     };
   };
