@@ -38,6 +38,7 @@
       push.autoSetupRemote = true;
       rerere.enabled = true;
       user.useConfigOnly = true;
+      fetch.writeCommitGraph = true;
       branch.sort = "-committerdate";
     };
   };
