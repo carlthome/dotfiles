@@ -127,5 +127,6 @@
   "workbench.preferredDarkColorTheme": "GitHub Dark",
   "workbench.preferredLightColorTheme": "GitHub Light",
   "workbench.settings.enableNaturalLanguageSearch": false,
-  "workbench.startupEditor": "readme"
+  "workbench.startupEditor": "readme",
+  "zenMode.showTabs": "none"
 }
