@@ -1,5 +1,5 @@
 { pkgs, git, gh, ... }: pkgs.writeShellApplication {
-  name = "git-clone-all";
+  name = "github-clone-all";
   runtimeInputs = [ git gh ];
   text = builtins.readFile ./script.sh;
 }
