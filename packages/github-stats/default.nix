@@ -1,5 +1,5 @@
 { pkgs, gh, ... }: pkgs.writeShellApplication {
-  name = "git-stats";
+  name = "github-stats";
   runtimeInputs = [ gh ];
   text = builtins.readFile ./script.sh;
 }
