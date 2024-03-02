@@ -44,7 +44,6 @@
     zsh.enable = true;
     nushell.enable = true;
     bash.enable = true;
-    tmux.enable = true;
     nnn.enable = true;
     starship = {
       enable = true;

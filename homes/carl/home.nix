@@ -6,6 +6,7 @@
     emacs
     git
     github
+    tmux
     auto-upgrade
     git-refresh
   ];
