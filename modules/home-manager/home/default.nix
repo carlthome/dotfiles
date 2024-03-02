@@ -58,11 +58,6 @@
     };
     gpg.enable = true;
     gitui.enable = true;
-    gh = {
-      enable = true;
-      settings.git_protocol = "ssh";
-      gitCredentialHelper.enable = false;
-    };
     pyenv.enable = true;
   };
 

@@ -5,6 +5,7 @@
     neovim
     emacs
     git
+    github
     auto-upgrade
     git-refresh
   ];
