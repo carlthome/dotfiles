@@ -7,6 +7,7 @@
       co = "checkout";
       s = "status";
       l = "log";
+      b = "branch";
       d = "diff";
       refresh = "!${self.packages.${pkgs.system}.git-refresh}/bin/git-refresh";
     };
