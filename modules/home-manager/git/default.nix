@@ -9,6 +9,7 @@
       l = "log";
       b = "branch";
       d = "diff";
+      find = "grep -w";
       refresh = "!${self.packages.${pkgs.system}.git-refresh}/bin/git-refresh";
     };
     signing = {
