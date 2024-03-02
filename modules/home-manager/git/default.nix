@@ -23,6 +23,8 @@
       gpg.format = "ssh";
       gpg.ssh.allowedSignersFile = "~/.ssh/allowed_signers";
       core.editor = "vim";
+      core.fsmonitor = true;
+      core.untrackedCache = true;
       diff.guitool = "vscode";
       diff.tool = "vimdiff";
       difftool.prompt = false;
