@@ -8,6 +8,7 @@
       s = "status";
       l = "log";
       d = "diff";
+      refresh = "!${self.packages.${pkgs.system}.git-refresh}/bin/git-refresh";
     };
     signing = {
       signByDefault = true;
