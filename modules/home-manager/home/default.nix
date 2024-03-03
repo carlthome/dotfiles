@@ -27,7 +27,6 @@
     edit = "nix edit";
     update = "nix flake update --commit-lock-file";
     switch-home = "home-manager switch --flake .";
-    py = "steam-run $(which python)";
   };
 
   # Enable user programs.
