@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }@inputs: {
+{ config, pkgs, lib, self, ... }@inputs: {
 
   # Add each flake input to registry.
   nix.registry = (lib.mapAttrs (_: flake: { inherit flake; })) ((lib.filterAttrs (_: lib.isType "flake")) inputs);
@@ -27,6 +27,7 @@
     edit = "nix edit";
     update = "nix flake update --commit-lock-file";
     switch-home = "home-manager switch --flake .";
+    pylab = "${self.packages.${pkgs.system}.pylab}/bin/pylab";
   };
 
   # Enable user programs.
