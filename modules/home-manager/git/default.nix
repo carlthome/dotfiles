@@ -20,6 +20,11 @@
       enable = true;
       skipSmudge = true;
     };
+    ignores = [
+      ".DS_Store"
+      "*~"
+      "*.swp"
+    ];
     extraConfig = {
       gpg.format = "ssh";
       gpg.ssh.allowedSignersFile = "~/.ssh/allowed_signers";
