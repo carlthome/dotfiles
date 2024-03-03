@@ -60,6 +60,7 @@ in
     modules = [
       configuration
       ./mbp/configuration.nix
+      self.darwinModules.auto-upgrade
       self.darwinModules.default
     ];
   };
@@ -69,6 +70,7 @@ in
     modules = [
       configuration
       ./Betty/configuration.nix
+      self.darwinModules.auto-upgrade
       self.darwinModules.default
     ];
   };
