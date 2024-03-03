@@ -111,6 +111,12 @@
   "telemetry.telemetryLevel": "off",
   "terminal.integrated.enableMultiLinePasteWarning": true,
   "terminal.integrated.fontSize": 14,
+  "terminal.integrated.profiles.osx": {
+    "tmux-workspace": {
+      "path": "tmux",
+      "args": ["new-session", "-A", "-s", "vscode:${workspaceFolder}"]
+    }
+  },
   "update.mode": "none",
   "window.autoDetectColorScheme": true,
   "window.commandCenter": true,
