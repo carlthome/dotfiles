@@ -7,6 +7,7 @@
     clang
     gcc-unwrapped
     gnumake
+    unixtools.watch
   ];
 
   # Enable fingerprint scanner for authentication.
