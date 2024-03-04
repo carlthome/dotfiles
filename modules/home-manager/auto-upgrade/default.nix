@@ -12,11 +12,6 @@ in
   launchd.agents.auto-upgrade = {
     enable = true;
     config = {
-      KeepAlive = {
-        Crashed = true;
-        SuccessfulExit = false;
-      };
-      RunAtLoad = true;
       ProgramArguments = [ program ];
       ProcessType = "Background";
       StartCalendarInterval = [{ Hour = 0; Minute = 0; }];

@@ -3,7 +3,6 @@
   launchd.agents.auto-upgrade = {
     command = "/run/current-system/sw/bin/darwin-rebuild switch --refresh --flake github:carlthome/dotfiles";
     serviceConfig = {
-      RunAtLoad = true;
       ProcessType = "Background";
       StartCalendarInterval = [{ Hour = 0; Minute = 0; }];
       StandardErrorPath = "/tmp/auto-upgrade.err";
