@@ -8,7 +8,7 @@ in
     config = {
       ProgramArguments = [ program ];
       ProcessType = "Background";
-      StartCalendarInterval = [{ Hour = 0; Minute = 0; }];
+      StartCalendarInterval = [{ Day = 0; Hour = 0; Minute = 0; }];
       StandardErrorPath = "/tmp/git-refresh.err";
       StandardOutPath = "/tmp/git-refresh.out";
     };
@@ -18,7 +18,7 @@ in
       Unit.Description = "Timer for git-refresh.service";
       Install.WantedBy = [ "timers.target" ];
       Timer = {
-        OnCalendar = "daily";
+        OnCalendar = "weekly";
         Unit = "git-refresh.service";
         Persistent = true;
       };
