@@ -8,6 +8,8 @@
       sensible
       sidebar
       weather
+      resurrect
+      continuum
     ];
     extraConfig = ''
       # Enable mouse mode.
