@@ -30,6 +30,7 @@
   environment = {
     systemPackages = with pkgs; [ vim htop ];
     shellAliases = {
+      show-system = "nix derivation show /run/current-system";
       switch-system = "nixos-rebuild switch --flake .";
       list-generations = "nix-env --list-generations";
       py = "steam-run $(which python)";
