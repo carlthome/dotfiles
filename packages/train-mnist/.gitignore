@@ -4,3 +4,4 @@ logs
 model.onnx
 *.egg-info
 build
+.venv
