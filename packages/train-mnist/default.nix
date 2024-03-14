@@ -21,6 +21,7 @@ pkgs.python3Packages.buildPythonApplication {
     torchmetrics
     torchvision
     pytorch-lightning
+    onnx
     onnxruntime
   ];
 }
