@@ -17,7 +17,7 @@ class MNISTDataModule(L.LightningDataModule):
         super().__init__()
         self.data_dir = data_dir
         self.transform = transforms.Compose(
-            [
+            transforms=[
                 transforms.ToTensor(),
                 transforms.Normalize((0.1307,), (0.3081,)),
             ]
@@ -41,13 +41,28 @@ class MNISTDataModule(L.LightningDataModule):
             )
 
     def train_dataloader(self):
-        return DataLoader(self.mnist_train, batch_size=self.batch_size, num_workers=8)
+        return DataLoader(
+            self.mnist_train,
+            batch_size=self.batch_size,
+            num_workers=8,
+            persistent_workers=True,
+        )
 
     def val_dataloader(self):
-        return DataLoader(self.mnist_val, batch_size=self.batch_size, num_workers=8)
+        return DataLoader(
+            self.mnist_val,
+            batch_size=self.batch_size,
+            num_workers=8,
+            persistent_workers=True,
+        )
 
     def test_dataloader(self):
-        return DataLoader(self.mnist_test, batch_size=self.batch_size, num_workers=8)
+        return DataLoader(
+            self.mnist_test,
+            batch_size=self.batch_size,
+            num_workers=8,
+            persistent_workers=True,
+        )
 
 
 class LitModel(L.LightningModule):
@@ -114,7 +129,7 @@ def main():
     trainer = L.Trainer(max_epochs=10, default_root_dir="logs")
     trainer.fit(model, dataset)
     trainer.test(model, dataset)
-    model.to_onnx("model.onnx", input_sample=torch.randn(1, 1, 28, 28))
+    model.to_onnx("model.onnx", input_sample=torch.randn(1, *dataset.dims))
 
 
 if __name__ == "__main__":

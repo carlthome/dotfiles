@@ -1,7 +1,7 @@
 import fire
 
-import mnist.train
 import mnist.predict
+import mnist.train
 
 
 def main():
