@@ -37,9 +37,7 @@
     fish.enable = true;
     fzf = {
       enable = true;
-      enableBashIntegration = true;
-      enableZshIntegration = true;
-      enableFishIntegration = true;
+      tmux.enableShellIntegration = true;
     };
     zsh.enable = true;
     nushell.enable = true;
