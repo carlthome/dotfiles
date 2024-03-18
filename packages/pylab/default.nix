@@ -16,6 +16,6 @@ pkgs.buildEnv {
   ];
   meta = {
     description = "Python environment for data science exploration";
-    mainProgram = "ipython";
+    mainProgram = "jupyter";
   };
 }
