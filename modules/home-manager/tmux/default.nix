@@ -3,11 +3,9 @@
     enable = true;
     plugins = with pkgs.tmuxPlugins; [
       better-mouse-mode
-      catppuccin
       cpu
       sensible
       sidebar
-      weather
       resurrect
       continuum
     ];
