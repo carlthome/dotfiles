@@ -45,9 +45,7 @@
     nnn.enable = true;
     starship = {
       enable = true;
-      enableZshIntegration = true;
-      enableBashIntegration = true;
-      enableFishIntegration = true;
+      enableTransience = true;
     };
     direnv = {
       enable = true;
