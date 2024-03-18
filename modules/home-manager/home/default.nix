@@ -27,7 +27,7 @@
     edit = "nix edit";
     update = "nix flake update --commit-lock-file";
     switch-home = "home-manager switch --flake .";
-    pylab = "${self.packages.${pkgs.system}.pylab}/bin/pylab";
+    pylab = "${self.packages.${pkgs.system}.pylab.meta.mainProgram}";
   };
 
   # Enable user programs.
