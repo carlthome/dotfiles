@@ -16,6 +16,7 @@
       # Automatic session restore.
       set -g @continuum-restore 'on'
 
+      # Display CPU usage in the status bar.
       set -g status-right '#[fg=black,bg=color15] #{cpu_percentage}  %H:%M '
       run-shell ${pkgs.tmuxPlugins.cpu}/share/tmux-plugins/cpu/cpu.tmux
 
