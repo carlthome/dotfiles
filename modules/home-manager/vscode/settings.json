@@ -52,6 +52,7 @@
   "editor.inlineSuggest.enabled": true,
   "editor.mouseWheelZoom": true,
   "editor.suggestSelection": "first",
+  "editor.wordWrap": "on",
   "explorer.autoReveal": false,
   "extensions.autoUpdate": false,
   "files.insertFinalNewline": true,
