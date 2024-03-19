@@ -21,7 +21,7 @@
     restore = "git restore --patch --source";
     push = "git push";
     pull = "git pull";
-    build = "nix build";
+    build = "nix build --print-build-logs";
     run = "nix run";
     develop = "nix develop";
     edit = "nix edit";
