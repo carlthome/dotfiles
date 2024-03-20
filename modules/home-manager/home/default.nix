@@ -107,8 +107,7 @@
     mdcat
     minikube
     mypy
-    # TODO Currently broken on macOS.
-    #ncdu
+    ncdu_1
     nil
     ninja
     nix-diff
