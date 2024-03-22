@@ -163,12 +163,12 @@
   home.enableNixpkgsReleaseCheck = true;
 
   # TODO Remove after testing.
-  launchd.agents.good-afternoon = {
+  launchd.agents.lunchtime = {
     enable = true;
     config = {
-      ProgramArguments = [ "/usr/bin/say" "Good afternoon" ];
-      StandardErrorPath = "/tmp/good-afternoon.err";
-      StandardOutPath = "/tmp/good-afternoon.out";
+      ProgramArguments = [ "/usr/bin/say" "lunchtime" ];
+      StandardErrorPath = "/tmp/lunchtime.err";
+      StandardOutPath = "/tmp/lunchtime.out";
       StartCalendarInterval = [
         {
           Hour = 12;
