@@ -2,12 +2,14 @@
 
   # Install packages in system profile.
   environment.systemPackages = with pkgs; [
-    vim
-    git
     clang
+    coreutils
     gcc-unwrapped
+    git
     gnumake
+    rectangle
     unixtools.watch
+    vim
   ];
 
   # Enable fingerprint scanner for authentication.
