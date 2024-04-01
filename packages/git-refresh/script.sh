@@ -12,8 +12,8 @@ printf "Will run 'git fetch' for:\n%s\n\n" "$repos"
 # Go through every repo, fetch remote changes and warn on local changes not found remotely.
 for repo in $repos; do
 
-	# Download remote changes.
-	git -C "$repo" fetch
+	# Download remote changes and apply repo maintenance.
+	git -C "$repo" fetch --verbose --progress --auto-maintenance
 
 	# Display local changes.
 	status=$(git -C "$repo" status --porcelain)
