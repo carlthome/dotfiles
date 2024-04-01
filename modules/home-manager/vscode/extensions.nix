@@ -61,8 +61,8 @@ let
     {
       name = "git-line-blame";
       publisher = "carlthome";
-      version = "0.6.1";
-      sha256 = "sha256-Jh4DmLEoCsA0lY1ad3jMQRhWXEoXmggAKW8Z9QGYJjY=";
+      version = "0.8.0";
+      sha256 = "sha256-voMnpi4XcclmW49/HeKUctDGOYAdLp8dio5nr7kEMpg=";
     }
     {
       name = "copilot-chat";
