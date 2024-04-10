@@ -98,7 +98,7 @@
   "notebook.experimental.remoteSave": true,
   "notebook.formatOnSave.enabled": true,
   "notebook.globalToolbar": false,
-  "notebook.output.scrolling": true,
+  "notebook.output.scrolling": false,
   "python.analysis.autoFormatStrings": true,
   "python.analysis.autoImportCompletions": false,
   "python.analysis.inlayHints.callArgumentNames": true,
