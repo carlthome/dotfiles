@@ -28,6 +28,7 @@
     update = "nix flake update --commit-lock-file";
     switch-home = "home-manager switch --flake .";
     pylab = "${self.packages.${pkgs.system}.pylab.meta.mainProgram}";
+    docker-cpu = "docker ps -q | xargs docker stats --no-stream";
   };
 
   # Enable user programs.
