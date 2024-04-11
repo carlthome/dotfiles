@@ -41,12 +41,6 @@ let
   ];
   marketplaceExtensions = (pkgs.vscode-utils.extensionsFromVscodeMarketplace [
     {
-      name = "noctis";
-      publisher = "liviuschera";
-      version = "10.40.0";
-      sha256 = "UbGWorOVeitE9Q6tZ18h9K4Noz5Y3oaiuYaJtPzcwOc=";
-    }
-    {
       name = "flake8";
       publisher = "ms-python";
       version = "2023.6.0";
@@ -71,12 +65,6 @@ let
       sha256 = "IJ75gqsQj0Ukjlrqevum5AoaeZ5vOfxX/4TceXe+EIg=";
     }
     {
-      name = "andromeda";
-      publisher = "EliverLara";
-      version = "1.8.1";
-      sha256 = "sha256-O0WIewAExQTLlwstAglx1/6ukLntAqXxOEKRzw/5wKA=";
-    }
-    {
       name = "datawrangler";
       publisher = "ms-toolsai";
       version = "0.26.0";
@@ -94,7 +82,31 @@ let
       version = "1.2.4";
       sha256 = "sha256-1jvuoaP+bn8uR7O7kIDZiBKuG3VwMTQMjCJbSlnC7Qo=";
     }
-  ]) ++ ([
+    {
+      name = "andromeda";
+      publisher = "EliverLara";
+      version = "1.8.1";
+      sha256 = "sha256-O0WIewAExQTLlwstAglx1/6ukLntAqXxOEKRzw/5wKA=";
+    }
+    {
+      name = "noctis";
+      publisher = "liviuschera";
+      version = "10.40.0";
+      sha256 = "UbGWorOVeitE9Q6tZ18h9K4Noz5Y3oaiuYaJtPzcwOc=";
+    }
+    {
+      name = "sorcerer";
+      publisher = "MarkThomasMiller";
+      version = "0.1.3";
+      sha256 = "sha256-VCch8H//o3pTw3IRqGmCN+sz1G0DDPvbzqkabPTXT5Q=";
+    }
+    {
+      name = "dragan-color-theme";
+      publisher = "Miladfathy";
+      version = "2.0.8";
+      sha256 = "sha256-oeAzHODbKif8ZUnn8qUlLT2M2tUfEEGaGQ1Kkuagni4=";
+    }
+  ]) ++ [
     ((pkgs.vscode-utils.extensionFromVscodeMarketplace
       {
         name = "cloudcode";
@@ -102,6 +114,6 @@ let
         version = "2.2.1";
         sha256 = "sha256-PRGtxcN98DisCPAoRdgDQYFwYo/LEPflx55YDe08C+k=";
       }).overrideAttrs (_: { sourceRoot = "extension"; }))
-  ]);
+  ];
 in
 marketplaceExtensions ++ packagedExtensions
