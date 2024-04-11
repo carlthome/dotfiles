@@ -56,7 +56,7 @@ let
       name = "git-line-blame";
       publisher = "carlthome";
       version = "0.8.0";
-      sha256 = "sha256-voMnpi4XcclmW49/HeKUctDGOYAdLp8dio5nr7kEMpg=";
+      sha256 = "voMnpi4XcclmW49/HeKUctDGOYAdLp8dio5nr7kEMpg=";
     }
     {
       name = "copilot-chat";
@@ -68,25 +68,25 @@ let
       name = "datawrangler";
       publisher = "ms-toolsai";
       version = "0.26.0";
-      sha256 = "sha256-9Diu3mb7VjB4MXWb5+gYnEjXJiAzSww4Ij3VDb4l77w=";
+      sha256 = "9Diu3mb7VjB4MXWb5+gYnEjXJiAzSww4Ij3VDb4l77w=";
     }
     {
       name = "vscode-dotnet-runtime";
       publisher = "ms-dotnettools";
       version = "2.0.1";
-      sha256 = "sha256-tyPHE3YAKDx6SW/qguafe5OmxDKLPfQHXjsDQaGONFg=";
+      sha256 = "tyPHE3YAKDx6SW/qguafe5OmxDKLPfQHXjsDQaGONFg=";
     }
     {
       name = "python-environment-manager";
       publisher = "donjayamanne";
       version = "1.2.4";
-      sha256 = "sha256-1jvuoaP+bn8uR7O7kIDZiBKuG3VwMTQMjCJbSlnC7Qo=";
+      sha256 = "1jvuoaP+bn8uR7O7kIDZiBKuG3VwMTQMjCJbSlnC7Qo=";
     }
     {
       name = "andromeda";
       publisher = "EliverLara";
       version = "1.8.1";
-      sha256 = "sha256-O0WIewAExQTLlwstAglx1/6ukLntAqXxOEKRzw/5wKA=";
+      sha256 = "O0WIewAExQTLlwstAglx1/6ukLntAqXxOEKRzw/5wKA=";
     }
     {
       name = "noctis";
@@ -98,13 +98,13 @@ let
       name = "sorcerer";
       publisher = "MarkThomasMiller";
       version = "0.1.3";
-      sha256 = "sha256-VCch8H//o3pTw3IRqGmCN+sz1G0DDPvbzqkabPTXT5Q=";
+      sha256 = "VCch8H//o3pTw3IRqGmCN+sz1G0DDPvbzqkabPTXT5Q=";
     }
     {
       name = "dragan-color-theme";
       publisher = "Miladfathy";
       version = "2.0.8";
-      sha256 = "sha256-oeAzHODbKif8ZUnn8qUlLT2M2tUfEEGaGQ1Kkuagni4=";
+      sha256 = "oeAzHODbKif8ZUnn8qUlLT2M2tUfEEGaGQ1Kkuagni4=";
     }
   ]) ++ [
     ((pkgs.vscode-utils.extensionFromVscodeMarketplace
@@ -112,7 +112,7 @@ let
         name = "cloudcode";
         publisher = "googlecloudtools";
         version = "2.2.1";
-        sha256 = "sha256-PRGtxcN98DisCPAoRdgDQYFwYo/LEPflx55YDe08C+k=";
+        sha256 = "PRGtxcN98DisCPAoRdgDQYFwYo/LEPflx55YDe08C+k=";
       }).overrideAttrs (_: { sourceRoot = "extension"; }))
   ];
 in
