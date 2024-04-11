@@ -57,7 +57,6 @@
       AppleShowAllExtensions = true;
       ShowPathbar = true;
       FXEnableExtensionChangeWarning = false;
-      FXRemoveOldTrashItems = true;
     };
   };
 
