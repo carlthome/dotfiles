@@ -98,7 +98,7 @@ let
       name = "sorcerer";
       publisher = "MarkThomasMiller";
       version = "0.1.3";
-      sha256 = "VCch8H//o3pTw3IRqGmCN+sz1G0DDPvbzqkabPTXT5Q=";
+      sha256 = "QvyIsRQF6CYvSH6LxRD2YzVBtlGQl6V+lXOaqGe23zU=";
     }
     {
       name = "dragan-color-theme";
