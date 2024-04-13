@@ -5,7 +5,7 @@ let
     pkgs = import nixpkgs {
       inherit system;
       overlays = [
-        self.overlays.vscode-unstable
+        self.overlays.nixpkgs-unstable
       ];
     };
     modules = [
