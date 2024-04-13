@@ -116,8 +116,13 @@
     "tmux-workspace": {
       "path": "tmux",
       "args": ["new-session", "-A", "-s", "vscode:${workspaceFolder}"]
+    },
+    "nu": {
+      "path": "nu",
+      "args": []
     }
   },
+  "terminal.integrated.defaultProfile.osx": "nu",
   "update.mode": "none",
   "window.autoDetectColorScheme": true,
   "window.commandCenter": true,
