@@ -122,7 +122,6 @@
       "args": []
     }
   },
-  "terminal.integrated.defaultProfile.osx": "nu",
   "update.mode": "none",
   "window.autoDetectColorScheme": true,
   "window.commandCenter": true,
