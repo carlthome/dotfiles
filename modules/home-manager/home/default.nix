@@ -80,6 +80,7 @@
     docker-slim
     duckdb
     fantasque-sans-mono
+    fd
     fdupes
     ffmpeg-full
     fx
@@ -94,6 +95,7 @@
     ]))
     hadolint
     htop
+    iftop
     isort
     jq
     # TODO Currently broken.
@@ -110,6 +112,7 @@
     minikube
     mypy
     ncdu_1
+    nettools
     nil
     ninja
     nix-diff
@@ -124,6 +127,7 @@
     nodejs
     nodePackages.npm
     nodePackages.prettier
+    pandoc
     pass
     pdfgrep
     pdm
