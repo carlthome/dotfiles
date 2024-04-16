@@ -37,6 +37,7 @@
     man.enable = true;
     fish.enable = true;
     zsh.enable = true;
+    awscli.enable = true;
     nushell.enable = true;
     bash.enable = true;
     nnn.enable = true;
