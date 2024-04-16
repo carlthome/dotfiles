@@ -99,8 +99,7 @@
     iftop
     isort
     jq
-    # TODO Currently broken.
-    #jujutsu
+    jujutsu
     jupyter
     k9s
     keepassxc
@@ -158,8 +157,7 @@
     terraform
     tree
     typst
-    # TODO Currently broken.
-    #visidata
+    visidata
     wget
     yarn
   ];
