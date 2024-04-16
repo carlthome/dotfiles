@@ -108,6 +108,7 @@
     kubectx
     kubernetes-helm
     lame
+    lynis
     mdcat
     minikube
     mypy
