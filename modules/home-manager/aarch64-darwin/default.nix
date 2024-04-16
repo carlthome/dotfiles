@@ -1,18 +1,20 @@
 { config, pkgs, lib, ... }: {
   nixpkgs.config = {
     allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-      "vscode"
-      "terraform"
       "roomeqwizard"
+      "terraform"
+      "vscode"
     ];
   };
 
   home.packages = with pkgs; [
     colima
+    net-news-wire
     rectangle
     roomeqwizard
     sequelpro
     stats
+    #wireshark-qt
   ];
 
   home.sessionVariables = {

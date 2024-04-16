@@ -19,7 +19,7 @@
   programs.zsh.initExtra = ''
     fzf-rg() {
       clear
-      ${self.packages.${pkgs.system}.fuzzy-ripgrep}/bin/fuzzy-ripgrep $BUFFER
+      ${self.packages.${pkgs.system}.fzf-ripgrep}/bin/fzf-ripgrep $BUFFER
       zle reset-prompt
     }
     zle -N fzf-rg
@@ -37,7 +37,7 @@
   programs.bash.initExtra = ''
     fzf-rg() {
         clear
-        ${self.packages.${pkgs.system}.fuzzy-ripgrep}/bin/fuzzy-ripgrep $READLINE_LINE
+        ${self.packages.${pkgs.system}.fzf-ripgrep}/bin/fzf-ripgrep $READLINE_LINE
     }
     bind -x '"\C-f": fzf-rg'
 
