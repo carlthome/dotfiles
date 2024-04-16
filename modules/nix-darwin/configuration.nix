@@ -4,6 +4,7 @@
   environment.systemPackages = with pkgs; [
     clang
     coreutils
+    findutils
     gcc-unwrapped
     git
     gnumake
