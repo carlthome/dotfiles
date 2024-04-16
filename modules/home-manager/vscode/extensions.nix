@@ -18,6 +18,7 @@ let
     ms-kubernetes-tools.vscode-kubernetes-tools
     ms-python.black-formatter
     ms-python.isort
+    ms-pyright.pyright
     ms-python.python
     ms-python.vscode-pylance
     ms-toolsai.jupyter
