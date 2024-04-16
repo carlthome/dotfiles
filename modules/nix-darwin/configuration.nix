@@ -8,7 +8,6 @@
     gcc-unwrapped
     git
     gnumake
-    rectangle
     unixtools.watch
     vim
   ];

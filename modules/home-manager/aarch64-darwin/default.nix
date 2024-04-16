@@ -9,7 +9,10 @@
 
   home.packages = with pkgs; [
     colima
+    rectangle
     roomeqwizard
+    sequelpro
+    stats
   ];
 
   home.sessionVariables = {
