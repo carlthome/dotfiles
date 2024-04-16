@@ -117,7 +117,7 @@
     nix-info
     nix-init
     nix-tree
-    nixfmt
+    nixfmt-classic
     nixos-rebuild
     nixpkgs-fmt
     nixpkgs-review
