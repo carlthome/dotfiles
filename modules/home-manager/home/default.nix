@@ -53,6 +53,7 @@
     gpg.enable = true;
     gitui.enable = true;
     pyenv.enable = true;
+    bun.enable = true;
   };
 
   # Include additional user packages.
