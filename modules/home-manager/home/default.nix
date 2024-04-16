@@ -75,6 +75,7 @@
     coreutils-full
     ctags
     curl
+    delve
     dive
     docker-client
     docker-slim
@@ -86,14 +87,10 @@
     fx
     gcc
     gnumake
+    gnupg
     go
     go-tools
     gopls
-    delve
-    gnupg
-    (google-cloud-sdk.withExtraComponents (with google-cloud-sdk.components; [
-      gke-gcloud-auth-plugin
-    ]))
     hadolint
     htop
     iftop
@@ -161,6 +158,9 @@
     visidata
     wget
     yarn
+    (google-cloud-sdk.withExtraComponents (with google-cloud-sdk.components; [
+      gke-gcloud-auth-plugin
+    ]))
   ];
 
   # Discover fonts installed through home.packages.
