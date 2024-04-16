@@ -7,6 +7,7 @@
     git
     github
     tmux
+    fzf
     auto-upgrade
     git-refresh
   ];

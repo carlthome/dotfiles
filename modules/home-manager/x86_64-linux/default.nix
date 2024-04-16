@@ -21,6 +21,10 @@
     ];
   };
 
+  home.shellAliases = {
+    open = "xdg-open";
+  };
+
   home.packages = with pkgs; [
     caprine-bin
     chromium

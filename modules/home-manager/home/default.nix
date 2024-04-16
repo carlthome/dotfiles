@@ -36,10 +36,6 @@
     home-manager.enable = true;
     man.enable = true;
     fish.enable = true;
-    fzf = {
-      enable = true;
-      tmux.enableShellIntegration = true;
-    };
     zsh.enable = true;
     nushell.enable = true;
     bash.enable = true;
