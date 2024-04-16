@@ -87,6 +87,7 @@
     gcc
     gnumake
     go
+    go-tools
     gopls
     delve
     gnupg
