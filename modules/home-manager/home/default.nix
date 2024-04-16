@@ -62,11 +62,9 @@
     actionlint
     asdf-vm
     autoflake
-    awscli
     black
     buildah
     buildkit
-    bun
     cachix
     cmake
     comma
@@ -87,7 +85,6 @@
     fx
     gcc
     gnumake
-    gnupg
     go
     go-tools
     gopls
