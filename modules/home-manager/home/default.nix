@@ -38,6 +38,7 @@
     fish.enable = true;
     zsh.enable = true;
     awscli.enable = true;
+    yt-dlp.enable = true;
     nushell.enable = true;
     bash.enable = true;
     nnn.enable = true;
