@@ -125,7 +125,8 @@
     pandoc
     pass
     pdfgrep
-    pdm
+    # TODO Disable broken.
+    #pdm
     pipenv
     pipx
     podman
