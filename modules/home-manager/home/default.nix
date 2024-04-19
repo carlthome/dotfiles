@@ -5,7 +5,6 @@
 
   # Set environment variables.
   home.sessionVariables = {
-    DOCKER_BUILDKIT = "1";
     EDITOR = "code";
   };
 
