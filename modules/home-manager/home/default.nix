@@ -163,6 +163,11 @@
     ]))
   ];
 
+  # Avoid having ncdu look through cloud storage and network shares.
+  xdg.configFile."ncdu/config".source = (pkgs.writeText "ncdu-config" ''
+    --one-file-system
+  '');
+
   # Discover fonts installed through home.packages.
   fonts.fontconfig.enable = true;
 
