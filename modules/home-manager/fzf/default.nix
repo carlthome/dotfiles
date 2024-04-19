@@ -18,7 +18,6 @@
 
   programs.zsh.initExtra = ''
     fzf-rg() {
-      clear
       ${self.packages.${pkgs.system}.fzf-ripgrep}/bin/fzf-ripgrep "$BUFFER"
       zle reset-prompt
     }
@@ -26,7 +25,6 @@
     bindkey '^F' fzf-rg
 
     fzf-open() {
-      clear
       ${self.packages.${pkgs.system}.fzf-open}/bin/fzf-open "$BUFFER"
       zle reset-prompt
     }
@@ -36,13 +34,11 @@
 
   programs.bash.initExtra = ''
     fzf-rg() {
-        clear
         ${self.packages.${pkgs.system}.fzf-ripgrep}/bin/fzf-ripgrep "$READLINE_LINE"
     }
     bind -x '"\C-f": fzf-rg'
 
     fzf-open() {
-        clear
         ${self.packages.${pkgs.system}.fzf-open}/bin/fzf-open "$READLINE_LINE"
     }
     bind -x '"\C-p": fzf-open'
