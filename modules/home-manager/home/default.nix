@@ -123,6 +123,7 @@
     nodejs
     nodePackages.npm
     nodePackages.prettier
+    opusTools
     pandoc
     pass
     pdfgrep
@@ -141,6 +142,7 @@
     restic
     ripgrep
     rsync
+    rubberband
     runme
     rustup
     shellcheck
@@ -155,6 +157,7 @@
     tree
     typst
     visidata
+    vorbis-tools
     wget
     yarn
     (google-cloud-sdk.withExtraComponents (with google-cloud-sdk.components; [
