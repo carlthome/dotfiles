@@ -2,7 +2,7 @@
 set -x
 # Run fzf to select a path.
 query=${1:-""}
-match=$(fd --color=always | fzf --query="$query" --no-multi)
+match=$(fd --color=always | fzf --query="$query" --no-multi --ansi)
 echo "Selected: $match"
 
 # Open the selected path.
