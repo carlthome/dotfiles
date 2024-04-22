@@ -10,6 +10,7 @@
     fzf
     auto-upgrade
     git-refresh
+    auto-audit
   ];
 
   home.username = "carl";
