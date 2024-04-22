@@ -2,8 +2,8 @@
   programs.fzf = {
     enable = true;
     tmux.enableShellIntegration = config.programs.tmux.enable;
-    defaultOptions = [ "--height 100%" "--layout=reverse" "--info=inline" "--border" "--margin=1" "--padding=1" ];
-    fileWidgetOptions = [ "--preview 'stat {}'" ];
+    defaultOptions = [ "--height 100%" ];
+    fileWidgetOptions = [ "--preview 'stat {}'" "--preview-window noborder" ];
   };
 
   home.packages = with pkgs; [
