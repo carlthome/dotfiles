@@ -15,5 +15,6 @@
     sequelpro
     stats
     #wireshark-qt
+    iterm2
   ];
 }
