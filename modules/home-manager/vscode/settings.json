@@ -101,6 +101,7 @@
   "notebook.output.scrolling": false,
   "python.analysis.autoFormatStrings": true,
   "python.analysis.autoImportCompletions": false,
+  "python.analysis.importFormat": "relative",
   "python.analysis.inlayHints.callArgumentNames": true,
   "python.analysis.inlayHints.functionReturnTypes": true,
   "python.analysis.inlayHints.pytestParameters": true,
