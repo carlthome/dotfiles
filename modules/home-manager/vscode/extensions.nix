@@ -18,9 +18,8 @@ let
     ms-kubernetes-tools.vscode-kubernetes-tools
     ms-python.black-formatter
     ms-python.isort
-    ms-pyright.pyright
     ms-python.python
-    ms-python.vscode-pylance
+    (if pkgs.config.allowUnfreePredicate "vscode" then ms-python.vscode-pylance else ms-pyright.pyright)
     ms-toolsai.jupyter
     ms-toolsai.vscode-jupyter-slideshow
     ms-vscode-remote.remote-containers
