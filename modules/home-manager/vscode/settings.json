@@ -8,6 +8,9 @@
   "[dockerfile]": {
     "editor.defaultFormatter": "ms-azuretools.vscode-docker"
   },
+  "[go]": {
+    "editor.defaultFormatter": "golang.go"
+  },
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
