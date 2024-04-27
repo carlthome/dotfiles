@@ -14,7 +14,6 @@
     roomeqwizard
     sequelpro
     stats
-    #wireshark-qt
     iterm2
   ];
 }
