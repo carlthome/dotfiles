@@ -73,14 +73,4 @@ in
       self.darwinModules.default
     ];
   };
-
-  Betty = nix-darwin.lib.darwinSystem {
-    system = "aarch64-darwin";
-    modules = [
-      configuration
-      ./Betty/configuration.nix
-      self.darwinModules.auto-upgrade
-      self.darwinModules.default
-    ];
-  };
 }
