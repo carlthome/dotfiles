@@ -11,8 +11,5 @@ nix flake update --commit-lock-file .
 nix run .#switch-system
 nix run .#switch-home
 
-# Install included packages.
-nix profile install
-
 # Update remote repository.
 git push
