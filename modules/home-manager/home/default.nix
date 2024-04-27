@@ -55,6 +55,7 @@
     gitui.enable = true;
     pyenv.enable = true;
     bun.enable = true;
+    fd.enable = true;
   };
 
   # Include additional user packages.
