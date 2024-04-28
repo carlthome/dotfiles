@@ -14,6 +14,7 @@ let
     hashicorp.terraform
     jnoortheen.nix-ide
     mikestead.dotenv
+    mkhl.direnv
     ms-azuretools.vscode-docker
     ms-kubernetes-tools.vscode-kubernetes-tools
     ms-python.black-formatter
@@ -57,12 +58,6 @@ let
       publisher = "carlthome";
       version = "0.8.0";
       sha256 = "voMnpi4XcclmW49/HeKUctDGOYAdLp8dio5nr7kEMpg=";
-    }
-    {
-      name = "copilot-chat";
-      publisher = "github";
-      version = "0.8.0";
-      sha256 = "IJ75gqsQj0Ukjlrqevum5AoaeZ5vOfxX/4TceXe+EIg=";
     }
     {
       name = "datawrangler";
