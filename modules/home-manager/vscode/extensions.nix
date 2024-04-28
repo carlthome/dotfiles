@@ -22,6 +22,7 @@ let
     ms-python.isort
     ms-python.python
     (if pkgs.config.allowUnfreePredicate "vscode" then ms-python.vscode-pylance else ms-pyright.pyright)
+    ms-toolsai.datawrangler
     ms-toolsai.jupyter
     ms-toolsai.vscode-jupyter-slideshow
     ms-vscode-remote.remote-containers
@@ -62,18 +63,6 @@ let
       publisher = "carlthome";
       version = "0.8.0";
       sha256 = "voMnpi4XcclmW49/HeKUctDGOYAdLp8dio5nr7kEMpg=";
-    }
-    {
-      name = "datawrangler";
-      publisher = "ms-toolsai";
-      version = "0.26.0";
-      sha256 = "9Diu3mb7VjB4MXWb5+gYnEjXJiAzSww4Ij3VDb4l77w=";
-    }
-    {
-      name = "vscode-dotnet-runtime";
-      publisher = "ms-dotnettools";
-      version = "2.0.1";
-      sha256 = "tyPHE3YAKDx6SW/qguafe5OmxDKLPfQHXjsDQaGONFg=";
     }
     {
       name = "python-environment-manager";
