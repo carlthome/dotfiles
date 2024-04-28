@@ -27,6 +27,7 @@ let
     ms-vscode-remote.remote-containers
     ms-vscode-remote.remote-ssh
     ms-vscode.cmake-tools
+    ms-vscode.live-server
     ms-vscode.makefile-tools
     njpwerner.autodocstring
     pkief.material-icon-theme
