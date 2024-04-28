@@ -6,6 +6,7 @@ let
     dbaeumer.vscode-eslint
     esbenp.prettier-vscode
     github.copilot
+    github.copilot-chat
     github.github-vscode-theme
     github.vscode-github-actions
     github.vscode-pull-request-github

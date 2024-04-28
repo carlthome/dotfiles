@@ -7,6 +7,7 @@ let
     config.allowUnfreePredicate = pkg: builtins.elem (nixpkgs-unstable.lib.getName pkg) [
       "vscode"
       "vscode-extension-github-copilot"
+      "vscode-extension-github-copilot-chat"
       "vscode-extension-MS-python-vscode-pylance"
       "vscode-extension-ms-vscode-cpptools"
       "vscode-extension-ms-vscode-remote-remote-ssh"
