@@ -46,6 +46,8 @@
   "debug.terminal.clearBeforeReusing": true,
   "debug.toolBarLocation": "commandCenter",
   "debugpy.debugJustMyCode": false,
+  "direnv.restart.automatic": true,
+  "direnv.status.showChangesCount": false,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.find.autoFindInSelection": "multiline",
   "editor.fontFamily": "Fantasque Sans Mono, monospace",
