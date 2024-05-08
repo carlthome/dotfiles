@@ -64,6 +64,7 @@
     actionlint
     asdf-vm
     autoflake
+    autossh
     black
     buildah
     buildkit
