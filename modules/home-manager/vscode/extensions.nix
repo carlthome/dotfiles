@@ -24,7 +24,9 @@ let
     (if pkgs.config.allowUnfreePredicate "vscode" then ms-python.vscode-pylance else ms-pyright.pyright)
     ms-toolsai.datawrangler
     ms-toolsai.jupyter
+    ms-toolsai.jupyter-keymap
     ms-toolsai.jupyter-renderers
+    ms-toolsai.vscode-jupyter-cell-tags
     ms-toolsai.vscode-jupyter-slideshow
     ms-vscode-remote.remote-containers
     ms-vscode-remote.remote-ssh
