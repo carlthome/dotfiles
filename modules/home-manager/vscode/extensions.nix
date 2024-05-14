@@ -19,6 +19,7 @@ let
     ms-azuretools.vscode-docker
     ms-kubernetes-tools.vscode-kubernetes-tools
     ms-python.black-formatter
+    ms-python.debugpy
     ms-python.isort
     ms-python.python
     (if pkgs.config.allowUnfreePredicate "vscode" then ms-python.vscode-pylance else ms-pyright.pyright)
@@ -53,13 +54,6 @@ let
       publisher = "ms-python";
       version = "2023.6.0";
       sha256 = "Hk7rioPvrxV0zMbwdighBAlGZ43rN4DLztTyiHqO6o4=";
-    }
-    # TODO https://github.com/NixOS/nixpkgs/pull/307453
-    {
-      name = "debugpy";
-      publisher = "ms-python";
-      version = "2023.3.13121011";
-      sha256 = "owYUEyQl2FQytApfuI97N4y9p7/dL0lu6EBk/AzSMjw=";
     }
     {
       name = "git-line-blame";
