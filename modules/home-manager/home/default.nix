@@ -56,6 +56,7 @@
     pyenv.enable = true;
     bun.enable = true;
     fd.enable = true;
+    poetry.enable = true;
   };
 
   # Include additional user packages.
@@ -134,7 +135,6 @@
     pipenv
     pipx
     podman
-    poetry
     postgresql
     pre-commit
     pyenv
