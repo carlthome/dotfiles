@@ -156,6 +156,7 @@
     sqlitebrowser
     syft
     terraform
+    timidity
     tree
     typst
     visidata
