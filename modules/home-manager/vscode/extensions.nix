@@ -2,6 +2,7 @@
 
 let
   packagedExtensions = with pkgs.vscode-extensions; [
+    charliermarsh.ruff
     davidanson.vscode-markdownlint
     dbaeumer.vscode-eslint
     esbenp.prettier-vscode
