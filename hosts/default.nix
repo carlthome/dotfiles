@@ -1,5 +1,6 @@
 { nixpkgs, nix-darwin, self, ... }:
 let
+  disableOptimise = ({ lib, ... }: { nix.settings.auto-optimise-store = lib.mkForce false; }); # TODO https://github.com/NixOS/nix/issues/7273
   configuration = {
     # Configure the `nix` program itself.
     nix.settings = {
@@ -12,7 +13,7 @@ let
         "carlthome.cachix.org-1:BHerYg0J5Qv/Yw/SsxqPBlTY+cttA9axEsmrK24R15w="
         "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
       ];
-      auto-optimise-store = true; # TODO https://github.com/NixOS/nix/issues/7273
+      auto-optimise-store = true;
       cores = 1;
       max-jobs = 1;
     };
@@ -61,6 +62,7 @@ in
       ./mbp/configuration.nix
       self.darwinModules.auto-upgrade
       self.darwinModules.default
+      disableOptimise
     ];
   };
 
@@ -71,6 +73,7 @@ in
       ./mba/configuration.nix
       self.darwinModules.auto-upgrade
       self.darwinModules.default
+      disableOptimise
     ];
   };
 }
