@@ -80,7 +80,7 @@
   "github.gitProtocol": "ssh",
   "githubPullRequests.pullBranch": "always",
   "githubPullRequests.pushBranch": "always",
-  "githubPullRequests.setAutoMerge": true,
+  "githubPullRequests.defaultCreateOption": "createAutoMerge",
   "jupyter.askForKernelRestart": false,
   "jupyter.debugJustMyCode": false,
   "jupyter.runStartupCommands": ["%load_ext autoreload", "%autoreload 2"],
