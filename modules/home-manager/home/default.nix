@@ -14,6 +14,7 @@
     k = "kubectl";
     g = "git";
     ll = "ls -al";
+    pc = "pre-commit run --all";
     clean = "git clean -xd --interactive";
     commit = "git commit --patch";
     rebase = "git rebase --interactive";
