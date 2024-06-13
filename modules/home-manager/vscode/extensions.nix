@@ -60,8 +60,8 @@ let
     {
       name = "git-line-blame";
       publisher = "carlthome";
-      version = "0.8.0";
-      sha256 = "voMnpi4XcclmW49/HeKUctDGOYAdLp8dio5nr7kEMpg=";
+      version = "0.9.0";
+      sha256 = "sha256-Y3DCkPCbvuLxad2Oz82dIYgPIBLhE1FR8Nb9kw7jEpg=";
     }
     {
       name = "python-environment-manager";
