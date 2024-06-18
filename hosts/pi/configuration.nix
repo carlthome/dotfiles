@@ -83,6 +83,28 @@
     openFirewall = true;
   };
 
+  services.blocky = {
+    enable = true;
+    settings = {
+      ports.dns = 53;
+      upstreams.groups.default = [
+        "https://one.one.one.one/dns-query"
+      ];
+      bootstrapDns = {
+        upstream = "https://one.one.one.one/dns-query";
+        ips = [ "1.1.1.1" "1.0.0.1" ];
+      };
+      blocking = {
+        blackLists = {
+          ads = [ "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts" ];
+        };
+        clientGroupsBlock = {
+          default = [ "ads" ];
+        };
+      };
+    };
+  };
+
   services.loki = {
     enable = true;
     configFile = ./loki/config.yml;
@@ -291,6 +313,10 @@
     #3100 # Loki
     8123 # Home Assistant
     2049 # NFS
+  ];
+
+  networking.firewall.allowedUDPPorts = [
+    53 # DNS
   ];
 
   # This value determines the NixOS release from which the default
