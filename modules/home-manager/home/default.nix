@@ -6,6 +6,7 @@
   # Set environment variables.
   home.sessionVariables = {
     EDITOR = "code";
+    SHELL = "fish";
   };
 
   # Register shell aliases.
