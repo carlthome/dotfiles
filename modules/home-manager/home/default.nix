@@ -44,6 +44,7 @@
     nushell.enable = true;
     bash.enable = true;
     nnn.enable = true;
+    kitty.enable = true;
     starship = {
       enable = true;
       enableTransience = true;
