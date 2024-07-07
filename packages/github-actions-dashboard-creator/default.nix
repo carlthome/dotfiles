@@ -1,5 +1,5 @@
-{ pkgs, gh, sed, ... }: pkgs.writeShellApplication {
+{ pkgs, gh, gnused, ... }: pkgs.writeShellApplication {
   name = "github-actions-dashboard-creator";
-  runtimeInputs = [ gh sed ];
+  runtimeInputs = [ gh gnused ];
   text = builtins.readFile ./script.sh;
 }
