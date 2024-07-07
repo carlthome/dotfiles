@@ -19,7 +19,7 @@
     theme = "Slate";
 
     font = {
-      name = "Victor Mono";
+      name = "Maple Mono";
       size = 14;
     };
   };
