@@ -17,6 +17,32 @@
       smartcase = true;
     };
     extraConfig = ''
+      " Highlight matches as you type
+      set incsearch
+      set hlsearch
+
+      " Show suggestions when tab-completing
+      set wildmenu
+      set wildmode=longest:full,full
+      set wildoptions=pum
+
+      " Set current directory to the one of the current file
+      set autochdir
+
+      " Create a new vertical split below instead of above the current one
+      set splitbelow
+
+      " Show command as it is being typed
+      set showcmd
+
+      " Highlight matching brackets when the cursor is over them
+      set showmatch
+
+      " Don't redraw when recording macros
+      set lazyredraw
+      set redrawtime=200
+
+      " Configure file explorer
       let g:netrw_banner = 0
       let g:netrw_liststyle = 3
     '';
