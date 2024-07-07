@@ -10,6 +10,7 @@
     fzf
     auto-upgrade
     git-refresh
+    kitty
   ];
 
   home.username = "carlthome";

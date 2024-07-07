@@ -45,7 +45,6 @@
     nushell.enable = true;
     bash.enable = true;
     nnn.enable = true;
-    kitty.enable = true;
     starship = {
       enable = true;
       enableTransience = true;
@@ -162,6 +161,7 @@
     timidity
     tree
     typst
+    victor-mono
     visidata
     vorbis-tools
     wget

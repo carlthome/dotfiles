@@ -11,6 +11,7 @@
     auto-upgrade
     git-refresh
     auto-audit
+    kitty
   ];
 
   home.username = "carl";
