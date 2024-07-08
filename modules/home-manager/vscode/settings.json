@@ -50,7 +50,7 @@
   "direnv.status.showChangesCount": false,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.find.autoFindInSelection": "multiline",
-  "editor.fontFamily": "Fantasque Sans Mono, monospace",
+  "editor.fontFamily": "JetBrains Mono, Maple Mono, Fantasque Sans Mono, monospace",
   "editor.fontLigatures": true,
   "editor.fontSize": 14,
   "editor.formatOnSave": true,
