@@ -98,6 +98,7 @@
     htop
     iftop
     isort
+    jetbrains-mono
     jq
     jujutsu
     jupyter
@@ -109,6 +110,7 @@
     kubernetes-helm
     lame
     lynis
+    maple-mono
     mdcat
     minikube
     mypy
