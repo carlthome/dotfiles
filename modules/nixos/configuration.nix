@@ -33,7 +33,6 @@
       show-system = "nix derivation show /run/current-system";
       switch-system = "nixos-rebuild switch --flake .";
       list-generations = "nix-env --list-generations";
-      py = "steam-run $(which python)";
     };
     shells = [ pkgs.fish ];
     variables = {
