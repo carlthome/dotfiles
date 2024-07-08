@@ -30,11 +30,18 @@
     search = "nix search";
     update = "nix flake update --commit-lock-file";
     switch-home = "home-manager switch --flake .";
-    pylab = "${self.packages.${pkgs.system}.pylab.meta.mainProgram}";
+    pylab = "${self.packages.${pkgs.system}.pylab}/bin/jupyter";
     docker-cpu = "docker ps -q | xargs docker stats --no-stream";
     pods = "${self.packages.${pkgs.system}.k8s-pods-logs}/bin/k8s-pods-logs";
     icat = "kitten icat";
   };
+
+  # Default startup setup when starting an IPython session.
+  home.file.".ipython/profile_default/startup/setup.ipy".text = ''
+    %pylab inline
+    %load_ext autoreload
+    %autoreload 2
+  '';
 
   # Enable user programs.
   programs = {
