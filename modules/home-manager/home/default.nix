@@ -33,6 +33,7 @@
     pylab = "${self.packages.${pkgs.system}.pylab.meta.mainProgram}";
     docker-cpu = "docker ps -q | xargs docker stats --no-stream";
     pods = "${self.packages.${pkgs.system}.k8s-pods-logs}/bin/k8s-pods-logs";
+    icat = "kitten icat";
   };
 
   # Enable user programs.
