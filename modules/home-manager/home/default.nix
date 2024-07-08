@@ -83,6 +83,7 @@
     cachix
     cmake
     comma
+    commitizen
     cookiecutter
     copier
     coreutils-full
