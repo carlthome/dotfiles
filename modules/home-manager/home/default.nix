@@ -5,7 +5,8 @@
 
   # Set environment variables.
   home.sessionVariables = {
-    EDITOR = "code";
+    EDITOR = "vim";
+    VISUAL = "code";
     SHELL = "fish";
   };
 
