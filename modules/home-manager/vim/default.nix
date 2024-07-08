@@ -7,6 +7,7 @@
       vim-fugitive
       vim-nix
       vim-startify
+      vim-gitgutter
       vim-which-key
       ctrlp
     ];
