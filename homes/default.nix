@@ -1,4 +1,4 @@
-{ home-manager, nixpkgs, nix-index-database, system, self, ... }@inputs:
+{ home-manager, nixpkgs, nix-index-database, system, self, nixvim, ... }@inputs:
 let
   names = builtins.attrNames (builtins.readDir ./.);
   mkHome = name: home-manager.lib.homeManagerConfiguration {
@@ -13,6 +13,7 @@ let
       nix-index-database.hmModules.nix-index
       self.homeModules.home
       self.homeModules.${system}
+      nixvim.homeManagerModules.nixvim
     ];
     extraSpecialArgs = inputs;
   };
