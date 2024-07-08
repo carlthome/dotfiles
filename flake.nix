@@ -10,6 +10,7 @@
     nix-index-database = { url = "github:nix-community/nix-index-database"; inputs.nixpkgs.follows = "nixpkgs"; };
     pre-commit-hooks = { url = "github:cachix/pre-commit-hooks.nix"; inputs.nixpkgs.follows = "nixpkgs"; };
     mirpkgs = { url = "github:carlthome/mirpkgs/main"; inputs.nixpkgs.follows = "nixpkgs"; };
+    nixvim = { url = "github:nix-community/nixvim"; inputs.nixpkgs.follows = "nixpkgs"; };
   };
 
   outputs = { self, nixpkgs, flake-utils, ... }@inputs:
