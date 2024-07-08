@@ -27,7 +27,7 @@
     run = "nix run";
     develop = "nix develop";
     edit = "nix edit";
-    "?" = "nix search";
+    search = "nix search";
     update = "nix flake update --commit-lock-file";
     switch-home = "home-manager switch --flake .";
     pylab = "${self.packages.${pkgs.system}.pylab.meta.mainProgram}";
