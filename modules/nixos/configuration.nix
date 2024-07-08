@@ -38,6 +38,7 @@
     shells = [ pkgs.fish ];
     variables = {
       EDITOR = "vim";
+      SHELL = "fish";
     };
   };
 
