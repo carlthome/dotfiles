@@ -7,6 +7,7 @@
       vim-fugitive
       vim-nix
       vim-startify
+      vim-which-key
       ctrlp
     ];
     settings = {
