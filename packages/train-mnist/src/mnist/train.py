@@ -22,6 +22,16 @@ class MNISTDataModule(L.LightningDataModule):
                 transforms.Normalize((0.1307,), (0.3081,)),
             ]
         )
+        self.augmentation = transforms.Compose(
+            transforms=[
+                self.transform,
+                transforms.RandomInvert(),
+                transforms.RandomRotation(10),
+                transforms.RandomAffine(0, translate=(0.1, 0.1)),
+                transforms.RandomAffine(0, scale=(0.9, 1.1)),
+                transforms.RandomAffine(0, shear=10),
+            ]
+        )
         self.batch_size = batch_size
         self.dims = [1, 28, 28]
         self.num_classes = 10
@@ -32,7 +42,7 @@ class MNISTDataModule(L.LightningDataModule):
 
     def setup(self, stage=None):
         if stage == "fit" or stage is None:
-            mnist_full = MNIST(self.data_dir, train=True, transform=self.transform)
+            mnist_full = MNIST(self.data_dir, train=True, transform=self.augmentation)
             self.mnist_train, self.mnist_val = random_split(mnist_full, [55000, 5000])
 
         if stage == "test" or stage is None:
@@ -77,6 +87,9 @@ class LitModel(L.LightningModule):
         self.save_hyperparameters()
         self.learning_rate = learning_rate
         self.model = nn.Sequential(
+            nn.Conv2d(dims[0], 32, 5, padding=2),
+            nn.ReLU(),
+            nn.Conv2d(32, 1, 1),
             nn.Flatten(),
             nn.Linear(dims[0] * dims[1] * dims[2], hidden_size),
             nn.ReLU(),
