@@ -23,5 +23,7 @@ pkgs.python3Packages.buildPythonApplication {
     pytorch-lightning
     onnx
     onnxruntime
+    gradio
+    fastapi
   ];
 }
