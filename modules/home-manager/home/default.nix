@@ -176,6 +176,7 @@
     visidata
     vorbis-tools
     wget
+    wrk
     yarn
     yq
     (google-cloud-sdk.withExtraComponents (with google-cloud-sdk.components; [
