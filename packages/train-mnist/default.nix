@@ -1,12 +1,12 @@
 { pkgs ? import <nixpkgs> { }, ... }:
 
-pkgs.python3Packages.buildPythonApplication {
+pkgs.python311Packages.buildPythonApplication {
   pname = "mnist";
   version = "0.1.0";
   src = ./.;
   format = "pyproject";
 
-  nativeBuildInputs = with pkgs.python3Packages; [
+  nativeBuildInputs = with pkgs.python311Packages; [
     setuptools
     wheel
     pytestCheckHook
@@ -14,7 +14,7 @@ pkgs.python3Packages.buildPythonApplication {
 
   importChecks = [ "mnist" ];
 
-  propagatedBuildInputs = with pkgs.python3Packages; [
+  propagatedBuildInputs = with pkgs.python311Packages; [
     fire
     torch
     torchaudio-bin
