@@ -11,6 +11,7 @@
     auto-upgrade
     git-refresh
     kitty
+    helix
   ];
 
   home.username = "carlthome";

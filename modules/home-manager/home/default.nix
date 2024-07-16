@@ -105,7 +105,6 @@
     go-tools
     gopls
     hadolint
-    helix
     htop
     iftop
     isort

@@ -12,6 +12,7 @@
     git-refresh
     auto-audit
     kitty
+    helix
   ];
 
   home.username = "carl";
