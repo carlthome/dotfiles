@@ -7,11 +7,12 @@ let
   defaultExtensions = { "remote.SSH.defaultExtensions" = map (x: x.vscodeExtUniqueId) extensions; };
   userSettings = (builtins.fromJSON (builtins.readFile ./settings.json)) // defaultExtensions;
   keybindings = builtins.fromJSON (builtins.readFile ./keybindings.json);
+  userTasks = builtins.fromJSON (builtins.readFile ./tasks.json);
   extensions = import ./extensions.nix { inherit pkgs; };
 in
 {
   programs.vscode = {
-    inherit userSettings extensions keybindings;
+    inherit userSettings userTasks extensions keybindings;
     enable = true;
     mutableExtensionsDir = false;
     package = if pkgs.config.allowUnfreePredicate "vscode" then pkgs.vscode else pkgs.vscodium;
