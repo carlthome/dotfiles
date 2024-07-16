@@ -15,6 +15,7 @@
 
   outputs = { self, nixpkgs, flake-utils, ... }@inputs:
     let
+      systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ];
       mkSystem = system: {
         legacyPackages.homeConfigurations = import ./homes (inputs // { inherit system; });
         packages = import ./packages (inputs // { inherit system; });
@@ -26,7 +27,7 @@
         };
       };
     in
-    flake-utils.lib.eachDefaultSystem mkSystem // {
+    flake-utils.lib.eachSystem systems mkSystem // {
       nixosConfigurations = import ./hosts inputs;
       darwinConfigurations = import ./hosts inputs;
       nixosModules = import ./modules/nixos inputs;
