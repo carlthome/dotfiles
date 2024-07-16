@@ -17,7 +17,7 @@ pkgs.python311Packages.buildPythonApplication {
   propagatedBuildInputs = with pkgs.python311Packages; [
     fire
     torch
-    torchaudio-bin
+    torchaudio
     torchmetrics
     torchvision
     pytorch-lightning
