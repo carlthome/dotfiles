@@ -23,7 +23,8 @@
       src="$genProfilePath/home-path/Applications/"
       dst="${config.home.homeDirectory}/Applications/Home Manager Trampolines"
       mkdir -p "$dst"
-      ${pkgs.rsync}/bin/rsync --archive --checksum --chmod=-w --copy-unsafe-links --delete "$src" "$dst"
+      ${pkgs.rsync}/bin/rsync --archive --checksum --copy-unsafe-links --delete "$src" "$dst"
+      chmod -R u+rwX "$dst"
     '';
   };
 }
