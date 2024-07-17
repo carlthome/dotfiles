@@ -1,6 +1,6 @@
 { config, pkgs, lib, ... }: {
   home.packages = with pkgs; [
-    fira-code
+    maple-mono
   ];
   programs.kitty = {
     enable = true;
