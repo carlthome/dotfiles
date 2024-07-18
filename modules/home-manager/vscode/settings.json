@@ -115,6 +115,7 @@
   "python.formatting.provider": "none",
   "redhat.telemetry.enabled": false,
   "remote.downloadExtensionsLocally": true,
+  "ruff.importStrategy": "useBundled",
   "telemetry.telemetryLevel": "off",
   "terminal.integrated.enableMultiLinePasteWarning": true,
   "terminal.integrated.fontSize": 14,
