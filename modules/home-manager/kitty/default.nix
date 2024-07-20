@@ -12,11 +12,23 @@
       update_check_interval = 0;
       tab_bar_edge = "top";
       tab_bar_style = "powerline";
-      tab_powerline_style = "round";
+      tab_powerline_style = "angled";
+    };
+
+    keybindings = {
+      "cmd+1" = "goto_tab 1";
+      "cmd+2" = "goto_tab 2";
+      "cmd+3" = "goto_tab 3";
+      "cmd+4" = "goto_tab 4";
+      "cmd+5" = "goto_tab 5";
+      "cmd+6" = "goto_tab 6";
+      "cmd+7" = "goto_tab 7";
+      "cmd+8" = "goto_tab 8";
+      "cmd+9" = "goto_tab 9";
     };
 
     # https://github.com/kovidgoyal/kitty-themes
-    theme = "Slate";
+    theme = "Grape";
 
     font = {
       name = "Maple Mono";
