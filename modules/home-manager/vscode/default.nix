@@ -14,6 +14,8 @@ in
   programs.vscode = {
     inherit userSettings userTasks extensions keybindings;
     enable = true;
+    enableUpdateCheck = false;
+    enableExtensionUpdateCheck = false;
     mutableExtensionsDir = false;
     package = if pkgs.config.allowUnfreePredicate "vscode" then pkgs.vscode else pkgs.vscodium;
   };
