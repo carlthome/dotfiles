@@ -5,9 +5,9 @@
 
   # Set environment variables.
   home.sessionVariables = {
-    EDITOR = "vim";
-    VISUAL = "code";
-    SHELL = "fish";
+    EDITOR = "~/.nix-profile/bin/vim";
+    VISUAL = "~/.nix-profile/bin/code";
+    SHELL = "~/.nix-profile/bin/fish";
   };
 
   # Register shell aliases.
