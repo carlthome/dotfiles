@@ -122,6 +122,7 @@
   "redhat.telemetry.enabled": false,
   "remote.downloadExtensionsLocally": true,
   "ruff.importStrategy": "useBundled",
+  "scm.experimental.showHistoryGraph": true,
   "telemetry.telemetryLevel": "off",
   "terminal.integrated.enableMultiLinePasteWarning": true,
   "terminal.integrated.fontSize": 14,
