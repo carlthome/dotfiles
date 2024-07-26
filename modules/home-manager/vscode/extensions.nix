@@ -21,6 +21,7 @@ let
     ms-kubernetes-tools.vscode-kubernetes-tools
     ms-python.black-formatter
     ms-python.debugpy
+    ms-python.flake8
     ms-python.isort
     ms-python.python
     (if pkgs.config.allowUnfreePredicate "vscode" then ms-python.vscode-pylance else ms-pyright.pyright)
@@ -49,13 +50,6 @@ let
     #ms-vsliveshare.vsliveshare
   ];
   marketplaceExtensions = (pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-    # TODO https://github.com/NixOS/nixpkgs/pull/307449
-    {
-      name = "flake8";
-      publisher = "ms-python";
-      version = "2023.6.0";
-      sha256 = "Hk7rioPvrxV0zMbwdighBAlGZ43rN4DLztTyiHqO6o4=";
-    }
     {
       name = "git-line-blame";
       publisher = "carlthome";
