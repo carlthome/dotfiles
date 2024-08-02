@@ -13,6 +13,8 @@
     allowUnfree = true; # TODO Disable
   };
 
+  hardware.nvidia.modesetting.enable = true;
+
   services.xserver.videoDrivers = [ "nvidia" ];
   virtualisation.docker.enableNvidia = true;
   environment.systemPackages = with pkgs; [
