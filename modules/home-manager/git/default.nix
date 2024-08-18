@@ -24,6 +24,7 @@
       ".DS_Store"
       "*~"
       "*.swp"
+      ".venv"
     ];
     extraConfig = {
       gpg.format = "ssh";
