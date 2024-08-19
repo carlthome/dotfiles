@@ -31,6 +31,9 @@
   services.nix-daemon.enable = true;
   nix.package = pkgs.nix;
 
+  # Deduplicate files in the nix store.
+  nix.optimise.automatic = true;
+
   # Enable sandboxing.
   nix.settings.sandbox = false;
 
