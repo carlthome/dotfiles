@@ -13,7 +13,7 @@
 
   # Register shell aliases.
   home.shellAliases = {
-    d = "docker run --rm -it";
+    d = "docker run -v $(pwd):$(pwd) -w $(pwd) --rm -it";
     k = "kubectl";
     g = "git";
     ll = "ls -al";
