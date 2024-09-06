@@ -24,7 +24,7 @@
       dst="${config.home.homeDirectory}/Applications/Home Manager Trampolines"
       mkdir -p "$dst"
       ${pkgs.rsync}/bin/rsync --archive --checksum --copy-unsafe-links --delete "$src" "$dst"
-      chmod -R u+rwX "$dst"
+      chmod -R 755 "$dst"
     '';
   };
 }
