@@ -138,6 +138,7 @@
       "args": []
     }
   },
+  "testing.automaticallyOpenPeekView": "never",
   "testing.openTesting": "never",
   "update.mode": "none",
   "window.autoDetectColorScheme": true,
