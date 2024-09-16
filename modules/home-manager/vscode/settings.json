@@ -39,6 +39,8 @@
   "debug.console.acceptSuggestionOnEnter": "on",
   "debug.console.closeOnEnd": true,
   "debug.console.fontSize": 14,
+  "debug.focusEditorOnBreak": false,
+  "debug.focusWindowOnBreak": false,
   "debug.hideLauncherWhileDebugging": true,
   "debug.inlineValues": "on",
   "debug.internalConsoleOptions": "openOnSessionStart",
