@@ -120,6 +120,7 @@
   "python.analysis.inlayHints.pytestParameters": true,
   "python.analysis.inlayHints.variableTypes": false,
   "python.analysis.typeCheckingMode": "basic",
+  "python.createEnvironment.contentButton": "show",
   "python.formatting.provider": "none",
   "redhat.telemetry.enabled": false,
   "remote.downloadExtensionsLocally": true,
