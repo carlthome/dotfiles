@@ -92,6 +92,12 @@ let
       version = "2.0.8";
       sha256 = "oeAzHODbKif8ZUnn8qUlLT2M2tUfEEGaGQ1Kkuagni4=";
     }
+    {
+      name = "sarif-viewer";
+      publisher = "MS-SarifVSCode";
+      version = "3.4.4";
+      sha256 = "sha256-J7Bqnj9fRP8lcshv9fdK8l6u+i/M1V6XUZf1dMpv/F4=";
+    }
   ]) ++ [
     ((pkgs.vscode-utils.extensionFromVscodeMarketplace
       {
