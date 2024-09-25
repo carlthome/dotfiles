@@ -10,7 +10,6 @@
   home.packages = with pkgs; [
     colima
     net-news-wire
-    rectangle
     roomeqwizard
     sequelpro
     stats
