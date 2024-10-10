@@ -6,7 +6,7 @@
     enable = true;
     displayManager.gdm.enable = true;
     desktopManager.gnome.enable = true;
-    layout = "se";
+    xkb.layout = "se";
   };
 
   # Configure audio settings.
