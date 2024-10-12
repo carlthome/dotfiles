@@ -14,7 +14,7 @@ let
         "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
       ];
       auto-optimise-store = true;
-      cores = 1;
+      cores = 4;
       max-jobs = 1;
     };
 
