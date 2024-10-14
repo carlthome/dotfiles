@@ -8,4 +8,6 @@
       127.0.0.1       kubernetes.default.svc.cluster.local
     '';
   };
+
+  system.stateVersion = 5;
 }
