@@ -40,7 +40,7 @@
       gpg.ssh.allowedSignersFile = "~/.ssh/allowed_signers";
       help.autocorrect = 30;
       init.defaultBranch = "main";
-      merge.conflictstyle = "diff3";
+      merge.conflictstyle = "zdiff3";
       merge.guitool = "vscode";
       merge.tool = "vimdiff";
       mergetool.prompt = false;
