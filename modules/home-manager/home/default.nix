@@ -75,6 +75,7 @@
     bun.enable = true;
     fd.enable = true;
     poetry.enable = true;
+    alacritty.enable = true;
   };
 
   # Include additional user packages.
