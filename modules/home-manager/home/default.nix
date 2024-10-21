@@ -49,7 +49,10 @@
     home-manager.enable = true;
     man.enable = true;
     fish.enable = true;
-    zsh.enable = true;
+    zsh = {
+      enable = true;
+      autocd = true;
+    };
     awscli.enable = true;
     yt-dlp.enable = true;
     nushell.enable = true;
