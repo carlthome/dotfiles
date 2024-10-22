@@ -56,7 +56,19 @@
     awscli.enable = true;
     yt-dlp.enable = true;
     nushell.enable = true;
-    bash.enable = true;
+    bash = {
+      enable = true;
+      shellOptions = [
+        "autocd"
+        "cdspell"
+        "dirspell"
+        "checkhash"
+        "checkjobs"
+        "extglob"
+        "globstar"
+        "histappend"
+      ];
+    };
     nnn.enable = true;
     starship = {
       enable = true;
