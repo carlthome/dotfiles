@@ -15,6 +15,7 @@ device=/dev/sdb
 sudo dd if=$image of=$device bs=4096 conv=fsync status=progress
 
 # Preconfigure Wi-Fi access.
+sudo mkdir -p /run/media/$USER/NIXOS_SD/etc/
 printf 'network={\n  ssid="My Network"\n  psk="My Password"\n}\n' | sudo tee /run/media/$USER/NIXOS_SD/etc/wpa_supplicant.conf
 
 # Plug the SD card (or USB drive) into the Raspberry Pi and power it up. Then rebuild the configuration remotely as needed by running:
