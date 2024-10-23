@@ -29,4 +29,4 @@ Replace `test` with `switch` to apply the new configuration on reboot. Note that
 ## References
 
 - https://xeiaso.net/blog/prometheus-grafana-loki-nixos-2020-11-20/
-- https://discourse.nixos.org/t/how-to-use-exported-grafana-dashboard/27739/2?u=carlthome
+- https://discourse.nixos.org/t/how-to-use-exported-grafana-dashboard/27739/2
