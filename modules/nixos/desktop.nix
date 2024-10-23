@@ -28,7 +28,7 @@
   services.flatpak.enable = true;
 
   # Find printers automatically.
-  services.printing.enable = true;
+  services.printing.enable = false;
 
   # Add additional GNOME programs.
   services.udev.packages = [ pkgs.gnome.gnome-settings-daemon ];
