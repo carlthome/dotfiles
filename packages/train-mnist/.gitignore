@@ -5,3 +5,4 @@ model.onnx
 *.egg-info
 build
 .venv
+.mypy_cache
