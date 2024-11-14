@@ -171,6 +171,7 @@
     pass
     pdfgrep
     pdm
+    pijul
     pipenv
     pipx
     podman
