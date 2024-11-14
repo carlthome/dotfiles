@@ -199,6 +199,7 @@
     timidity
     tree
     typst
+    uv
     victor-mono
     visidata
     vorbis-tools
