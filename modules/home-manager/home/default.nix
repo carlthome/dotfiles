@@ -137,7 +137,6 @@
     isort
     jetbrains-mono
     jq
-    jujutsu
     jupyter
     k9s
     keepassxc
