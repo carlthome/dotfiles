@@ -24,9 +24,6 @@
     enableSyntaxHighlighting = true;
   };
 
-  # Recreate /run/current-system symlink after boot.
-  services.activate-system.enable = true;
-
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
   nix.package = pkgs.nix;
