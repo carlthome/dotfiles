@@ -171,6 +171,7 @@
     pass
     pdfgrep
     pdm
+    phoronix-test-suite
     pijul
     pipenv
     pipx
