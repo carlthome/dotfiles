@@ -1,21 +1,7 @@
-{ home-manager, nixpkgs, nix-index-database, system, self, nixvim, ... }@inputs:
+{ nixpkgs, system, self, ... }@inputs:
 let
   names = builtins.attrNames (builtins.readDir ./.);
-  mkHome = name: home-manager.lib.homeManagerConfiguration {
-    pkgs = import nixpkgs {
-      inherit system;
-      overlays = [
-        self.overlays.nixpkgs-unstable
-      ];
-    };
-    modules = [
-      ./${name}/home.nix
-      nix-index-database.hmModules.nix-index
-      self.homeModules.home
-      self.homeModules.${system}
-      nixvim.homeManagerModules.nixvim
-    ];
-    extraSpecialArgs = inputs;
-  };
+  args = inputs // { inherit system; inherit self; };
+  mkHome = name: import ./${name} args;
 in
 nixpkgs.lib.genAttrs names mkHome
