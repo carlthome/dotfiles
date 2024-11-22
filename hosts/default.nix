@@ -1,6 +1,7 @@
-{ nixpkgs, nix-darwin, self, ... }:
+{ nixpkgs, ... }@inputs:
 let
-  disableOptimise = ({ lib, ... }: { nix.settings.auto-optimise-store = lib.mkForce false; }); # TODO https://github.com/NixOS/nix/issues/7273
+  names = builtins.attrNames (builtins.readDir ./.);
+
   configuration = {
     # Configure the `nix` program itself.
     nix.settings = {
@@ -29,53 +30,7 @@ let
       options = "--delete-older-than 30d";
     };
   };
+  args = inputs // { inherit configuration; };
+  mkHost = name: import ./${name} args;
 in
-{
-  t1 = nixpkgs.lib.nixosSystem {
-    system = "x86_64-linux";
-    modules = [
-      configuration
-      ./t1/configuration.nix
-      ./t1/hardware-configuration.nix
-      self.nixosModules.default
-      self.nixosModules.desktop
-      self.nixosModules.cuda
-    ];
-  };
-
-  pi = nixpkgs.lib.nixosSystem {
-    system = "aarch64-linux";
-    modules = [
-      configuration
-      "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
-      { sdImage.compressImage = false; }
-      { nixpkgs.overlays = [ self.overlays.modules-closure ]; }
-      ./pi/configuration.nix
-      ./pi/hardware-configuration.nix
-      self.nixosModules.default
-      self.nixosModules.server
-    ];
-  };
-
-  mbp = nix-darwin.lib.darwinSystem {
-    system = "aarch64-darwin";
-    modules = [
-      configuration
-      ./mbp/configuration.nix
-      self.darwinModules.auto-upgrade
-      self.darwinModules.default
-      disableOptimise
-    ];
-  };
-
-  mba = nix-darwin.lib.darwinSystem {
-    system = "aarch64-darwin";
-    modules = [
-      configuration
-      ./mba/configuration.nix
-      self.darwinModules.auto-upgrade
-      self.darwinModules.default
-      disableOptimise
-    ];
-  };
-}
+nixpkgs.lib.genAttrs names mkHost
