@@ -24,6 +24,7 @@
         devShells.default = import ./shell.nix {
           pkgs = nixpkgs.legacyPackages.${system};
           shellHook = self.checks.${system}.pre-commit-check.shellHook;
+          buildInputs = self.checks.${system}.pre-commit-check.enabledPackages;
         };
       };
     in
