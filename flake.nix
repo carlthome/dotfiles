@@ -34,6 +34,7 @@
       nixosModules = import ./modules/nixos inputs;
       darwinModules = import ./modules/nix-darwin inputs;
       homeModules = import ./modules/home-manager inputs;
+      modules = import./modules inputs;
       overlays = import ./overlays inputs;
       templates = import ./templates inputs;
     };

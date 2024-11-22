@@ -1,12 +1,12 @@
-{ nix-darwin, self, configuration, ... }:
+{ nix-darwin, self, ... }:
 
 nix-darwin.lib.darwinSystem {
   system = "aarch64-darwin";
   modules = [
-    configuration
     ./configuration.nix
+    ({ lib, ... }: { nix.settings.auto-optimise-store = lib.mkForce false; }) # TODO https://github.com/NixOS/nix/issues/7273
     self.darwinModules.auto-upgrade
     self.darwinModules.default
-    ({ lib, ... }: { nix.settings.auto-optimise-store = lib.mkForce false; }) # TODO https://github.com/NixOS/nix/issues/7273
+    self.modules.default
   ];
 }
