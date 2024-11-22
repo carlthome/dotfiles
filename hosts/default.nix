@@ -1,7 +1,6 @@
 { nixpkgs, ... }@inputs:
 let
-  names = builtins.attrNames (builtins.readDir ./.);
-
+  names = builtins.attrNames (nixpkgs.lib.filterAttrs (n: v: v == "directory") (builtins.readDir ./.));
   configuration = {
     # Configure the `nix` program itself.
     nix.settings = {
