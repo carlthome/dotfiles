@@ -1,3 +1,3 @@
-{
-  default = import ./configuration.nix;
+{ nixpkgs, ... }: {
+  default = import ./configuration.nix { inherit nixpkgs; };
 }
