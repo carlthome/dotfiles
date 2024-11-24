@@ -306,17 +306,17 @@
   };
 
   networking.firewall.allowedTCPPorts = [
-    config.services.grafana.settings.server.http_port
-    config.services.prometheus.port
-    config.services.prometheus.alertmanager.port
+    #config.services.grafana.settings.server.http_port
+    #config.services.prometheus.port
+    #config.services.prometheus.alertmanager.port
     # TODO Expose Loki after adding authentication.
     #3100 # Loki
-    8123 # Home Assistant
-    2049 # NFS
+    #8123 # Home Assistant
+    #2049 # NFS
   ];
 
   networking.firewall.allowedUDPPorts = [
-    53 # DNS
+    #53 # DNS
   ];
 
   # This value determines the NixOS release from which the default
