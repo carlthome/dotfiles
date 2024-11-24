@@ -4,19 +4,25 @@
 
 ```sh
 # Build OS image.
-nix build .#nixosConfigurations.pi.config.system.build.sdImage
+nix build .#nixosConfigurations.pi.config.system.build.sdImage --print-build-logs
 image=$(find result/sd-image -type f -name "*.img")
+
+# You can also launch a VM to test that the configuration works as intended.
+nix run .#nixosConfigurations.pi.config.system.build.vm -- -serial stdio
+
+# Or build a QEMU image for later use.
+nixos-rebuild build-vm --flake .#pi
 
 # Look up USB drive device name manually.
 lsblk
-device=/dev/sdb
+device=/dev/sda
 
 # Write image to device.
-sudo dd if=$image of=$device bs=4096 conv=fsync status=progress
+sudo dd if=$image of=$device bs=4M status=progress oflag=sync
 
 # Preconfigure Wi-Fi access.
-sudo mkdir -p /run/media/$USER/NIXOS_SD/etc/
-printf 'network={\n  ssid="My Network"\n  psk="My Password"\n}\n' | sudo tee /run/media/$USER/NIXOS_SD/etc/wpa_supplicant.conf
+sudo mkdir -p /run/media/$USER/NIXOS_SD1/etc/
+printf 'network={\n  ssid="My Network"\n  psk="My Password"\n}\n' | sudo tee /run/media/$USER/NIXOS_SD1/etc/wpa_supplicant.conf
 
 # Plug the SD card (or USB drive) into the Raspberry Pi and power it up. Then rebuild the configuration remotely as needed by running:
 nixos-rebuild --flake .#pi --target-host pi --use-remote-sudo test
