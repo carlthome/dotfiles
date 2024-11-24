@@ -76,6 +76,7 @@
         "blur-my-shell@aunetx"
         "caffeine@patapon.info"
         "hue-lights@chlumskyvaclav.gmail.com"
+        "nightthemeswitcher@romainvigier.fr"
         "places-menu@gnome-shell-extensions.gcampax.github.com"
         "rounded-window-corners@yilozt"
         "system-monitor@gnome-shell-extensions.gcampax.github.com"
