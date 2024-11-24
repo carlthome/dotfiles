@@ -64,6 +64,7 @@
       night-theme-switcher
       rounded-window-corners
       system-monitor
+      systemd-manager
     ]);
 
   # Use `dconf watch /` to track stateful changes you are doing, then set them here.
@@ -80,6 +81,7 @@
         "places-menu@gnome-shell-extensions.gcampax.github.com"
         "rounded-window-corners@yilozt"
         "system-monitor@gnome-shell-extensions.gcampax.github.com"
+        "systemd-manager@hardpixel.eu"
       ];
     };
   };
