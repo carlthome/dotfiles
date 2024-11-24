@@ -63,6 +63,7 @@
       hue-lights
       night-theme-switcher
       rounded-window-corners
+      system-monitor
     ]);
 
   # Use `dconf watch /` to track stateful changes you are doing, then set them here.
@@ -77,6 +78,7 @@
         "hue-lights@chlumskyvaclav.gmail.com"
         "places-menu@gnome-shell-extensions.gcampax.github.com"
         "rounded-window-corners@yilozt"
+        "system-monitor@gnome-shell-extensions.gcampax.github.com"
       ];
     };
   };
