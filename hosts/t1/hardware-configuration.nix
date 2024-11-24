@@ -26,6 +26,13 @@
     {
       device = "/dev/disk/by-uuid/2B82-6540";
       fsType = "vfat";
+      options = [ "fmask=0022" "dmask=0022" ];
+    };
+
+  fileSystems."/usr/share/datasets" =
+    {
+      device = "/dev/disk/by-uuid/b0075b08-d350-452d-96da-5d02bea9deb3";
+      fsType = "ext4";
     };
 
   swapDevices = [ ];
@@ -35,13 +42,8 @@
   # still possible to use this option, but it's recommended to use it in conjunction
   # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
   networking.useDHCP = lib.mkDefault true;
-  # networking.interfaces.br-32176e585b84.useDHCP = lib.mkDefault true;
-  # networking.interfaces.br-35c8b7e536bf.useDHCP = lib.mkDefault true;
-  # networking.interfaces.br-7fdb69a286e4.useDHCP = lib.mkDefault true;
-  # networking.interfaces.br-da93f7b8017f.useDHCP = lib.mkDefault true;
-  # networking.interfaces.br-ff998d1fa7eb.useDHCP = lib.mkDefault true;
   # networking.interfaces.docker0.useDHCP = lib.mkDefault true;
-  # networking.interfaces.wlp6s0.useDHCP = lib.mkDefault true;
+  # networking.interfaces.wlp5s0.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
