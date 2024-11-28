@@ -129,6 +129,9 @@
         domain = "localhost";
       };
     };
+    declarativePlugins = with pkgs.grafanaPlugins; [
+      grafana-piechart-panel
+    ];
     provision.enable = true;
     provision.datasources.settings.datasources = [
       {
@@ -143,6 +146,12 @@
         type = "loki";
         access = "proxy";
         url = "http://127.0.0.1:3100";
+      }
+      {
+        name = "Blocky";
+        type = "prometheus";
+        access = "proxy";
+        url = "http://127.0.0.1:4000";
       }
     ];
     provision.dashboards.settings.providers = [
@@ -167,6 +176,14 @@
           targets = [
             "127.0.0.1:${toString config.services.prometheus.exporters.node.port}"
             "192.168.0.71:9100"
+          ];
+        }];
+      }
+      {
+        job_name = "blocky";
+        static_configs = [{
+          targets = [
+            "127.0.0.1:4000"
           ];
         }];
       }
