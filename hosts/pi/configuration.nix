@@ -333,7 +333,7 @@
   ];
 
   networking.firewall.allowedUDPPorts = [
-    #53 # DNS
+    53 # DNS
   ];
 
   # This value determines the NixOS release from which the default
