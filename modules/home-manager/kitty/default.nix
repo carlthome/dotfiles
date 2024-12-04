@@ -29,7 +29,7 @@
     };
 
     # https://github.com/kovidgoyal/kitty-themes
-    theme = "Grape";
+    themeFile = "Grape";
 
     font = {
       name = "Maple Mono";
