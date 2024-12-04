@@ -1,7 +1,7 @@
 { config, pkgs, ... }: {
 
   # Configure graphics settings.
-  hardware.opengl.enable = true;
+  hardware.graphics.enable = true;
   services.xserver = {
     enable = true;
     displayManager.gdm.enable = true;
@@ -10,7 +10,6 @@
   };
 
   # Configure audio settings.
-  sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {

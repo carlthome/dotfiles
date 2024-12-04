@@ -30,6 +30,7 @@
       trouble.enable = true;
       twilight.enable = true;
       virt-column.enable = true;
+      web-devicons.enable = true;
       which-key.enable = true;
       wilder.enable = true;
       wtf.enable = true;
@@ -44,7 +45,7 @@
         servers = {
           bashls.enable = true;
           nixd.enable = true;
-          ruff-lsp.enable = true;
+          ruff_lsp.enable = true;
         };
         keymaps.lspBuf = {
           "gd" = "definition";
