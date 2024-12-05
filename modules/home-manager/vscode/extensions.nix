@@ -56,12 +56,13 @@ let
       version = "0.9.0";
       sha256 = "sha256-Y3DCkPCbvuLxad2Oz82dIYgPIBLhE1FR8Nb9kw7jEpg=";
     }
-    {
-      name = "runme";
-      publisher = "stateful";
-      version = "3.6.1";
-      sha256 = "sha256-SJzSckY61vObVq8FE0kv4MrtKFJqx8eAHCzd9/k65+M=";
-    }
+    # TODO This extension is too buggy.
+    # {
+    #   name = "runme";
+    #   publisher = "stateful";
+    #   version = "3.6.1";
+    #   sha256 = "sha256-SJzSckY61vObVq8FE0kv4MrtKFJqx8eAHCzd9/k65+M=";
+    # }
     {
       name = "python-environment-manager";
       publisher = "donjayamanne";
