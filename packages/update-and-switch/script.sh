@@ -5,7 +5,7 @@ set -ex
 git pull
 
 # Update flake lock file.
-nix flake update --commit-lock-file .
+nix flake update --commit-lock-file --flake .
 
 # Switch system and home configuration.
 nix run .#switch-system
