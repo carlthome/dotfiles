@@ -95,6 +95,7 @@
     nh.enable = true;
     poetry.enable = true;
     alacritty.enable = true;
+    zed-editor.enable = true;
   };
 
   # Include additional user packages.
