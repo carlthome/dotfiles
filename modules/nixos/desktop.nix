@@ -30,7 +30,7 @@
   services.printing.enable = false;
 
   # Add additional GNOME programs.
-  services.udev.packages = [ pkgs.gnome.gnome-settings-daemon ];
+  services.udev.packages = [ pkgs.gnome-settings-daemon ];
   environment.systemPackages = [ pkgs.gnomeExtensions.appindicator ];
 
   # Include Steam for all users.
