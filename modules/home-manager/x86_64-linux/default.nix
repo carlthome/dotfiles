@@ -63,7 +63,6 @@
       caffeine
       hue-lights
       night-theme-switcher
-      rounded-window-corners
       system-monitor
       systemd-manager
     ]);
@@ -80,7 +79,6 @@
         "hue-lights@chlumskyvaclav.gmail.com"
         "nightthemeswitcher@romainvigier.fr"
         "places-menu@gnome-shell-extensions.gcampax.github.com"
-        "rounded-window-corners@yilozt"
         "system-monitor@gnome-shell-extensions.gcampax.github.com"
         "systemd-manager@hardpixel.eu"
       ];
