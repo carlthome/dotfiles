@@ -92,6 +92,7 @@
     pyenv.enable = true;
     bun.enable = true;
     fd.enable = true;
+    nh.enable = true;
     poetry.enable = true;
     alacritty.enable = true;
   };
