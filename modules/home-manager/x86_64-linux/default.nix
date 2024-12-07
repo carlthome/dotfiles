@@ -13,6 +13,7 @@
       "spotify"
       "steam-original"
       "steam"
+      "steam-unwrapped"
       "vscode"
       "terraform"
     ];
