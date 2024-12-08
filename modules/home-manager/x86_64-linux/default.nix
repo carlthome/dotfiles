@@ -64,6 +64,7 @@
       hue-lights
       night-theme-switcher
       system-monitor
+      vitals
     ]);
 
   # Use `dconf watch /` to track stateful changes you are doing, then set them here.
@@ -79,6 +80,7 @@
         "nightthemeswitcher@romainvigier.fr"
         "places-menu@gnome-shell-extensions.gcampax.github.com"
         "system-monitor@gnome-shell-extensions.gcampax.github.com"
+        "Vitals@CoreCoding.com"
       ];
     };
   };
