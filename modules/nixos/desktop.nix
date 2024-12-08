@@ -26,7 +26,7 @@
   # Enable Flatpak as a fallback for missing packages.
   services.flatpak.enable = true;
 
-  # Find printers automatically.
+  # Don't find printers automatically.
   services.printing.enable = false;
 
   # Add additional GNOME programs.
