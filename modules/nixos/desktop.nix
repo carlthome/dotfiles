@@ -29,9 +29,16 @@
   # Don't find printers automatically.
   services.printing.enable = false;
 
-  # Add additional GNOME programs.
-  services.udev.packages = [ pkgs.gnome-settings-daemon ];
-  environment.systemPackages = [ pkgs.gnomeExtensions.appindicator ];
+  # To get systray icons support.
+  services.udev.packages = with pkgs; [ gnome-settings-daemon ];
+
+  # Add additional software for all users.
+  environment.systemPackages = with pkgs; [
+    gnomeExtensions.appindicator
+    mission-center
+    monitorets
+    resources
+  ];
 
   # Include Steam for all users.
   programs.steam.enable = true;
