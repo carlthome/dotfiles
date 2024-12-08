@@ -19,7 +19,7 @@
     carl = {
       isNormalUser = true;
       description = "Carl Thomé";
-      extraGroups = [ "networkmanager" "wheel" "docker" ];
+      extraGroups = [ "networkmanager" "wheel" "docker" "audio" ];
       packages = with pkgs; [ ];
     };
   };
