@@ -218,7 +218,7 @@
 
   virtualisation.oci-containers.backend = "docker";
   virtualisation.oci-containers.containers.home-assistant = {
-    image = "ghcr.io/home-assistant/home-assistant:stable";
+    image = "ghcr.io/home-assistant/home-assistant:2024.12.1";
     ports = [ "8123:8123" ];
     volumes = [
       "/etc/home-assistant:/config"
