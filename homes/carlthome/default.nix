@@ -26,5 +26,6 @@ home-manager.lib.homeManagerConfiguration {
     self.homeModules.tmux
     self.homeModules.vim
     self.homeModules.vscode
+    self.homeModules.zed
   ];
 }
