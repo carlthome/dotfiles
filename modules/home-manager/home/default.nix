@@ -16,6 +16,7 @@
     d = "docker run -v $(pwd):$(pwd) -w $(pwd) --rm -it";
     k = "kubectl";
     g = "git";
+    gg = "git grep --line-number --column";
     ll = "ls -al";
     pc = "pre-commit run --all";
     clean = "git clean -xd --interactive";
