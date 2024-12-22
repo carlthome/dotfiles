@@ -44,7 +44,7 @@
       options = [ "size=1G" ];
     };
 
-    "/var/lib/jellyfin/transcodes" = {
+    "/var/cache/jellyfin/transcodes" = {
       fsType = "tmpfs";
       options = [ "size=1G" ];
     };
