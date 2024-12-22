@@ -46,7 +46,7 @@
 
     "/var/cache/jellyfin/transcodes" = {
       fsType = "tmpfs";
-      options = [ "size=1G" ];
+      options = [ "size=2G" ];
     };
 
     "/mnt/datasets" = {
