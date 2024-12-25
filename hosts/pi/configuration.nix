@@ -267,67 +267,15 @@
     dashboards // templates;
 
   services.nginx = {
-    enable = false; # TODO
+    enable = true;
     recommendedProxySettings = true;
     recommendedOptimisation = true;
     recommendedGzipSettings = true;
-
-    upstreams = {
-      "grafana" = {
-        servers = {
-          "127.0.0.1:${toString config.services.grafana.port}" = { };
-        };
-      };
-      "prometheus" = {
-        servers = {
-          "127.0.0.1:${toString config.services.prometheus.port}" = { };
-        };
-      };
-      "loki" = {
-        servers = {
-          "127.0.0.1:${toString config.services.loki.configuration.server.http_listen_port}" = { };
-        };
-      };
-      "promtail" = {
-        servers = {
-          "127.0.0.1:${toString config.services.promtail.configuration.server.http_listen_port}" = { };
-        };
-      };
-    };
-
-    virtualHosts.grafana = {
+    virtualHosts."grafana.pi.local" = {
       locations."/" = {
-        proxyPass = "http://grafana";
+        proxyPass = "http://127.0.0.1:${toString config.services.grafana.settings.server.http_port}";
         proxyWebsockets = true;
       };
-      listen = [{
-        addr = "192.168.0.75";
-        port = 8010;
-      }];
-    };
-
-    virtualHosts.prometheus = {
-      locations."/".proxyPass = "http://prometheus";
-      listen = [{
-        addr = "192.168.0.75";
-        port = 8020;
-      }];
-    };
-
-    virtualHosts.loki = {
-      locations."/".proxyPass = "http://loki";
-      listen = [{
-        addr = "192.168.0.75";
-        port = 8030;
-      }];
-    };
-
-    virtualHosts.promtail = {
-      locations."/".proxyPass = "http://promtail";
-      listen = [{
-        addr = "192.168.0.75";
-        port = 8031;
-      }];
     };
   };
 
