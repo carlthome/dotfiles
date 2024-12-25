@@ -7,9 +7,6 @@
   security.pam.sshAgentAuth.enable = true;
   security.pam.services.sudo.sshAgentAuth = true;
 
-  # Disable sudo by default.
-  security.sudo.enable = false;
-
   # Insist all users are declaratively defined.
   users.mutableUsers = false;
 
