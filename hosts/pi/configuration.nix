@@ -287,6 +287,8 @@
     #3100 # Loki
     #8123 # Home Assistant
     #2049 # NFS
+    80 # HTTP
+    443 # HTTPS
   ];
 
   networking.firewall.allowedUDPPorts = [
