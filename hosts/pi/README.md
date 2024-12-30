@@ -2,10 +2,11 @@
 
 ## Usage
 
+### Installation
+
 ```sh
 # Build OS image.
 nix build .#nixosConfigurations.pi.config.system.build.sdImage --print-build-logs
-image=$(find result/sd-image -type f -name "*.img")
 
 # You can also launch a VM to test that the configuration works as intended.
 nix run .#nixosConfigurations.pi.config.system.build.vm -- -serial stdio
@@ -18,16 +19,31 @@ lsblk
 device=/dev/sda
 
 # Write image to device.
+image=$(find result/sd-image -type f -name "*.img")
 sudo dd if=$image of=$device bs=4M status=progress oflag=sync
 
 # Preconfigure Wi-Fi access.
 sudo mkdir -p /run/media/$USER/NIXOS_SD1/etc/
 printf 'network={\n  ssid="My Network"\n  psk="My Password"\n}\n' | sudo tee /run/media/$USER/NIXOS_SD1/etc/wpa_supplicant.conf
 
-# Plug the SD card (or USB drive) into the Raspberry Pi and power it up. Then rebuild the configuration remotely as needed by running:
+# Update local SSH configuration.
+printf '\nHost pi\n  HostName pi.local\n  ForwardAgent yes\n' | tee --append ~/.ssh/config
+
+```
+
+Plug the SD card (or USB drive) into the Raspberry Pi and power it up. You should be able to `ssh pi` into the machine.
+
+### Update configuration
+
+```sh
+# Build and switch to the latest configuration on the remote.
+ssh pi
+nixos-rebuild --flake github:carlthome/dotfiles#pi test
+
+# Or build a local configuration on another system and update remotely.
 nixos-rebuild --flake .#pi --target-host pi --use-remote-sudo test
 
-# Or build on the remote device (e.g. if the local machine is macOS):
+# Or also build on the remote (e.g. if the local machine is macOS):
 nixos-rebuild --flake .#pi --fast --build-host pi --target-host pi --use-remote-sudo test
 ```
 
