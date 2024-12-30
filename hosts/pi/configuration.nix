@@ -17,13 +17,7 @@ let
     })
     (builtins.readDir ./prometheus/alertmanager/templates);
 
-  configFiles = {
-    "dnscrypt-proxy/forwarding-rules.txt" = {
-      source = ./dnscrypt/forwarding-rules.txt;
-      group = "dnscrypt-proxy2";
-      user = "dnscrypt-proxy2";
-    };
-  };
+  configFiles = { };
 in
 {
   nix.settings.trusted-users = [ "root" "carl" ];
@@ -152,6 +146,19 @@ in
         clientGroupsBlock = {
           default = [ "ads" ];
         };
+      };
+
+      customDNS = {
+        customTTL = "1h";
+        filterUnmappedTypes = true;
+        zone = ''
+          $ORIGIN home.
+          $TTL 86400
+          pi  IN  A  192.168.0.75
+          grafana  IN  CNAME  pi
+          jellyfin  IN  CNAME  pi
+          home-assistant  IN  CNAME  pi
+        '';
       };
     };
   };
@@ -293,9 +300,21 @@ in
     recommendedProxySettings = true;
     recommendedOptimisation = true;
     recommendedGzipSettings = true;
-    virtualHosts."grafana.pi.local" = {
+    virtualHosts."grafana.home" = {
       locations."/" = {
         proxyPass = "http://127.0.0.1:${toString config.services.grafana.settings.server.http_port}";
+        proxyWebsockets = true;
+      };
+    };
+    virtualHosts."jellyfin.home" = {
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:8096";
+        proxyWebsockets = true;
+      };
+    };
+    virtualHosts."home-assistant.home" = {
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:8123";
         proxyWebsockets = true;
       };
     };
