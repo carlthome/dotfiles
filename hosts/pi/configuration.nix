@@ -1,7 +1,32 @@
-{ config, pkgs, lib, ... }: {
-  nix.settings.trusted-users = [ "root" "carl" ];
+{ config, pkgs, lib, ... }:
 
-  networking.hostName = "pi";
+let
+  grafanaDashboards = lib.mapAttrs'
+    (name: value: lib.nameValuePair ("grafana/dashboards/" + name) {
+      source = ./grafana/dashboards/${name};
+      group = "grafana";
+      user = "grafana";
+    })
+    (builtins.readDir ./grafana/dashboards);
+
+  alertManagerTemplates = lib.mapAttrs'
+    (name: value: lib.nameValuePair ("alertmanager/templates/" + name) {
+      source = ./prometheus/alertmanager/templates/${name};
+      group = "alertmanager";
+      user = "alertmanager";
+    })
+    (builtins.readDir ./prometheus/alertmanager/templates);
+
+  configFiles = {
+    "dnscrypt-proxy/forwarding-rules.txt" = {
+      source = ./dnscrypt/forwarding-rules.txt;
+      group = "dnscrypt-proxy2";
+      user = "dnscrypt-proxy2";
+    };
+  };
+in
+{
+  nix.settings.trusted-users = [ "root" "carl" ];
 
   users.users = {
     carl = {
@@ -62,9 +87,24 @@
     };
   };
 
-  networking.wireless = {
-    enable = true;
-    interfaces = [ "wlan0" ];
+  environment.etc = configFiles // grafanaDashboards // alertManagerTemplates;
+
+  networking = {
+    hostName = "pi";
+    wireless = {
+      enable = true;
+      interfaces = [ "wlan0" ];
+    };
+    firewall = {
+      allowedTCPPorts = [
+        80 # HTTP
+        443 # HTTPS
+        53 # DNS
+      ];
+      allowedUDPPorts = [
+        53 # DNS
+      ];
+    };
   };
 
   services.avahi = {
@@ -248,26 +288,6 @@
     /mnt/media 192.168.0.19(rw,sync)
   '';
 
-  # Add all Grafana dashboards and Alertmanager templates to /etc.
-  environment.etc =
-    let
-      dashboards = lib.mapAttrs'
-        (name: value: lib.nameValuePair ("grafana/dashboards/" + name) {
-          source = ./grafana/dashboards/${name};
-          group = "grafana";
-          user = "grafana";
-        })
-        (builtins.readDir ./grafana/dashboards);
-      templates = lib.mapAttrs'
-        (name: value: lib.nameValuePair ("alertmanager/templates/" + name) {
-          source = ./prometheus/alertmanager/templates/${name};
-          group = "grafana";
-          user = "grafana";
-        })
-        (builtins.readDir ./prometheus/alertmanager/templates);
-    in
-    dashboards // templates;
-
   services.nginx = {
     enable = true;
     recommendedProxySettings = true;
@@ -280,22 +300,6 @@
       };
     };
   };
-
-  networking.firewall.allowedTCPPorts = [
-    #config.services.grafana.settings.server.http_port
-    #config.services.prometheus.port
-    #config.services.prometheus.alertmanager.port
-    # TODO Expose Loki after adding authentication.
-    #3100 # Loki
-    #8123 # Home Assistant
-    #2049 # NFS
-    80 # HTTP
-    443 # HTTPS
-  ];
-
-  networking.firewall.allowedUDPPorts = [
-    53 # DNS
-  ];
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
