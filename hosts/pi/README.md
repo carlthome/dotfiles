@@ -40,10 +40,10 @@ Plug the SD card (or USB drive) into the Raspberry Pi and power it up. You shoul
 ssh pi
 nixos-rebuild --flake github:carlthome/dotfiles#pi test
 
-# Or build a local configuration on another system and update remotely.
+# Or build a local configuration and update the remote.
 nixos-rebuild --flake .#pi --target-host pi --use-remote-sudo test
 
-# Or also build on the remote (e.g. if the local machine is macOS):
+# Or also build remotely (e.g. if the local machine is macOS):
 nixos-rebuild --flake .#pi --fast --build-host pi --target-host pi --use-remote-sudo test
 ```
 
