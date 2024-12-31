@@ -154,6 +154,7 @@ in
         zone = ''
           $ORIGIN home.
           $TTL 86400
+          router  IN  A  192.168.0.1
           pi  IN  A  192.168.0.75
           grafana  IN  CNAME  pi
           jellyfin  IN  CNAME  pi
