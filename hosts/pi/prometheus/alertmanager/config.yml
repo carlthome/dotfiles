@@ -56,7 +56,7 @@ receivers:
             name: readmebutton
             text: "README :green_book:"
             value: "text"
-            url: "{{ (index .Alerts 0).Labels.readmeUrl }}" # just a link for our internal readme, it comes with https:// so no need to add
+            url: "https://{{ (index .Alerts 0).Labels.readmeUrl }}" # just a link for our internal readme, it comes with https:// so no need to add
           - type: button
             name: grafana
             text: "Grafana :grafana:"
