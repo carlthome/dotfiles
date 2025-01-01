@@ -238,8 +238,8 @@ in
         job_name = "node_exporter";
         static_configs = [{
           targets = [
-            "127.0.0.1:${toString config.services.prometheus.exporters.node.port}"
-            "192.168.0.71:9100"
+            "localhost:${toString config.services.prometheus.exporters.node.port}"
+            "pi-zero.local:9100"
           ];
         }];
       }
