@@ -17,7 +17,13 @@ let
     })
     (builtins.readDir ./prometheus/alertmanager/templates);
 
-  configFiles = { };
+  configFiles = {
+    "home-assistant/configuration.yaml" = {
+      source = ./home-assistant/configuration.yaml;
+      group = "home-assistant";
+      user = "home-assistant";
+    };
+  };
 in
 {
   nix.settings.trusted-users = [ "root" "carl" ];
