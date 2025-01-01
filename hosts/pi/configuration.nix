@@ -187,6 +187,7 @@ in
         http_port = 3000;
         domain = "localhost";
       };
+      panels.disable_sanitize_html = true;
     };
     declarativePlugins = with pkgs.grafanaPlugins; [
       grafana-piechart-panel
@@ -199,12 +200,14 @@ in
         access = "proxy";
         url = "http://127.0.0.1:${toString config.services.prometheus.port}";
         isDefault = true;
+        uid = "prometheus";
       }
       {
         name = "Loki";
         type = "loki";
         access = "proxy";
         url = "http://127.0.0.1:3100";
+        uid = "loki";
       }
     ];
     provision.dashboards.settings.providers = [

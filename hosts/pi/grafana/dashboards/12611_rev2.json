@@ -1,4 +1,14 @@
 {
+  "__inputs": [
+    {
+      "name": "DS_LOKI",
+      "label": "Loki",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "loki",
+      "pluginName": "Loki"
+    }
+  ],
   "annotations": {
     "list": [
       {
@@ -33,7 +43,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "000000042"
+        "uid": "${DS_LOKI}"
       },
       "description": "Total  Count of log lines in the specified time range",
       "fieldConfig": {
@@ -100,7 +110,7 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "000000042"
+            "uid": "${DS_LOKI}"
           },
           "editorMode": "code",
           "expr": "sum(count_over_time(({container=\"$container\", stream=~\"$stream\", pod=~\"$pod\"})[$__interval]))",
@@ -115,7 +125,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "000000042"
+        "uid": "${DS_LOKI}"
       },
       "description": "Total Count: of $searchable_pattern in the specified time range",
       "fieldConfig": {
@@ -182,7 +192,7 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "000000042"
+            "uid": "${DS_LOKI}"
           },
           "editorMode": "code",
           "expr": "sum(count_over_time(({container=\"$container\", stream=~\"$stream\", pod=~\"$pod\"} |~ \"(?i)$searchable_pattern\")[$__interval]))",
@@ -197,7 +207,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "000000042"
+        "uid": "${DS_LOKI}"
       },
       "description": "Live logs is a like 'tail -f' in a real time",
       "gridPos": {
@@ -221,7 +231,7 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "000000042"
+            "uid": "${DS_LOKI}"
           },
           "editorMode": "code",
           "expr": "{container=\"$container\", pod=~\"$pod\", stream=~\"$stream\"} |~ \"(?i)$searchable_pattern\" ",
@@ -268,7 +278,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "000000042"
+        "uid": "${DS_LOKI}"
       },
       "fieldConfig": {
         "defaults": {
@@ -318,7 +328,7 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "000000042"
+            "uid": "${DS_LOKI}"
           },
           "editorMode": "code",
           "expr": "sum(count_over_time(({container=\"$container\", pod=~\"$pod\"})[$__interval])) by (stream)",
@@ -334,7 +344,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "000000042"
+        "uid": "${DS_LOKI}"
       },
       "fieldConfig": {
         "defaults": {
@@ -384,7 +394,7 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "000000042"
+            "uid": "${DS_LOKI}"
           },
           "editorMode": "code",
           "expr": "sum(count_over_time(({container=\"$container\", pod=~\"$pod\", stream=~\"$stream\"} |~ \"(?i)$searchable_pattern\")[$__interval])) by (pod)",
@@ -399,7 +409,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "000000042"
+        "uid": "${DS_LOKI}"
       },
       "fieldConfig": {
         "defaults": {
@@ -463,7 +473,7 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "000000042"
+            "uid": "${DS_LOKI}"
           },
           "editorMode": "code",
           "expr": "sum(count_over_time(({container=\"$container\", stream=~\"$stream\", pod=~\"$pod\"} |~ \"(?i)$searchable_pattern\")[$__interval])) * 100 / sum(count_over_time(({container=\"$container\", stream=~\"$stream\", pod=~\"$pod\"})[$__interval]))",
@@ -478,7 +488,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "000000042"
+        "uid": "${DS_LOKI}"
       },
       "fieldConfig": {
         "defaults": {
@@ -562,7 +572,7 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "000000042"
+            "uid": "${DS_LOKI}"
           },
           "editorMode": "code",
           "expr": "sum(count_over_time(({container=\"$container\", pod=~\"$pod\", stream=~\"$stream\"} |~ \"(?i)$searchable_pattern\")[$__interval])) by (pod)",
@@ -577,7 +587,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "000000042"
+        "uid": "${DS_LOKI}"
       },
       "fieldConfig": {
         "defaults": {
@@ -660,7 +670,7 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "000000042"
+            "uid": "${DS_LOKI}"
           },
           "editorMode": "code",
           "expr": "sum(rate(({container=\"$container\", stream=~\"$stream\", pod=~\"$pod\"} |~ \"(?i)$searchable_pattern\")[30s])) by (pod)",
@@ -676,7 +686,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "000000042"
+        "uid": "${DS_LOKI}"
       },
       "fieldConfig": {
         "defaults": {
@@ -797,7 +807,7 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "000000042"
+            "uid": "${DS_LOKI}"
           },
           "editorMode": "code",
           "expr": "sum(count_over_time(({container=\"$container\", pod=~\"$pod\"})[$__interval])) by (stream)",
@@ -820,12 +830,30 @@
       {
         "current": {
           "selected": false,
+          "text": "default",
+          "value": "default"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "datasource",
+        "multi": false,
+        "name": "DS_LOKI",
+        "options": [],
+        "query": "loki",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      },
+      {
+        "current": {
+          "selected": false,
           "text": "pod",
           "value": "pod"
         },
         "datasource": {
           "type": "loki",
-          "uid": "000000042"
+          "uid": "${DS_LOKI}"
         },
         "definition": "",
         "hide": 0,
@@ -841,7 +869,7 @@
           "type": 1
         },
         "refresh": 1,
-        "regex": "",
+        "regex": ".*",
         "skipUrlSync": false,
         "sort": 0,
         "type": "query"
@@ -854,7 +882,7 @@
         },
         "datasource": {
           "type": "loki",
-          "uid": "000000042"
+          "uid": "${DS_LOKI}"
         },
         "definition": "label_values({container_name=\"$container_name\"}, pod_name)",
         "hide": 0,
@@ -886,7 +914,7 @@
         },
         "datasource": {
           "type": "loki",
-          "uid": "000000042"
+          "uid": "${DS_LOKI}"
         },
         "definition": "label_values({container_name=\"$container_name\"}, stream)",
         "hide": 0,
