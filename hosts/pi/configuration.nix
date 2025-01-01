@@ -22,6 +22,7 @@ let
       source = ./home-assistant/configuration.yaml;
       group = "home-assistant";
       user = "home-assistant";
+      mode = "0644";
     };
   };
 in
