@@ -182,14 +182,9 @@ in
     configFile = ./loki/config.yml;
   };
 
-  systemd.services.promtail = {
-    description = "Promtail service for Loki";
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig = {
-      ExecStart = ''
-        ${pkgs.grafana-loki}/bin/promtail --config.file ${./loki/promtail.yml}
-      '';
-    };
+  services.promtail = {
+    enable = true;
+    configFile = ./loki/promtail.yml;
   };
 
   services.grafana = {
