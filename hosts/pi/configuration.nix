@@ -161,11 +161,17 @@ in
         zone = ''
           $ORIGIN home.
           $TTL 86400
+
           router  IN  A  192.168.0.1
           pi  IN  A  192.168.0.75
+
           grafana  IN  CNAME  pi
+          alertmanager  IN  CNAME  pi
+          prometheus  IN  CNAME  pi
+          loki  IN  CNAME  pi
           jellyfin  IN  CNAME  pi
           home-assistant  IN  CNAME  pi
+          blocky  IN  CNAME  pi
         '';
       };
     };
@@ -300,30 +306,37 @@ in
     /mnt/media 192.168.0.19(rw,sync)
   '';
 
-  services.nginx = {
-    enable = true;
-    recommendedProxySettings = true;
-    recommendedOptimisation = true;
-    recommendedGzipSettings = true;
-    virtualHosts."grafana.home" = {
-      locations."/" = {
-        proxyPass = "http://127.0.0.1:${toString config.services.grafana.settings.server.http_port}";
-        proxyWebsockets = true;
-      };
-    };
-    virtualHosts."jellyfin.home" = {
-      locations."/" = {
-        proxyPass = "http://127.0.0.1:8096";
-        proxyWebsockets = true;
-      };
-    };
-    virtualHosts."home-assistant.home" = {
-      locations."/" = {
-        proxyPass = "http://127.0.0.1:8123";
-        proxyWebsockets = true;
-      };
-    };
+  security.acme = {
+    defaults.email = "c@rlth.me";
+    acceptTerms = true;
   };
+
+  services.nginx =
+    let
+      mkVirtualHost = (domain: port: {
+        addSSL = false;
+        enableACME = false;
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:${toString port}";
+          proxyWebsockets = true;
+        };
+      });
+    in
+    {
+      enable = true;
+      recommendedProxySettings = true;
+      recommendedOptimisation = true;
+      recommendedGzipSettings = true;
+      virtualHosts = builtins.mapAttrs mkVirtualHost {
+        "grafana.home" = config.services.grafana.settings.server.http_port;
+        "alertmanager.home" = config.services.prometheus.alertmanager.port;
+        "prometheus.home" = config.services.prometheus.port;
+        "loki.home" = 3100;
+        "jellyfin.home" = 8096;
+        "home-assistant.home" = 8123;
+        "blocky.home" = 4000;
+      };
+    };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
