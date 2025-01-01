@@ -139,6 +139,7 @@ in
       ports.dns = 53;
       ports.http = 4000;
       prometheus.enable = true;
+      queryLog.type = "none";
       upstreams.groups.default = [
         "https://one.one.one.one/dns-query"
       ];
