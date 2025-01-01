@@ -206,12 +206,6 @@ in
         access = "proxy";
         url = "http://127.0.0.1:3100";
       }
-      {
-        name = "Blocky";
-        type = "prometheus";
-        access = "proxy";
-        url = "http://127.0.0.1:4000";
-      }
     ];
     provision.dashboards.settings.providers = [
       {
