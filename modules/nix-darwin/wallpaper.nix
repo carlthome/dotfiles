@@ -1,25 +1,21 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-{
+{ config, lib, pkgs, ... }: {
   options.services.wallpaper = {
-    enable = mkEnableOption "Automatic wallpaper changing service";
+    enable = lib.mkEnableOption "Automatic wallpaper changing service";
 
-    interval = mkOption {
-      type = types.str;
+    interval = lib.mkOption {
+      type = lib.types.str;
       default = "daily";
       description = "How often to change the wallpaper (daily, hourly)";
     };
 
-    category = mkOption {
-      type = types.str;
+    category = lib.mkOption {
+      type = lib.types.str;
       default = "nature";
       description = "Category of images to fetch from Unsplash";
     };
   };
 
-  config = mkIf config.services.wallpaper.enable {
+  config = lib.mkIf config.services.wallpaper.enable {
     environment.systemPackages = with pkgs; [
       darwin.apple_sdk.frameworks.CoreServices
     ];
