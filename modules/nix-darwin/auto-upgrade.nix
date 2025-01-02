@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }: {
+{ config, pkgs, lib, ... }: {
   options.services.auto-upgrade = {
     enable = lib.mkEnableOption "Automatic system upgrades";
     flake = lib.mkOption {
