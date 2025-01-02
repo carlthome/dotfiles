@@ -27,21 +27,6 @@ let
   };
 in
 {
-  nix.settings.trusted-users = [ "root" "carl" ];
-
-  users.users = {
-    carl = {
-      isNormalUser = true;
-      description = "Carl Thomé";
-      extraGroups = [ "wheel" ];
-      packages = with pkgs; [ ];
-      openssh.authorizedKeys.keys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF242vreA7b28tHGdr979yTEqyfIMStXn3Gqlr8OjKcS"
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDJmEWvLXWvMV9S6XZApJUEaUPvTpEhPMiVWu7lZAEpQ"
-      ];
-    };
-  };
-
   hardware.enableRedistributableFirmware = true;
 
   boot = {
@@ -104,6 +89,17 @@ in
       ];
       allowedUDPPorts = [
         53 # DNS
+      ];
+    };
+  };
+
+  users.users = {
+    pi = {
+      isNormalUser = true;
+      extraGroups = [ "wheel" ];
+      openssh.authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF242vreA7b28tHGdr979yTEqyfIMStXn3Gqlr8OjKcS"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDJmEWvLXWvMV9S6XZApJUEaUPvTpEhPMiVWu7lZAEpQ"
       ];
     };
   };

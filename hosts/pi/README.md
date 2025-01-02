@@ -27,7 +27,7 @@ sudo mkdir -p /run/media/$USER/NIXOS_SD1/etc/
 printf 'network={\n  ssid="My Network"\n  psk="My Password"\n}\n' | sudo tee /run/media/$USER/NIXOS_SD1/etc/wpa_supplicant.conf
 
 # Update local SSH configuration.
-printf '\nHost pi\n  HostName pi.local\n  ForwardAgent yes\n' | tee --append ~/.ssh/config
+printf '\nHost pi\n  HostName pi.local\n  User pi\n  ForwardAgent yes\n' | tee --append ~/.ssh/config
 
 ```
 
