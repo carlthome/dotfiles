@@ -20,5 +20,10 @@
     category = "nature";
   };
 
+  services.auto-upgrade = {
+    enable = true;
+    flake = "github:carlthome/dotfiles";
+  };
+
   system.stateVersion = 5;
 }
