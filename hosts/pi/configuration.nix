@@ -306,12 +306,40 @@ in
     defaults.email = "c@rlth.me";
     acceptTerms = true;
   };
+  
+  systemd.services.nginx-self-signed = {
+    description = "Generate self-signed certificates for nginx";
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      StateDirectory = "nginx";
+      User = "nginx";
+      Group = "nginx";
+    };
+    script = ''
+      if [ ! -f "$STATE_DIRECTORY/self-signed.key" ]; then
+        ${pkgs.openssl}/bin/openssl req -x509 -nodes -days 365 -newkey rsa:4096 \
+          -keyout "$STATE_DIRECTORY/self-signed.key" \
+          -out "$STATE_DIRECTORY/self-signed.crt" \
+          -subj "/CN=*.home/O=Home Lab/C=SE"
+        chmod 400 "$STATE_DIRECTORY/self-signed.key"
+        chmod 444 "$STATE_DIRECTORY/self-signed.crt"
+      fi
+    '';
+  };
 
   services.nginx =
     let
       mkVirtualHost = (domain: port: {
-        addSSL = false;
+        addSSL = true;
         enableACME = false;
+        sslCertificate = "/var/lib/nginx/self-signed.crt";
+        sslCertificateKey = "/var/lib/nginx/self-signed.key";
+        extraConfig = ''
+          ssl_stapling off;
+          ssl_stapling_verify off;
+        '';
         locations."/" = {
           proxyPass = "http://127.0.0.1:${toString port}";
           proxyWebsockets = true;
@@ -323,6 +351,8 @@ in
       recommendedProxySettings = true;
       recommendedOptimisation = true;
       recommendedGzipSettings = true;
+      recommendedTlsSettings = true;
+
       virtualHosts = builtins.mapAttrs mkVirtualHost {
         "grafana.home" = config.services.grafana.settings.server.http_port;
         "alertmanager.home" = config.services.prometheus.alertmanager.port;
