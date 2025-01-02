@@ -6,6 +6,9 @@
     flake = "github:carlthome/dotfiles";
   };
 
+  # Auto-deduplicate files in the store.
+  nix.auto-optimise-store = true;
+
   # Select locale, time zone and default keyboard layout.
   console.keyMap = "sv-latin1";
   time.timeZone = "Europe/Stockholm";
