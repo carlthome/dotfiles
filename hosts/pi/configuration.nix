@@ -263,22 +263,23 @@ in
         ];
       }];
     }];
-  };
 
-  services.prometheus.exporters.node = {
-    enable = true;
-    enabledCollectors = [ "systemd" "processes" ];
-  };
+    exporters = {
+      node = {
+        enable = true;
+        enabledCollectors = [ "systemd" "processes" ];
+      };
+      systemd = {
+        enable = true;
+      };
+    };
 
-  services.prometheus.exporters.systemd = {
-    enable = true;
-  };
-
-  services.prometheus.alertmanager = {
-    enable = true;
-    configText = builtins.readFile ./prometheus/alertmanager/config.yml;
-    environmentFile = "/etc/nixos/secrets/alertmanager.env";
-    checkConfig = false;
+    alertmanager = {
+      enable = true;
+      configText = builtins.readFile ./prometheus/alertmanager/config.yml;
+      environmentFile = "/etc/nixos/secrets/alertmanager.env";
+      checkConfig = false;
+    };
   };
 
   virtualisation.oci-containers.backend = "docker";
@@ -296,17 +297,19 @@ in
     ];
   };
 
-  services.nfs.server.enable = true;
-  services.nfs.server.exports = ''
-    /mnt/datasets 192.168.0.19(rw,sync)
-    /mnt/media 192.168.0.19(rw,sync)
-  '';
+  services.nfs.server = {
+    enable = true;
+    exports = ''
+      /mnt/datasets t1.local(rw,sync,no_subtree_check,sec=sys,root_squash)
+      /mnt/media t1.local(rw,sync,no_subtree_check,sec=sys,root_squash)
+    '';
+  };
 
   security.acme = {
     defaults.email = "c@rlth.me";
     acceptTerms = true;
   };
-  
+
   systemd.services.nginx-self-signed = {
     description = "Generate self-signed certificates for nginx";
     wantedBy = [ "multi-user.target" ];
