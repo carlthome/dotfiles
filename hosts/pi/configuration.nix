@@ -93,6 +93,19 @@ in
     };
   };
 
+  services.fail2ban = {
+    enable = true;
+    jails = {
+      ssh-iptables = ''
+        enabled = true
+        filter = sshd
+        maxretry = 3
+        findtime = 600
+        bantime = 3600
+      '';
+    };
+  };
+
   users.users = {
     pi = {
       isNormalUser = true;
