@@ -14,5 +14,11 @@
     max-free = ${toString (1024 * 1024 * 1024)}
   '';
 
+  services.wallpaper = {
+    enable = true;
+    interval = "daily";
+    category = "nature";
+  };
+
   system.stateVersion = 5;
 }

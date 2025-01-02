@@ -7,6 +7,7 @@ nix-darwin.lib.darwinSystem {
     ({ lib, ... }: { nix.settings.auto-optimise-store = lib.mkForce false; }) # TODO https://github.com/NixOS/nix/issues/7273
     self.darwinModules.auto-upgrade
     self.darwinModules.default
+    self.darwinModules.wallpaper
     self.modules.default
   ];
 }
