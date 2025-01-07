@@ -17,6 +17,7 @@
     let
       systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ];
       mkSystem = system: {
+        legacyPackages.homeConfigurations = import ./homes (inputs // { inherit system; });
         packages = import ./packages (inputs // { inherit system; });
         checks = import ./pre-commit.nix (inputs // { inherit system; });
         formatter = nixpkgs.legacyPackages.${system}.nixpkgs-fmt;
