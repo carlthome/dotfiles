@@ -77,6 +77,13 @@ in
 
   networking = {
     hostName = "pi";
+    useDHCP = false;
+    interfaces."wlan0" = {
+      ipv4.addresses = [{
+        address = "192.168.0.2";
+        prefixLength = 24;
+      }];
+    };
     wireless = {
       enable = true;
       interfaces = [ "wlan0" ];
