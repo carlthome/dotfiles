@@ -96,6 +96,8 @@ in
       ];
       allowedUDPPorts = [
         53 # DNS
+        67 # DHCP server
+        68 # DHCP client
       ];
     };
   };
@@ -149,6 +151,22 @@ in
     openFirewall = true;
   };
 
+  services.dnsmasq = {
+    enable = true;
+    settings = {
+      dhcp-range = "192.168.0.50,192.168.0.150,24h";
+      dhcp-option = [
+        "option:router,192.168.0.1"
+        "option:dns-server,192.168.0.2"
+      ];
+      domain = "home.local";
+      dhcp-authoritative = true;
+      dhcp-lease-max = 150;
+      log-dhcp = true;
+      port = 0; # Disables DNS service since Blocky will handle it
+    };
+  };
+
   services.blocky = {
     enable = true;
     settings = {
@@ -180,7 +198,7 @@ in
           $TTL 86400
 
           router  IN  A  192.168.0.1
-          pi  IN  A  192.168.0.75
+          pi  IN  A  192.168.0.2
 
           grafana  IN  CNAME  pi
           alertmanager  IN  CNAME  pi
