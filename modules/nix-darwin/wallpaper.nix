@@ -23,18 +23,17 @@
     launchd.agents.change-wallpaper = {
       serviceConfig = {
         ProgramArguments = [
-          "/bin/sh"
-          "-c"
-          ''
-            WALLPAPER_URL="https://source.unsplash.com/random/3840x2160/?${config.services.wallpaper.category}"
-            WALLPAPER_PATH="/tmp/wallpaper.jpg"
-            curl -L "$WALLPAPER_URL" -o "$WALLPAPER_PATH"
-            osascript -e "tell application \"Finder\" to set desktop picture to POSIX file \"$WALLPAPER_PATH\""
-          ''
+          (pkgs.writeShellApplication {
+            name = "change-wallpaper";
+            runtimeInputs = with pkgs; [ curl jq ];
+            text = builtins.readFile ./wallpaper.sh;
+          }).outPath
         ];
-        StartCalendarInterval = (if config.services.wallpaper.interval == "hourly"
-        then [{ Minute = 0; }]
-        else [{ Hour = 0; Minute = 0; }]);
+        StartCalendarInterval = (
+          if config.services.wallpaper.interval == "hourly"
+          then [{ Minute = 0; }]
+          else [{ Hour = 0; Minute = 0; }]
+        );
         RunAtLoad = true;
         StandardErrorPath = "/tmp/change-wallpaper.err";
         StandardOutPath = "/tmp/change-wallpaper.out";
