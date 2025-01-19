@@ -154,7 +154,7 @@ in
   services.dnsmasq = {
     enable = true;
     settings = {
-      dhcp-range = "192.168.0.50,192.168.0.150,24h";
+      dhcp-range = "192.168.0.3,192.168.0.99,24h";
       dhcp-option = [
         "option:router,192.168.0.1"
         "option:dns-server,192.168.0.2"
