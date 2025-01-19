@@ -161,7 +161,7 @@ in
       ];
       domain = "home.local";
       dhcp-authoritative = true;
-      dhcp-lease-max = 150;
+      dhcp-lease-max = 10;
       log-dhcp = true;
       port = 0; # Disables DNS service since Blocky will handle it
     };
