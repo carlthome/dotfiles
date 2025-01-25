@@ -374,6 +374,8 @@ in
     '';
   };
 
+  services.glances.enable = true;
+
   services.nginx =
     let
       mkVirtualHost = (domain: port: {
@@ -399,6 +401,7 @@ in
       recommendedTlsSettings = true;
 
       virtualHosts = builtins.mapAttrs mkVirtualHost {
+        "${config.networking.hostName}.local" = config.services.glances.port;
         "grafana.home" = config.services.grafana.settings.server.http_port;
         "alertmanager.home" = config.services.prometheus.alertmanager.port;
         "prometheus.home" = config.services.prometheus.port;
