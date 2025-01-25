@@ -104,6 +104,8 @@ in
         53 # DNS
         67 # DHCP server
         68 # DHCP client
+        5353 # mDNS
+        2049 # NFS
       ];
     };
   };
