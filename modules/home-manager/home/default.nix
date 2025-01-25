@@ -53,9 +53,6 @@
     zsh = {
       enable = true;
       autocd = true;
-      initExtra = ''
-        bindkey -v
-      '';
     };
     awscli.enable = true;
     yt-dlp.enable = true;
@@ -72,9 +69,6 @@
         "globstar"
         "histappend"
       ];
-      initExtra = ''
-        set -o vi
-      '';
     };
     nnn.enable = true;
     starship = {
