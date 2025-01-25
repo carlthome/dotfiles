@@ -228,6 +228,8 @@ in
   services.promtail = {
     enable = true;
     configFile = ./loki/promtail.yml;
+    # TODO https://github.com/NixOS/nixpkgs/blame/33b9d57c656e65a9c88c5f34e4eb00b83e2b0ca9/nixos/modules/services/logging/promtail.nix#L9
+    configuration.scrape_configs = [{ journal = true; }];
   };
 
   services.grafana = {
