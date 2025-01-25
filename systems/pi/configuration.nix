@@ -239,6 +239,7 @@ in
         domain = "localhost";
       };
       panels.disable_sanitize_html = true;
+      analytics.reporting_enabled = false;
     };
     declarativePlugins = with pkgs.grafanaPlugins; [
       grafana-piechart-panel
