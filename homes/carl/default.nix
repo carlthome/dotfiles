@@ -1,4 +1,12 @@
-{ home-manager, nixpkgs, nix-index-database, system, self, nixvim, ... }@inputs:
+{
+  home-manager,
+  nixpkgs,
+  nix-index-database,
+  system,
+  self,
+  nixvim,
+  ...
+}@inputs:
 
 home-manager.lib.homeManagerConfiguration {
   extraSpecialArgs = inputs;

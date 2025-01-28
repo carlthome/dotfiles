@@ -1,4 +1,10 @@
-{ config, pkgs, lib, ... }: {
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+{
   options.services.auto-upgrade = {
     enable = lib.mkEnableOption "Automatic home-manager upgrades";
     flake = lib.mkOption {
@@ -11,9 +17,20 @@
     launchd.agents.auto-upgrade = {
       enable = true;
       config = {
-        ProgramArguments = [ "${pkgs.home-manager}/bin/home-manager" "switch" "--refresh" "--flake" config.services.auto-upgrade.flake ];
+        ProgramArguments = [
+          "${pkgs.home-manager}/bin/home-manager"
+          "switch"
+          "--refresh"
+          "--flake"
+          config.services.auto-upgrade.flake
+        ];
         ProcessType = "Background";
-        StartCalendarInterval = [{ Hour = 0; Minute = 0; }];
+        StartCalendarInterval = [
+          {
+            Hour = 0;
+            Minute = 0;
+          }
+        ];
         StandardErrorPath = "/tmp/auto-upgrade-home.err";
         StandardOutPath = "/tmp/auto-upgrade-home.out";
       };

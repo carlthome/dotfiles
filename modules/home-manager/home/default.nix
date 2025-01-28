@@ -1,7 +1,16 @@
-{ config, pkgs, lib, self, ... }@inputs: {
+{
+  config,
+  pkgs,
+  lib,
+  self,
+  ...
+}@inputs:
+{
 
   # Add each flake input to registry.
-  nix.registry = (lib.mapAttrs (_: flake: { inherit flake; })) ((lib.filterAttrs (_: lib.isType "flake")) inputs);
+  nix.registry = (lib.mapAttrs (_: flake: { inherit flake; })) (
+    (lib.filterAttrs (_: lib.isType "flake")) inputs
+  );
 
   # Set environment variables.
   home.sessionVariables = {
@@ -154,9 +163,8 @@
     nix-info
     nix-init
     nix-tree
-    nixfmt-classic
+    nixfmt-rfc-style
     nixos-rebuild
-    nixpkgs-fmt
     nixpkgs-review
     nmap
     nodejs
@@ -204,15 +212,20 @@
     wrk
     yarn
     yq
-    (google-cloud-sdk.withExtraComponents (with google-cloud-sdk.components; [
-      gke-gcloud-auth-plugin
-    ]))
+    (google-cloud-sdk.withExtraComponents (
+      with google-cloud-sdk.components;
+      [
+        gke-gcloud-auth-plugin
+      ]
+    ))
   ];
 
   # Avoid having ncdu look through cloud storage and network shares.
-  xdg.configFile."ncdu/config".source = (pkgs.writeText "ncdu-config" ''
-    --one-file-system
-  '');
+  xdg.configFile."ncdu/config".source = (
+    pkgs.writeText "ncdu-config" ''
+      --one-file-system
+    ''
+  );
 
   # Discover fonts installed through home.packages.
   fonts.fontconfig.enable = true;
@@ -224,7 +237,10 @@
   launchd.agents.lunchtime = {
     enable = true;
     config = {
-      ProgramArguments = [ "/usr/bin/say" "lunchtime" ];
+      ProgramArguments = [
+        "/usr/bin/say"
+        "lunchtime"
+      ];
       StandardErrorPath = "/tmp/lunchtime.err";
       StandardOutPath = "/tmp/lunchtime.out";
       StartCalendarInterval = [

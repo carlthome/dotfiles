@@ -2,7 +2,10 @@
 #
 # Usage: vertex-run .#python-package
 #
-{ pkgs ? import <nixpkgs> { }, ... }:
+{
+  pkgs ? import <nixpkgs> { },
+  ...
+}:
 
 let
   image = pkgs.dockerTools.buildImage {

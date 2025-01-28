@@ -1,4 +1,10 @@
-{ config, pkgs, lib, ... }: {
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+{
 
   programs.nixvim = {
     enable = true;
@@ -57,7 +63,7 @@
       };
     };
 
-    extraPlugins = with pkgs.vimPlugins;  [
+    extraPlugins = with pkgs.vimPlugins; [
       ale
       ctrlp
       fidget-nvim

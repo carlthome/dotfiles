@@ -1,12 +1,13 @@
 { pkgs, ... }:
 let
-  program = ((pkgs.writeShellApplication
-    {
+  program = (
+    (pkgs.writeShellApplication {
       name = "auto-audit";
       runtimeInputs = with pkgs; [ lynis ];
       text = "lynis audit system";
-    }
-  ).outPath + "/bin/auto-audit");
+    }).outPath
+    + "/bin/auto-audit"
+  );
 in
 {
   launchd.agents.auto-audit = {
@@ -14,7 +15,12 @@ in
     config = {
       ProgramArguments = [ program ];
       ProcessType = "Background";
-      StartCalendarInterval = [{ Hour = 0; Minute = 0; }];
+      StartCalendarInterval = [
+        {
+          Hour = 0;
+          Minute = 0;
+        }
+      ];
       StandardErrorPath = "/tmp/auto-audit.err";
       StandardOutPath = "/tmp/auto-audit.out";
     };

@@ -1,5 +1,14 @@
-{ pkgs, fzf, fd, ... }: pkgs.writeShellApplication {
+{
+  pkgs,
+  fzf,
+  fd,
+  ...
+}:
+pkgs.writeShellApplication {
   name = "fzf-open";
-  runtimeInputs = [ fzf fd ];
+  runtimeInputs = [
+    fzf
+    fd
+  ];
   text = builtins.readFile ./script.sh;
 }

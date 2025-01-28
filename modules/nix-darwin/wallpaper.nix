@@ -1,4 +1,10 @@
-{ config, lib, pkgs, ... }: {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
   options.services.wallpaper = {
     enable = lib.mkEnableOption "Automatic wallpaper changing service";
 
@@ -25,14 +31,23 @@
         ProgramArguments = [
           (pkgs.writeShellApplication {
             name = "change-wallpaper";
-            runtimeInputs = with pkgs; [ curl jq ];
+            runtimeInputs = with pkgs; [
+              curl
+              jq
+            ];
             text = builtins.readFile ./wallpaper.sh;
           }).outPath
         ];
         StartCalendarInterval = (
-          if config.services.wallpaper.interval == "hourly"
-          then [{ Minute = 0; }]
-          else [{ Hour = 0; Minute = 0; }]
+          if config.services.wallpaper.interval == "hourly" then
+            [ { Minute = 0; } ]
+          else
+            [
+              {
+                Hour = 0;
+                Minute = 0;
+              }
+            ]
         );
         RunAtLoad = true;
         StandardErrorPath = "/tmp/change-wallpaper.err";

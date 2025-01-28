@@ -1,4 +1,10 @@
-{ config, pkgs, lib, ... }: {
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+{
   programs.vim = {
     enable = true;
     packageConfigurable = pkgs.vim;

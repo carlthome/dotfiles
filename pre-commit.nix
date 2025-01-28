@@ -1,9 +1,10 @@
-{ pre-commit-hooks, system, ... }: {
+{ pre-commit-hooks, system, ... }:
+{
   pre-commit-check = pre-commit-hooks.lib.${system}.run {
     src = ./.;
     hooks = {
       actionlint.enable = true;
-      nixpkgs-fmt.enable = true;
+      nixfmt-rfc-style.enable = true;
       prettier = {
         enable = true;
         excludes = [ "flake.lock" ];

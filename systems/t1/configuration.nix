@@ -1,11 +1,19 @@
-{ config, pkgs, lib, ... }: {
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+{
   networking.hostName = "t1";
 
   boot = {
     loader.systemd-boot.enable = true;
     loader.efi.canTouchEfiVariables = true;
     loader.efi.efiSysMountPoint = "/boot/efi";
-    initrd.secrets = { "/crypto_keyfile.bin" = null; };
+    initrd.secrets = {
+      "/crypto_keyfile.bin" = null;
+    };
   };
 
   # TODO Allow mount to fail.
@@ -19,7 +27,12 @@
     carl = {
       isNormalUser = true;
       description = "Carl Thomé";
-      extraGroups = [ "networkmanager" "wheel" "docker" "audio" ];
+      extraGroups = [
+        "networkmanager"
+        "wheel"
+        "docker"
+        "audio"
+      ];
       packages = with pkgs; [ ];
     };
   };
@@ -35,7 +48,10 @@
       passwordFile = "/etc/nixos/secrets/restic/datasets";
       rcloneConfigFile = "/etc/nixos/secrets/restic/rclone.conf";
       paths = [ "/usr/share/datasets" ];
-      timerConfig = { OnCalendar = "weekly"; Persistent = true; };
+      timerConfig = {
+        OnCalendar = "weekly";
+        Persistent = true;
+      };
     };
   };
 

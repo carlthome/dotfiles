@@ -8,7 +8,13 @@ in
     config = {
       ProgramArguments = [ program ];
       ProcessType = "Background";
-      StartCalendarInterval = [{ Day = 0; Hour = 0; Minute = 0; }];
+      StartCalendarInterval = [
+        {
+          Day = 0;
+          Hour = 0;
+          Minute = 0;
+        }
+      ];
       StandardErrorPath = "/tmp/git-refresh.err";
       StandardOutPath = "/tmp/git-refresh.out";
     };

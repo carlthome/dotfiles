@@ -1,7 +1,18 @@
-{ config, pkgs, lib, ... }: {
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+{
   programs.zed-editor = {
     enable = true;
-    extensions = [ "nix" "toml" "elixir" "make" ];
+    extensions = [
+      "nix"
+      "toml"
+      "elixir"
+      "make"
+    ];
     userSettings = {
       assistant = {
         enabled = true;
@@ -31,7 +42,12 @@
         dock = "bottom";
         detect_venv = {
           on = {
-            directories = [ ".env" "env" ".venv" "venv" ];
+            directories = [
+              ".env"
+              "env"
+              ".venv"
+              "venv"
+            ];
             activate_script = "default";
           };
         };
@@ -72,20 +88,38 @@
       };
       languages = {
         "Elixir" = {
-          language_servers = [ "!lexical" "elixir-ls" "!next-ls" ];
+          language_servers = [
+            "!lexical"
+            "elixir-ls"
+            "!next-ls"
+          ];
           format_on_save = {
             external = {
               command = "mix";
-              arguments = [ "format" "--stdin-filename" "{buffer_path}" "-" ];
+              arguments = [
+                "format"
+                "--stdin-filename"
+                "{buffer_path}"
+                "-"
+              ];
             };
           };
         };
         "HEEX" = {
-          language_servers = [ "!lexical" "elixir-ls" "!next-ls" ];
+          language_servers = [
+            "!lexical"
+            "elixir-ls"
+            "!next-ls"
+          ];
           format_on_save = {
             external = {
               command = "mix";
-              arguments = [ "format" "--stdin-filename" "{buffer_path}" "-" ];
+              arguments = [
+                "format"
+                "--stdin-filename"
+                "{buffer_path}"
+                "-"
+              ];
             };
           };
         };

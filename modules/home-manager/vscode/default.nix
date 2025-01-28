@@ -1,10 +1,18 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   settings-directory =
-    if pkgs.stdenv.hostPlatform.isDarwin
-    then "$HOME/Library/Application Support/Code/User"
-    else "$HOME/.config/Code/User";
-  defaultExtensions = { "remote.SSH.defaultExtensions" = map (x: x.vscodeExtUniqueId) extensions; };
+    if pkgs.stdenv.hostPlatform.isDarwin then
+      "$HOME/Library/Application Support/Code/User"
+    else
+      "$HOME/.config/Code/User";
+  defaultExtensions = {
+    "remote.SSH.defaultExtensions" = map (x: x.vscodeExtUniqueId) extensions;
+  };
   userSettings = (builtins.fromJSON (builtins.readFile ./settings.json)) // defaultExtensions;
   keybindings = builtins.fromJSON (builtins.readFile ./keybindings.json);
   userTasks = builtins.fromJSON (builtins.readFile ./tasks.json);
@@ -12,7 +20,12 @@ let
 in
 {
   programs.vscode = {
-    inherit userSettings userTasks extensions keybindings;
+    inherit
+      userSettings
+      userTasks
+      extensions
+      keybindings
+      ;
     enable = true;
     enableUpdateCheck = false;
     enableExtensionUpdateCheck = false;
@@ -39,8 +52,12 @@ in
       after = [ "writeBoundary" ];
       before = [ ];
       data = ''
-        cat ${(pkgs.formats.json {}).generate "settings.json" userSettings} > "${settings-directory}/settings.json"
-        cat ${(pkgs.formats.json {}).generate "keybindings.json" keybindings} > "${settings-directory}/keybindings.json"
+        cat ${
+          (pkgs.formats.json { }).generate "settings.json" userSettings
+        } > "${settings-directory}/settings.json"
+        cat ${
+          (pkgs.formats.json { }).generate "keybindings.json" keybindings
+        } > "${settings-directory}/keybindings.json"
       '';
     };
   };

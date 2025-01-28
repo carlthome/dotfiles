@@ -1,7 +1,11 @@
-{ nixpkgs, ... }: {
+{ nixpkgs, ... }:
+{
   # Configure the `nix` program itself.
   nix.settings = {
-    experimental-features = [ "nix-command" "flakes" ];
+    experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
     substituters = [
       "https://carlthome.cachix.org"
       "https://numtide.cachix.org"

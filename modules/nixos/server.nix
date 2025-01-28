@@ -1,4 +1,5 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, ... }:
+{
 
   # Configure key-based remote SSH access.
   services.openssh.enable = true;

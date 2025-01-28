@@ -1,21 +1,28 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
-  grafanaDashboards = lib.mapAttrs'
-    (name: value: lib.nameValuePair ("grafana/dashboards/" + name) {
+  grafanaDashboards = lib.mapAttrs' (
+    name: value:
+    lib.nameValuePair ("grafana/dashboards/" + name) {
       source = ./grafana/dashboards/${name};
       group = "grafana";
       user = "grafana";
-    })
-    (builtins.readDir ./grafana/dashboards);
+    }
+  ) (builtins.readDir ./grafana/dashboards);
 
-  alertManagerTemplates = lib.mapAttrs'
-    (name: value: lib.nameValuePair ("alertmanager/templates/" + name) {
+  alertManagerTemplates = lib.mapAttrs' (
+    name: value:
+    lib.nameValuePair ("alertmanager/templates/" + name) {
       source = ./prometheus/alertmanager/templates/${name};
       group = "alertmanager";
       user = "alertmanager";
-    })
-    (builtins.readDir ./prometheus/alertmanager/templates);
+    }
+  ) (builtins.readDir ./prometheus/alertmanager/templates);
 
   configFiles = {
     "home-assistant/configuration.yaml" = {
@@ -31,7 +38,11 @@ in
 
   boot = {
     kernelPackages = pkgs.linuxKernel.packages.linux_rpi4;
-    initrd.availableKernelModules = [ "xhci_pci" "usbhid" "usb_storage" ];
+    initrd.availableKernelModules = [
+      "xhci_pci"
+      "usbhid"
+      "usb_storage"
+    ];
     loader = {
       grub.enable = false;
       generic-extlinux-compatible.enable = true;
@@ -63,13 +74,20 @@ in
     "/mnt/datasets" = {
       device = "/dev/disk/by-uuid/1409bcc2-5b89-4d7e-ac96-c1db331053d8";
       fsType = "btrfs";
-      options = [ "nofail" "compress=zstd" "subvol=datasets" ];
+      options = [
+        "nofail"
+        "compress=zstd"
+        "subvol=datasets"
+      ];
     };
 
     "/mnt/media" = {
       device = "/dev/disk/by-uuid/1409bcc2-5b89-4d7e-ac96-c1db331053d8";
       fsType = "btrfs";
-      options = [ "nofail" "subvol=media" ];
+      options = [
+        "nofail"
+        "subvol=media"
+      ];
     };
   };
 
@@ -90,7 +108,10 @@ in
 
     interfaces."wlan0" = {
       ipv4.addresses = [
-        { address = "192.168.0.2"; prefixLength = 24; }
+        {
+          address = "192.168.0.2";
+          prefixLength = 24;
+        }
       ];
     };
 
@@ -187,7 +208,10 @@ in
       ];
       bootstrapDns = {
         upstream = "https://one.one.one.one/dns-query";
-        ips = [ "1.1.1.1" "1.0.0.1" ];
+        ips = [
+          "1.1.1.1"
+          "1.0.0.1"
+        ];
       };
       blocking = {
         blackLists = {
@@ -229,7 +253,7 @@ in
     enable = true;
     configFile = ./loki/promtail.yml;
     # TODO https://github.com/NixOS/nixpkgs/blame/33b9d57c656e65a9c88c5f34e4eb00b83e2b0ca9/nixos/modules/services/logging/promtail.nix#L9
-    configuration.scrape_configs = [{ journal = true; }];
+    configuration.scrape_configs = [ { journal = true; } ];
   };
 
   services.grafana = {
@@ -282,37 +306,48 @@ in
     scrapeConfigs = [
       {
         job_name = "node_exporter";
-        static_configs = [{
-          targets = [
-            "localhost:${toString config.services.prometheus.exporters.node.port}"
-            "pi-zero.local:9100"
-          ];
-        }];
+        static_configs = [
+          {
+            targets = [
+              "localhost:${toString config.services.prometheus.exporters.node.port}"
+              "pi-zero.local:9100"
+            ];
+          }
+        ];
       }
       {
         job_name = "blocky";
-        static_configs = [{
-          targets = [
-            "127.0.0.1:4000"
-          ];
-        }];
+        static_configs = [
+          {
+            targets = [
+              "127.0.0.1:4000"
+            ];
+          }
+        ];
       }
     ];
     ruleFiles = [ ./prometheus/rules.yml ];
-    alertmanagers = [{
-      scheme = "http";
-      path_prefix = "";
-      static_configs = [{
-        targets = [
-          "127.0.0.1:${toString config.services.prometheus.alertmanager.port}"
+    alertmanagers = [
+      {
+        scheme = "http";
+        path_prefix = "";
+        static_configs = [
+          {
+            targets = [
+              "127.0.0.1:${toString config.services.prometheus.alertmanager.port}"
+            ];
+          }
         ];
-      }];
-    }];
+      }
+    ];
 
     exporters = {
       node = {
         enable = true;
-        enabledCollectors = [ "systemd" "processes" ];
+        enabledCollectors = [
+          "systemd"
+          "processes"
+        ];
       };
       systemd = {
         enable = true;
@@ -381,20 +416,22 @@ in
 
   services.nginx =
     let
-      mkVirtualHost = (domain: port: {
-        addSSL = true;
-        enableACME = false;
-        sslCertificate = "/var/lib/nginx/self-signed.crt";
-        sslCertificateKey = "/var/lib/nginx/self-signed.key";
-        extraConfig = ''
-          ssl_stapling off;
-          ssl_stapling_verify off;
-        '';
-        locations."/" = {
-          proxyPass = "http://127.0.0.1:${toString port}";
-          proxyWebsockets = true;
-        };
-      });
+      mkVirtualHost = (
+        domain: port: {
+          addSSL = true;
+          enableACME = false;
+          sslCertificate = "/var/lib/nginx/self-signed.crt";
+          sslCertificateKey = "/var/lib/nginx/self-signed.key";
+          extraConfig = ''
+            ssl_stapling off;
+            ssl_stapling_verify off;
+          '';
+          locations."/" = {
+            proxyPass = "http://127.0.0.1:${toString port}";
+            proxyWebsockets = true;
+          };
+        }
+      );
     in
     {
       enable = true;

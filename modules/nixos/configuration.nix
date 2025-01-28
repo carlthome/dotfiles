@@ -1,4 +1,5 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, ... }:
+{
 
   # Auto-upgrade NixOS hosts periodically.
   system.autoUpgrade = {
@@ -31,7 +32,10 @@
 
   # Set a basic default environment for all users.
   environment = {
-    systemPackages = with pkgs; [ vim htop ];
+    systemPackages = with pkgs; [
+      vim
+      htop
+    ];
     shellAliases = {
       show-system = "nix derivation show /run/current-system";
       switch-system = "nixos-rebuild switch --flake .";

@@ -1,4 +1,5 @@
-{ pkgs, self, ... }: {
+{ pkgs, self, ... }:
+{
   programs.gh = {
     enable = true;
     settings = {

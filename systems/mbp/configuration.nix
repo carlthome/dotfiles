@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   networking.hostName = "mbp";
   environment.etc.hosts = {
     text = ''

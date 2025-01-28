@@ -1,22 +1,30 @@
-{ config, pkgs, lib, ... }: {
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+{
 
   # TODO Set this if not NixOS but still Linux.
   # targets.genericLinux.enable = true;
 
   nixpkgs.config = {
-    allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-      "discord"
-      "dropbox"
-      "google-chrome"
-      "reaper"
-      "slack"
-      "spotify"
-      "steam-original"
-      "steam"
-      "steam-unwrapped"
-      "vscode"
-      "terraform"
-    ];
+    allowUnfreePredicate =
+      pkg:
+      builtins.elem (lib.getName pkg) [
+        "discord"
+        "dropbox"
+        "google-chrome"
+        "reaper"
+        "slack"
+        "spotify"
+        "steam-original"
+        "steam"
+        "steam-unwrapped"
+        "vscode"
+        "terraform"
+      ];
     permittedInsecurePackages = [
       "electron-28.3.3"
       "electron-27.3.11"
@@ -27,37 +35,39 @@
     open = "xdg-open";
   };
 
-  home.packages = with pkgs; [
-    caprine-bin
-    chromium
-    deja-dup
-    discord
-    distrobox
-    dropbox
-    element-desktop
-    firefox
-    google-chrome
-    helvum
-    keepassxc
-    logseq
-    marker
-    obs-studio
-    okular
-    peek
-    reaper
-    signal-desktop
-    slack
-    spotify
-    stdenv.cc.cc.lib
-    steam
-    tdesktop
-    transmission_4-gtk
-    wineWowPackages.full
-    yabridge
-    yabridgectl
-    zlib
-  ] ++ (with pkgs.gnomeExtensions;
+  home.packages =
+    with pkgs;
     [
+      caprine-bin
+      chromium
+      deja-dup
+      discord
+      distrobox
+      dropbox
+      element-desktop
+      firefox
+      google-chrome
+      helvum
+      keepassxc
+      logseq
+      marker
+      obs-studio
+      okular
+      peek
+      reaper
+      signal-desktop
+      slack
+      spotify
+      stdenv.cc.cc.lib
+      steam
+      tdesktop
+      transmission_4-gtk
+      wineWowPackages.full
+      yabridge
+      yabridgectl
+      zlib
+    ]
+    ++ (with pkgs.gnomeExtensions; [
       bing-wallpaper-changer
       blur-my-shell
       caffeine

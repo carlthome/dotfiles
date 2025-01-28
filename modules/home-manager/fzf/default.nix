@@ -1,9 +1,18 @@
-{ config, pkgs, self, ... }: {
+{
+  config,
+  pkgs,
+  self,
+  ...
+}:
+{
   programs.fzf = {
     enable = true;
     tmux.enableShellIntegration = config.programs.tmux.enable;
     defaultOptions = [ "--height 100%" ];
-    fileWidgetOptions = [ "--preview 'stat {}'" "--preview-window noborder" ];
+    fileWidgetOptions = [
+      "--preview 'stat {}'"
+      "--preview-window noborder"
+    ];
   };
 
   home.packages = with pkgs; [

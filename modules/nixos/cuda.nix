@@ -1,4 +1,5 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, ... }:
+{
   nix.settings.substituters = [
     "https://cuda-maintainers.cachix.org"
   ];

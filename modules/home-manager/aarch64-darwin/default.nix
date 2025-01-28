@@ -1,10 +1,18 @@
-{ config, pkgs, lib, ... }: {
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+{
   nixpkgs.config = {
-    allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-      "roomeqwizard"
-      "terraform"
-      "vscode"
-    ];
+    allowUnfreePredicate =
+      pkg:
+      builtins.elem (lib.getName pkg) [
+        "roomeqwizard"
+        "terraform"
+        "vscode"
+      ];
   };
 
   home.packages = with pkgs; [

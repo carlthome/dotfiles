@@ -1,10 +1,15 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   networking.hostName = "mba";
 
   # Delete old store paths since the disk is only 256 GB.
   nix.gc = {
     automatic = true;
-    interval = { Weekday = 0; Hour = 0; Minute = 0; };
+    interval = {
+      Weekday = 0;
+      Hour = 0;
+      Minute = 0;
+    };
     options = "--delete-older-than 30d";
   };
 
