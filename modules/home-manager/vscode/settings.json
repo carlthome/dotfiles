@@ -103,7 +103,7 @@
       },
       "nix": {
         "flake": {
-          "autoArchive": true,
+          "autoArchive": false,
           "autoEvalInputs": false
         }
       }
