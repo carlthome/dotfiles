@@ -18,7 +18,7 @@
     };
     lfs = {
       enable = true;
-      skipSmudge = true;
+      skipSmudge = false;
     };
     ignores = [
       ".DS_Store"
