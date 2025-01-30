@@ -50,7 +50,7 @@ in
     tmp = {
       cleanOnBoot = true;
       useTmpfs = true;
-      tmpfsSize = "1G";
+      tmpfsSize = "2G";
     };
   };
 
