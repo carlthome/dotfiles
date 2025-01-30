@@ -203,6 +203,11 @@ in
       ports.http = 4000;
       prometheus.enable = true;
       queryLog.type = "none";
+      caching = {
+        minTime = "5m";
+        maxTime = "30m";
+        prefetching = true;
+      };
       upstreams.groups.default = [
         "https://one.one.one.one/dns-query"
       ];
