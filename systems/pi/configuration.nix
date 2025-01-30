@@ -215,7 +215,10 @@ in
       };
       blocking = {
         blackLists = {
-          ads = [ "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts" ];
+          ads = [
+            "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
+            "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/multi.txt"
+          ];
         };
         clientGroupsBlock = {
           default = [ "ads" ];
