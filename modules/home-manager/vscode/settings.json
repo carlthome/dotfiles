@@ -119,6 +119,7 @@
   "notebook.formatOnSave.enabled": true,
   "notebook.globalToolbar": false,
   "notebook.output.scrolling": false,
+  "notebook.inlineValues": true,
   "python.analysis.autoFormatStrings": true,
   "python.analysis.autoImportCompletions": false,
   "python.analysis.importFormat": "relative",
