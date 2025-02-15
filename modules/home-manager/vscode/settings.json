@@ -74,6 +74,8 @@
   "files.trimFinalNewlines": true,
   "files.trimTrailingWhitespace": true,
   "git.allowNoVerifyCommit": true,
+  "git.blame.editorDecoration.enabled": true,
+  "git.blame.statusBarItem.enabled": true,
   "git.autofetch": true,
   "git.autoStash": true,
   "git.confirmSync": false,

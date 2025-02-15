@@ -51,12 +51,6 @@ let
   ];
   marketplaceExtensions =
     (pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-      {
-        name = "git-line-blame";
-        publisher = "carlthome";
-        version = "0.9.0";
-        sha256 = "sha256-Y3DCkPCbvuLxad2Oz82dIYgPIBLhE1FR8Nb9kw7jEpg=";
-      }
       # TODO This extension is too buggy.
       # {
       #   name = "runme";
