@@ -78,6 +78,15 @@
     ];
   };
 
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    publish = {
+      enable = true;
+      addresses = true;
+    };
+  };
+
   # Enable cross-platform emulator
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
