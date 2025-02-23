@@ -39,7 +39,8 @@ let
     njpwerner.autodocstring
     pkief.material-icon-theme
     redhat.vscode-yaml
-    rust-lang.rust-analyzer
+    # TODO Currently broken on nixpkgs-unstable?
+    #rust-lang.rust-analyzer
     stkb.rewrap
     svelte.svelte-vscode
     tamasfe.even-better-toml
