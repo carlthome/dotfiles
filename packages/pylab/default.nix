@@ -16,6 +16,7 @@ pkgs.buildEnv {
         pandas
         scikit-learn
         scipy
+        pyarrow
       ]
     ))
   ];
