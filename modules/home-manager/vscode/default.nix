@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  nix-vscode-extensions,
   ...
 }:
 let
@@ -16,7 +17,11 @@ let
   userSettings = (builtins.fromJSON (builtins.readFile ./settings.json)) // defaultExtensions;
   keybindings = builtins.fromJSON (builtins.readFile ./keybindings.json);
   userTasks = builtins.fromJSON (builtins.readFile ./tasks.json);
-  extensions = import ./extensions.nix { inherit pkgs; };
+
+  extensions = import ./extensions.nix {
+    inherit pkgs;
+    vscode-extensions = nix-vscode-extensions.extensions.${pkgs.system};
+  };
 in
 {
   programs.vscode = {

@@ -1,4 +1,8 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  vscode-extensions,
+  ...
+}:
 
 let
   packagedExtensions = with pkgs.vscode-extensions; [
@@ -38,7 +42,6 @@ let
     ms-vscode.makefile-tools
     njpwerner.autodocstring
     pkief.material-icon-theme
-    redhat.vscode-yaml
     # TODO Currently broken on nixpkgs-unstable?
     #rust-lang.rust-analyzer
     stkb.rewrap
@@ -50,45 +53,31 @@ let
     #ms-vscode.cpptools
     #ms-vsliveshare.vsliveshare
   ];
+
+  communityPackagedExtensions = with vscode-extensions.vscode-marketplace; [
+    # TODO Enable once stable.
+    #ms-python.vscode-python-envs
+    donjayamanne.python-environment-manager
+    eliverlara.andromeda
+    liviuschera.noctis
+    markthomasmiller.sorcerer
+    miladfathy.dragan-color-theme
+    # TODO This extension is too buggy.
+    #stateful.runme
+  ];
+
+  openVsxExtensions = with vscode-extensions.open-vsx; [
+    redhat.vscode-yaml
+  ];
+
   marketplaceExtensions =
     (pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-      # TODO This extension is too buggy.
       # {
-      #   name = "runme";
-      #   publisher = "stateful";
-      #   version = "3.6.1";
-      #   sha256 = "sha256-SJzSckY61vObVq8FE0kv4MrtKFJqx8eAHCzd9/k65+M=";
+      #   name = "vscode-python-envs";
+      #   publisher = "ms-python";
+      #   version = "0.3.10521015";
+      #   sha256 = "6YI54XFOIzbozW5ateyuq5t55XuNpnPNKkkGv38Ap3o=";
       # }
-      {
-        name = "python-environment-manager";
-        publisher = "donjayamanne";
-        version = "1.2.4";
-        sha256 = "1jvuoaP+bn8uR7O7kIDZiBKuG3VwMTQMjCJbSlnC7Qo=";
-      }
-      {
-        name = "andromeda";
-        publisher = "EliverLara";
-        version = "1.8.1";
-        sha256 = "O0WIewAExQTLlwstAglx1/6ukLntAqXxOEKRzw/5wKA=";
-      }
-      {
-        name = "noctis";
-        publisher = "liviuschera";
-        version = "10.40.0";
-        sha256 = "UbGWorOVeitE9Q6tZ18h9K4Noz5Y3oaiuYaJtPzcwOc=";
-      }
-      {
-        name = "sorcerer";
-        publisher = "MarkThomasMiller";
-        version = "0.1.3";
-        sha256 = "QvyIsRQF6CYvSH6LxRD2YzVBtlGQl6V+lXOaqGe23zU=";
-      }
-      {
-        name = "dragan-color-theme";
-        publisher = "Miladfathy";
-        version = "2.0.8";
-        sha256 = "oeAzHODbKif8ZUnn8qUlLT2M2tUfEEGaGQ1Kkuagni4=";
-      }
       # TODO Extension seems to take a lot of CPU by launching `rg` processes excessively.
       # {
       #   name = "sarif-viewer";
@@ -111,4 +100,9 @@ let
       )
     ];
 in
-marketplaceExtensions ++ packagedExtensions
+builtins.concatLists [
+  packagedExtensions
+  communityPackagedExtensions
+  marketplaceExtensions
+  openVsxExtensions
+]
