@@ -241,6 +241,7 @@ in
           pi  IN  A  192.168.0.2
 
           grafana  IN  CNAME  pi
+          uptime-kuma  IN  CNAME  pi
           alertmanager  IN  CNAME  pi
           prometheus  IN  CNAME  pi
           loki  IN  CNAME  pi
@@ -420,7 +421,12 @@ in
     '';
   };
 
-  services.glances.enable = true;
+  services.uptime-kuma = {
+    enable = true;
+    settings = {
+      PORT = "8080";
+    };
+  };
 
   services.nginx =
     let
@@ -449,8 +455,9 @@ in
       recommendedTlsSettings = true;
 
       virtualHosts = builtins.mapAttrs mkVirtualHost {
-        "${config.networking.hostName}.local" = config.services.glances.port;
+        "${config.networking.hostName}.local" = config.services.uptime-kuma.settings.PORT;
         "grafana.home" = config.services.grafana.settings.server.http_port;
+        "uptime-kuma.home" = config.services.uptime-kuma.settings.PORT;
         "alertmanager.home" = config.services.prometheus.alertmanager.port;
         "prometheus.home" = config.services.prometheus.port;
         "loki.home" = 3100;
