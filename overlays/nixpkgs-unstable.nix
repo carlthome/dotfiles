@@ -21,4 +21,5 @@ in
 {
   vscode = pkgs.vscode;
   vscode-extensions = pkgs.vscode-extensions;
+  skypilot = pkgs.skypilot;
 }

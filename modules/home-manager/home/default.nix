@@ -194,6 +194,7 @@
     rustup
     shellcheck
     skaffold
+    skypilot
     snyk
     sops
     sox
