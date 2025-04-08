@@ -177,13 +177,13 @@
     pdm
     phoronix-test-suite
     pijul
-    pip-tools
     pipenv
     pipx
     podman
     postgresql
     pre-commit
     pyenv
+    python3Packages.pip-tools
     python3Packages.tensorboard
     pyupgrade
     rclone
