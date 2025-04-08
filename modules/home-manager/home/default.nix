@@ -177,6 +177,7 @@
     pdm
     phoronix-test-suite
     pijul
+    pip-tools
     pipenv
     pipx
     podman
