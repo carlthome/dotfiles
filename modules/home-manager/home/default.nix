@@ -218,6 +218,7 @@
       with google-cloud-sdk.components;
       [
         gke-gcloud-auth-plugin
+        package-go-module
       ]
     ))
   ];
