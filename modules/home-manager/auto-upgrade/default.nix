@@ -4,51 +4,122 @@
   lib,
   ...
 }:
+
+let
+
+  cfg = config.services.auto-upgrade;
+
+  upgradeScript = pkgs.writeShellApplication {
+    name = "home-manager-auto-upgrade";
+    text = ''
+      home-manager switch --refresh --flake ${cfg.flake}
+    '';
+    runtimeInputs = with pkgs; [
+      home-manager
+      nix
+    ];
+  };
+
+  calendarIntervals = {
+    "hourly" = [
+      { Minute = 0; }
+    ];
+    "daily" = [
+      {
+        Hour = 0;
+        Minute = 0;
+      }
+    ];
+    "weekly" = [
+      {
+        Weekday = 0;
+        Hour = 0;
+        Minute = 0;
+      }
+    ];
+    "monthly" = [
+      {
+        Day = 1;
+        Hour = 0;
+        Minute = 0;
+      }
+    ];
+    "yearly" = [
+      {
+        Month = 1;
+        Day = 1;
+        Hour = 0;
+        Minute = 0;
+      }
+    ];
+    "annually" = [
+      {
+        Month = 1;
+        Day = 1;
+        Hour = 0;
+        Minute = 0;
+      }
+    ];
+    "quarterly" = [
+      {
+        Month = 1;
+        Day = 1;
+        Hour = 0;
+        Minute = 0;
+      }
+    ];
+  };
+in
 {
-  options.services.auto-upgrade = {
-    enable = lib.mkEnableOption "Automatic home-manager upgrades";
-    flake = lib.mkOption {
-      type = lib.types.str;
-      description = "Flake URI to use for upgrades";
+  options = {
+    services.auto-upgrade = {
+      enable = lib.mkEnableOption "Periodically updates Nix configuration";
+
+      frequency = lib.mkOption {
+        type = lib.types.str;
+        example = "weekly";
+        default = "daily";
+        description = "The interval at which auto upgrade is run.";
+      };
+
+      flake = lib.mkOption {
+        type = lib.types.str;
+        description = "Flake URI to use for upgrades";
+      };
     };
   };
 
-  config = lib.mkIf config.services.auto-upgrade.enable {
-    launchd.agents.auto-upgrade = {
-      enable = true;
-      config = {
-        ProgramArguments = [
-          "${pkgs.home-manager}/bin/home-manager"
-          "switch"
-          "--refresh"
-          "--flake"
-          config.services.auto-upgrade.flake
-        ];
-        ProcessType = "Background";
-        StartCalendarInterval = [
-          {
-            Hour = 0;
-            Minute = 0;
-          }
-        ];
-        StandardErrorPath = "/tmp/auto-upgrade-home.err";
-        StandardOutPath = "/tmp/auto-upgrade-home.out";
-      };
-    };
-    systemd.user = {
-      timers.home-manager-auto-upgrade = {
-        Unit.Description = "Home Manager upgrade timer";
-        Install.WantedBy = [ "timers.target" ];
-        Timer = {
-          OnCalendar = "daily";
-          Unit = "home-manager-auto-upgrade.service";
-          Persistent = true;
+  config =
+    let
+      systemdConfig = {
+        systemd.user = {
+          timers.home-manager-auto-upgrade = {
+            Unit.Description = "Home Manager upgrade timer";
+            Install.WantedBy = [ "timers.target" ];
+            Timer = {
+              OnCalendar = cfg.frequency;
+              Unit = "${upgradeScript.name}.service";
+              Persistent = true;
+            };
+          };
+          services.home-manager-auto-upgrade = {
+            Unit.Description = "Home Manager upgrade";
+            Service.ExecStart = "${toString upgradeScript}/bin/${upgradeScript.name}";
+          };
         };
       };
-      services.home-manager-auto-upgrade = {
-        Unit.Description = "Home Manager upgrade";
-        Service.ExecStart = "${pkgs.home-manager}/bin/home-manager switch --refresh --flake ${config.services.auto-upgrade.flake}";
+      launchdConfig = {
+        launchd.agents.auto-upgrade = {
+          enable = true;
+          config = {
+            Program = "${toString upgradeScript}/bin/${upgradeScript.name}";
+            ProcessType = "Background";
+            StartCalendarInterval = calendarIntervals.${cfg.frequency};
+            StandardErrorPath = "/tmp/${upgradeScript.name}.err";
+            StandardOutPath = "/tmp/${upgradeScript.name}.out";
+          };
+        };
       };
-    };
-  };
+    in
+    lib.mkIf cfg.enable (launchdConfig // systemdConfig);
 }
