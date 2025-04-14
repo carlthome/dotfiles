@@ -52,22 +52,6 @@ let
         Minute = 0;
       }
     ];
-    "annually" = [
-      {
-        Month = 1;
-        Day = 1;
-        Hour = 0;
-        Minute = 0;
-      }
-    ];
-    "quarterly" = [
-      {
-        Month = 1;
-        Day = 1;
-        Hour = 0;
-        Minute = 0;
-      }
-    ];
   };
 in
 {
