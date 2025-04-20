@@ -12,11 +12,14 @@ let
   upgradeScript = pkgs.writeShellApplication {
     name = "home-manager-auto-upgrade";
     text = ''
+      echo "Starting Home Manager upgrade at $(date)"
       home-manager switch --refresh --flake ${cfg.flake}
+      echo "Home Manager upgrade completed at $(date)"
     '';
     runtimeInputs = with pkgs; [
       home-manager
       nix
+      coreutils
     ];
   };
 
