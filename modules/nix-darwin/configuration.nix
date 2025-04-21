@@ -33,7 +33,7 @@
   nix.optimise.automatic = true;
 
   # Enable sandboxing.
-  nix.settings.sandbox = false;
+  nix.settings.sandbox = "relaxed";
 
   # Global shell aliases for all users.
   environment.shellAliases = {
