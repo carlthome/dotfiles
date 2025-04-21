@@ -4,11 +4,38 @@
   pkgs,
   ...
 }:
+let
+  cfg = config.services.wallpaper;
+
+  script = pkgs.writeShellApplication {
+    name = "change-wallpaper";
+    text = builtins.readFile ./wallpaper.sh;
+    runtimeInputs = with pkgs; [
+      curl
+      jq
+    ];
+  };
+
+  calendarIntervals = {
+    daily = [
+      {
+        Hour = 0;
+        Minute = 0;
+      }
+    ];
+    hourly = [
+      {
+        Minute = 0;
+      }
+    ];
+  };
+
+in
 {
   options.services.wallpaper = {
     enable = lib.mkEnableOption "Automatic wallpaper changing service";
 
-    interval = lib.mkOption {
+    frequency = lib.mkOption {
       type = lib.types.str;
       default = "daily";
       description = "How often to change the wallpaper (daily, hourly)";
@@ -21,34 +48,16 @@
     };
   };
 
-  config = lib.mkIf config.services.wallpaper.enable {
+  config = lib.mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
       darwin.apple_sdk.frameworks.CoreServices
     ];
 
     launchd.agents.change-wallpaper = {
       serviceConfig = {
-        ProgramArguments = [
-          (pkgs.writeShellApplication {
-            name = "change-wallpaper";
-            runtimeInputs = with pkgs; [
-              curl
-              jq
-            ];
-            text = builtins.readFile ./wallpaper.sh;
-          }).outPath
-        ];
-        StartCalendarInterval = (
-          if config.services.wallpaper.interval == "hourly" then
-            [ { Minute = 0; } ]
-          else
-            [
-              {
-                Hour = 0;
-                Minute = 0;
-              }
-            ]
-        );
+        Program = "${toString script}/bin/${script.name}";
+        ProcessType = "Background";
+        StartCalendarInterval = calendarIntervals.${cfg.frequency};
         RunAtLoad = true;
         StandardErrorPath = "/tmp/change-wallpaper.err";
         StandardOutPath = "/tmp/change-wallpaper.out";

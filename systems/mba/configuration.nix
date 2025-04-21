@@ -10,7 +10,7 @@
 
   services.wallpaper = {
     enable = true;
-    interval = "daily";
+    frequency = "daily";
     category = "nature";
   };
 
