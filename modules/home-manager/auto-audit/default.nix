@@ -1,19 +1,16 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 let
-  program = (
-    (pkgs.writeShellApplication {
-      name = "auto-audit";
-      runtimeInputs = with pkgs; [ lynis ];
-      text = "lynis audit system";
-    }).outPath
-    + "/bin/auto-audit"
-  );
+  script = pkgs.writeShellApplication {
+    name = "auto-audit";
+    text = builtins.readFile ./script.sh;
+    runtimeInputs = with pkgs; [ lynis ];
+  };
 in
 {
   launchd.agents.auto-audit = {
     enable = true;
     config = {
-      ProgramArguments = [ program ];
+      Program = "${script.outPath}/bin/${script.name}";
       ProcessType = "Background";
       StartCalendarInterval = [
         {
@@ -21,23 +18,21 @@ in
           Minute = 0;
         }
       ];
-      StandardErrorPath = "/tmp/auto-audit.err";
-      StandardOutPath = "/tmp/auto-audit.out";
+      StandardErrorPath = "/tmp/${script.name}.err";
+      StandardOutPath = "/tmp/${script.name}.out";
     };
   };
   systemd.user = {
     timers.auto-audit = {
-      Unit.Description = "Lynis audit timer";
       Install.WantedBy = [ "timers.target" ];
       Timer = {
         OnCalendar = "daily";
-        Unit = "auto-audit.service";
+        Unit = "${script.name}.service";
         Persistent = true;
       };
     };
     services.auto-audit = {
-      Unit.Description = "Lynis audit service";
-      Service.ExecStart = program;
+      Service.ExecStart = "${script.outPath}/bin/${script.name}";
     };
   };
 }
