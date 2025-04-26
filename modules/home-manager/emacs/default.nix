@@ -6,7 +6,8 @@
 }:
 {
   programs.emacs = {
-    enable = true;
+    # TODO Currently not working on macOS.
+    enable = false;
     extraPackages =
       epkgs: with epkgs; [
         emms
