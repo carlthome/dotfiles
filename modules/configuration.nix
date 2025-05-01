@@ -16,8 +16,8 @@
       "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
       "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
     ];
-    cores = 4;
-    max-jobs = 1;
+    cores = 2;
+    max-jobs = 2;
   };
 
   # Link old commands (nix-shell, nix-build, etc.) to use the same nixpkgs as the flake.
