@@ -58,7 +58,6 @@ in
         Program = "${toString script}/bin/${script.name}";
         ProcessType = "Background";
         StartCalendarInterval = calendarIntervals.${cfg.frequency};
-        RunAtLoad = true;
         StandardErrorPath = "/tmp/change-wallpaper.err";
         StandardOutPath = "/tmp/change-wallpaper.out";
       };
