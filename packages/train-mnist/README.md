@@ -26,6 +26,12 @@ and you should see something like this:
 ### Develop
 
 ```sh
+# Install additional development dependencies.
+pip install -e ".[tests]"
+
+# Run local tests.
+pytest
+
 # Run a local development server with hot reloading.
 fastapi dev
 
