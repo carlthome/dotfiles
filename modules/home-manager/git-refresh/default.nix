@@ -10,7 +10,7 @@ in
       ProcessType = "Background";
       StartCalendarInterval = [
         {
-          Day = 0;
+          Weekday = 0;
           Hour = 0;
           Minute = 0;
         }
