@@ -42,8 +42,7 @@ let
     ms-vscode.makefile-tools
     njpwerner.autodocstring
     pkief.material-icon-theme
-    # TODO Currently broken on nixpkgs-unstable?
-    #rust-lang.rust-analyzer
+    rust-lang.rust-analyzer
     stkb.rewrap
     svelte.svelte-vscode
     tamasfe.even-better-toml
