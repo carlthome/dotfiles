@@ -86,6 +86,9 @@ class LitModel(L.LightningModule):
         super().__init__()
         self.save_hyperparameters()
         self.learning_rate = learning_rate
+        self.example_input_array = {
+            "x": torch.randn(1, *dims),
+        }
         self.model = nn.Sequential(
             nn.Conv2d(dims[0], 32, 5, padding=2),
             nn.ReLU(),
@@ -107,29 +110,35 @@ class LitModel(L.LightningModule):
     def training_step(self, batch, batch_idx):
         x, y = batch
         logits = self(x)
-        loss = F.nll_loss(logits, y)
+        loss = F.nll_loss(logits, y[:, 0])
         self.log("train_loss", loss)
         return loss
 
     def validation_step(self, batch, batch_idx):
         x, y = batch
         logits = self(x)
-        loss = F.nll_loss(logits, y)
+        loss = F.nll_loss(logits, y[:, 0])
         preds = torch.argmax(logits, dim=1)
-
-        acc = accuracy(preds, y, task="multiclass", num_classes=10)
+        acc = accuracy(preds, y[:, 0], task="multiclass", num_classes=10)
         self.log("val_loss", loss, prog_bar=True)
         self.log("val_acc", acc, prog_bar=True)
+        return loss
 
     def test_step(self, batch, batch_idx):
         x, y = batch
         logits = self(x)
-        loss = F.nll_loss(logits, y)
+        loss = F.nll_loss(logits, y[:, 0])
         preds = torch.argmax(logits, dim=1)
-
-        acc = accuracy(preds, y, task="multiclass", num_classes=10)
+        acc = accuracy(preds, y[:, 0], task="multiclass", num_classes=10)
         self.log("test_loss", loss, prog_bar=True)
         self.log("test_acc", acc, prog_bar=True)
+        return loss
+
+    def predict_step(self, batch, batch_idx):
+        x, y = batch
+        logits = self(x)
+        preds = torch.argmax(logits, dim=1)
+        return preds
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=self.learning_rate)
