@@ -7,3 +7,4 @@ build
 .venv
 .mypy_cache
 .pytest_cache
+.direnv
