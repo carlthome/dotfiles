@@ -49,10 +49,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [
-      darwin.apple_sdk.frameworks.CoreServices
-    ];
-
     launchd.agents.change-wallpaper = {
       serviceConfig = {
         Program = "${toString script}/bin/${script.name}";
