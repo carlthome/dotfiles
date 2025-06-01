@@ -100,6 +100,7 @@
     poetry.enable = true;
     alacritty.enable = true;
     visidata.enable = true;
+    nix-init.enable = true;
   };
 
   # Include additional user packages.
@@ -162,7 +163,6 @@
     ninja
     nix-diff
     nix-info
-    nix-init
     nix-tree
     nixfmt-rfc-style
     nixos-rebuild
