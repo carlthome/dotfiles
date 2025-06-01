@@ -40,7 +40,7 @@
     ];
     shellAliases = {
       show-system = "nix derivation show /run/current-system";
-      switch-system = "sudo nixos-rebuild switch --flake .";
+      switch-system = "nh os switch .";
       list-generations = "nix-env --list-generations";
     };
     shells = [ pkgs.fish ];
