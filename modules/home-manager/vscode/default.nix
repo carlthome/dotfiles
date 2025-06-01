@@ -25,15 +25,17 @@ let
 in
 {
   programs.vscode = {
-    inherit
-      userSettings
-      userTasks
-      extensions
-      keybindings
-      ;
     enable = true;
-    enableUpdateCheck = false;
-    enableExtensionUpdateCheck = false;
+    profiles.default = {
+      inherit
+        userSettings
+        userTasks
+        extensions
+        keybindings
+        ;
+      enableExtensionUpdateCheck = false;
+      enableUpdateCheck = false;
+    };
     mutableExtensionsDir = false;
     package = if pkgs.config.allowUnfreePredicate "vscode" then pkgs.vscode else pkgs.vscodium;
   };
