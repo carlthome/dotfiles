@@ -34,7 +34,7 @@
   # Global shell aliases for all users.
   environment.shellAliases = {
     show-system = "nix derivation show /run/current-system";
-    switch-system = "sudo darwin-rebuild switch --flake .";
+    switch-system = "nh darwin switch .";
     list-generations = "nix-env --list-generations";
   };
 }
