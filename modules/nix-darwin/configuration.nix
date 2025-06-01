@@ -25,10 +25,6 @@
     enableSyntaxHighlighting = true;
   };
 
-  # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
-  nix.package = pkgs.nix;
-
   # Deduplicate files in the nix store.
   nix.optimise.automatic = true;
 
