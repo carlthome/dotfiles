@@ -6,7 +6,7 @@
 }:
 {
   home.packages = with pkgs; [
-    maple-mono
+    maple-mono.variable
   ];
   programs.kitty = {
     enable = true;
