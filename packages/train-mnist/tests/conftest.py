@@ -1,3 +1,4 @@
+from pathlib import Path
 import pytest
 import torch
 
@@ -30,3 +31,14 @@ def random_dataset() -> RandomDataset:
 @pytest.fixture
 def random_model() -> RandomModel:
     return RandomModel()
+
+
+@pytest.fixture
+def onnx_model(
+    random_model: RandomModel, random_dataset: RandomDataset, tmp_path: Path
+) -> Path:
+    image, _label = next(iter(random_dataset))
+    dummy_input = image.unsqueeze(0)
+    onnx_path = tmp_path / "model.onnx"
+    torch.onnx.export(random_model, dummy_input, onnx_path)
+    return onnx_path
