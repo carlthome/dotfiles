@@ -1,26 +1,31 @@
 from pathlib import Path
+
 import pytest
 import torch
 
 
 class RandomDataset(torch.utils.data.Dataset):
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, size: int = 60000, num_classes: int = 10):
+        self.size = size
+        self.num_classes = num_classes
 
     def __len__(self):
-        return 60000
+        return self.size
 
-    def __getitem__(self, idx):
-        return torch.randn(1, 28, 28), torch.randint(0, 10, (1,))
+    def __getitem__(self, idx: int) -> tuple[torch.Tensor, torch.Tensor]:
+        image = torch.randn(1, 28, 28)
+        label = torch.randint(0, self.num_classes, (1,))
+        return image, label
 
 
 class RandomModel(torch.nn.Module):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, input_size: int = 784, num_classes: int = 10):
         super().__init__()
-        self.fc = torch.nn.Linear(784, 10)
+        self.fc = torch.nn.Linear(input_size, num_classes)
 
-    def forward(self, x):
-        return self.fc(x.view(x.size(0), -1))
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        logits = self.fc(x.flatten(start_dim=1))
+        return logits
 
 
 @pytest.fixture
