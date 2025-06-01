@@ -51,7 +51,6 @@
         servers = {
           bashls.enable = true;
           nixd.enable = true;
-          ruff_lsp.enable = true;
         };
         keymaps.lspBuf = {
           "gd" = "definition";
