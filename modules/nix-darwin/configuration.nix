@@ -28,8 +28,8 @@
   # Deduplicate files in the nix store.
   nix.optimise.automatic = true;
 
-  # Enable sandboxing.
-  nix.settings.sandbox = "relaxed";
+  # TODO Enable sandboxing.
+  nix.settings.sandbox = false;
 
   # Global shell aliases for all users.
   environment.shellAliases = {
