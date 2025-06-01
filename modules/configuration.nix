@@ -17,7 +17,7 @@
       "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
     ];
     cores = 2;
-    max-jobs = 2;
+    max-jobs = "auto";
   };
 
   # Link old commands (nix-shell, nix-build, etc.) to use the same nixpkgs as the flake.
