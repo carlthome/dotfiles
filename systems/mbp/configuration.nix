@@ -7,5 +7,5 @@
     flake = "github:carlthome/dotfiles";
   };
 
-  system.stateVersion = 5;
+  system.stateVersion = 6;
 }
