@@ -25,7 +25,7 @@
   #  "." = "${self.packages.${pkgs.system}.fzf-open}/bin/fzf-open";
   #};
 
-  programs.zsh.initExtra = ''
+  programs.zsh.initContent = ''
     fzf-rg() {
       ${self.packages.${pkgs.system}.fzf-ripgrep}/bin/fzf-ripgrep "$BUFFER"
       zle reset-prompt
