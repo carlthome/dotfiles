@@ -37,28 +37,4 @@
     switch-system = "sudo darwin-rebuild switch --flake .";
     list-generations = "nix-env --list-generations";
   };
-
-  # Configure macOS settings.
-  system.defaults = {
-    trackpad = {
-      Clicking = false;
-    };
-    dock = {
-      autohide = true;
-      orientation = "bottom";
-      show-process-indicators = false;
-      show-recents = false;
-      static-only = true;
-    };
-    finder = {
-      AppleShowAllExtensions = true;
-      ShowPathbar = true;
-      FXEnableExtensionChangeWarning = false;
-    };
-  };
-
-  # https://medium.com/@zmre/nix-darwin-quick-tip-activate-your-preferences-f69942a93236
-  system.activationScripts.postUserActivation.text = ''
-    /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
-  '';
 }
