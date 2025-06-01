@@ -34,4 +34,30 @@
   #     chmod -R 755 "$dst"
   #   '';
   # };
+
+  # Configure macOS settings.
+  targets.darwin.defaults = {
+    "com.apple.trackpad" = {
+      Clicking = true;
+    };
+    "com.apple.desktopservices" = {
+      DSDontWriteNetworkStores = true;
+      DSDontWriteUSBStores = true;
+    };
+    "com.apple.dock" = {
+      autohide = true;
+      orientation = "bottom";
+      show-process-indicators = false;
+      show-recents = false;
+      static-only = true;
+    };
+    "com.apple.finder" = {
+      AppleShowAllExtensions = true;
+      AppleShowAllFiles = true;
+      ShowPathBar = true;
+      ShowStatusBar = true;
+      FXEnableExtensionChangeWarning = false;
+      FXRemoveOldTrashItems = true;
+    };
+  };
 }
