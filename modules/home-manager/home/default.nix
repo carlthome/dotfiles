@@ -146,7 +146,8 @@
     jq
     jupyter
     k9s
-    keepassxc
+    #TODO Broken
+    #keepassxc
     kind
     kubectl
     kubectx
@@ -200,7 +201,8 @@
     snyk
     sops
     sox
-    spr
+    # TODO Broken on macOS?
+    #spr
     sqlitebrowser
     syft
     terraform
