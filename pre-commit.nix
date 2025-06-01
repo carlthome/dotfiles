@@ -7,9 +7,16 @@
       nixfmt-rfc-style.enable = true;
       prettier = {
         enable = true;
-        excludes = [ "flake.lock" ];
+        excludes = [
+          "flake.lock"
+        ];
       };
-      shellcheck.enable = true;
+      shellcheck = {
+        enable = true;
+        excludes = [
+          ".envrc"
+        ];
+      };
       shfmt.enable = true;
     };
   };
