@@ -35,6 +35,8 @@
     systemPackages = with pkgs; [
       vim
       htop
+      ncdu
+      tmux
     ];
     shellAliases = {
       show-system = "nix derivation show /run/current-system";
