@@ -99,6 +99,7 @@
     nh.enable = true;
     poetry.enable = true;
     alacritty.enable = true;
+    visidata.enable = true;
   };
 
   # Include additional user packages.
@@ -208,7 +209,6 @@
     typst
     uv
     victor-mono
-    visidata
     vorbis-tools
     wget
     wrk
