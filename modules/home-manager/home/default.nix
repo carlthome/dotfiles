@@ -40,7 +40,7 @@
     edit = "nix edit";
     search = "nix search";
     update = "nix flake update --commit-lock-file";
-    switch-home = "home-manager switch --flake .";
+    switch-home = "nh home switch .";
     pylab = "${self.packages.${pkgs.system}.pylab}/bin/jupyter";
     docker-cpu = "docker ps -q | xargs docker stats --no-stream";
     pods = "${self.packages.${pkgs.system}.k8s-pods-logs}/bin/k8s-pods-logs";
