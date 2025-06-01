@@ -14,7 +14,7 @@
   ];
 
   # Enable fingerprint scanner for authentication.
-  security.pam.enableSudoTouchIdAuth = true;
+  security.pam.services.sudo_local.touchIdAuth = true;
 
   # Let nix-darwin create /etc/* configs to load itself.
   programs.fish.enable = true;
