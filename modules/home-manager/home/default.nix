@@ -151,7 +151,7 @@
     kubernetes-helm
     lame
     lynis
-    maple-mono
+    maple-mono.variable
     mdcat
     minikube
     mypy
