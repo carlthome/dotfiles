@@ -8,9 +8,15 @@
 {
 
   # Add each flake input to registry.
-  nix.registry = (lib.mapAttrs (_: flake: { inherit flake; })) (
-    (lib.filterAttrs (_: lib.isType "flake")) inputs
-  );
+  nix.registry =
+    let
+      flakes = lib.filterAttrs (_: lib.isType "flake") inputs;
+      registry = lib.mapAttrs (_: flake: { inherit flake; }) flakes;
+      aliases = {
+        dotfiles.flake = self;
+      };
+    in
+    registry // aliases;
 
   # Set environment variables.
   home.sessionVariables = {
