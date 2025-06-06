@@ -10,7 +10,7 @@ let
   cfg = config.services.auto-upgrade;
 
   upgradeScript = pkgs.writeShellApplication {
-    name = "auto-upgrade-home-manager";
+    name = "auto-upgrade";
     text = ''
       echo "Starting Home Manager upgrade at $(date)"
       home-manager switch --refresh --flake ${cfg.flake}
@@ -80,16 +80,16 @@ in
     let
       systemdConfig = {
         systemd.user = {
-          timers.home-manager-auto-upgrade = {
+          timers.auto-upgrade = {
             Unit.Description = "Home Manager upgrade timer";
             Install.WantedBy = [ "timers.target" ];
             Timer = {
               OnCalendar = cfg.frequency;
-              Unit = "${upgradeScript.name}.service";
+              Unit = "auto-upgrade.service";
               Persistent = true;
             };
           };
-          services.home-manager-auto-upgrade = {
+          services.auto-upgrade = {
             Unit.Description = "Home Manager upgrade";
             Service.ExecStart = "${toString upgradeScript}/bin/${upgradeScript.name}";
           };
