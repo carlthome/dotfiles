@@ -10,7 +10,7 @@ let
   cfg = config.services.auto-upgrade;
 
   upgradeScript = pkgs.writeShellApplication {
-    name = "auto-upgrade";
+    name = "auto-upgrade-home-manager";
     text = ''
       echo "Starting Home Manager upgrade at $(date)"
       home-manager switch --refresh --flake ${cfg.flake}
