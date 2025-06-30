@@ -222,6 +222,7 @@
     wrk
     yarn
     yq
+    ytt
     (google-cloud-sdk.withExtraComponents (
       with google-cloud-sdk.components;
       [
