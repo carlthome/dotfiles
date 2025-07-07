@@ -4,6 +4,58 @@
   self,
   ...
 }:
+
+let
+  fzfFunctions = {
+    fzf-rg = {
+      cmd = "${self.packages.${pkgs.system}.fzf-ripgrep}/bin/fzf-ripgrep";
+      zshKey = "^F";
+      bashKey = "\\C-f";
+    };
+    fzf-open = {
+      cmd = "${self.packages.${pkgs.system}.fzf-open}/bin/fzf-open";
+      zshKey = "^P";
+      bashKey = "\\C-p";
+    };
+    fzf-git = {
+      cmd = "${self.packages.${pkgs.system}.fzf-gitgrep}/bin/fzf-gitgrep";
+      zshKey = "^G";
+      bashKey = "\\C-g";
+    };
+  };
+
+  zshInit = builtins.concatStringsSep "\n\n" (
+    builtins.attrValues (
+      builtins.mapAttrs (
+        name:
+        { cmd, zshKey, ... }:
+        ''
+          ${name}() {
+            ${cmd} "$BUFFER"
+            zle reset-prompt
+          }
+          zle -N ${name}
+          bindkey '${zshKey}' ${name}
+        ''
+      ) fzfFunctions
+    )
+  );
+
+  bashInit = builtins.concatStringsSep "\n\n" (
+    builtins.attrValues (
+      builtins.mapAttrs (
+        name:
+        { cmd, bashKey, ... }:
+        ''
+          ${name}() {
+            ${cmd} "$READLINE_LINE"
+          }
+          bind -x '"${bashKey}":${name}'
+        ''
+      ) fzfFunctions
+    )
+  );
+in
 {
   programs.fzf = {
     enable = true;
@@ -17,39 +69,12 @@
 
   home.packages = with pkgs; [
     fzf-git-sh
-    bat
-    self.packages.${pkgs.system}.fzf-open
   ];
 
-  #home.shellAliases = {
-  #  "." = "${self.packages.${pkgs.system}.fzf-open}/bin/fzf-open";
-  #};
+  home.shellAliases = {
+    "." = "${self.packages.${pkgs.system}.fzf-open}/bin/fzf-open";
+  };
 
-  programs.zsh.initContent = ''
-    fzf-rg() {
-      ${self.packages.${pkgs.system}.fzf-ripgrep}/bin/fzf-ripgrep "$BUFFER"
-      zle reset-prompt
-    }
-    zle -N fzf-rg
-    bindkey '^F' fzf-rg
-
-    fzf-open() {
-      ${self.packages.${pkgs.system}.fzf-open}/bin/fzf-open "$BUFFER"
-      zle reset-prompt
-    }
-    zle -N fzf-open
-    bindkey '^P' fzf-open
-  '';
-
-  programs.bash.initExtra = ''
-    fzf-rg() {
-        ${self.packages.${pkgs.system}.fzf-ripgrep}/bin/fzf-ripgrep "$READLINE_LINE"
-    }
-    bind -x '"\C-f": fzf-rg'
-
-    fzf-open() {
-        ${self.packages.${pkgs.system}.fzf-open}/bin/fzf-open "$READLINE_LINE"
-    }
-    bind -x '"\C-p": fzf-open'
-  '';
+  programs.zsh.initContent = zshInit;
+  programs.bash.initExtra = bashInit;
 }
