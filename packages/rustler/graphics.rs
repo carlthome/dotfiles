@@ -1,21 +1,21 @@
 use ggez::glam::Vec2;
-use ggez::graphics::{self, Canvas, Color, DrawMode, DrawParam, Mesh, Rect, Text};
+use ggez::graphics::{self, Canvas, Color, DrawMode, DrawParam, Mesh, Rect};
 use ggez::Context;
 
-use crate::{Crab, MainState, CRAB_SIZE, PLAYER_SIZE};
+use crate::{Crab, CRAB_SIZE, PLAYER_SIZE};
 
 pub fn draw_grass(ctx: &mut Context, canvas: &mut Canvas) -> ggez::GameResult {
     use rand::Rng;
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
     for _ in 0..80 {
-        let x = rng.gen_range(0.0..800.0);
-        let y = rng.gen_range(0.0..600.0);
-        let w = rng.gen_range(20.0..60.0);
-        let h = rng.gen_range(8.0..20.0);
+        let x = rng.random_range(0.0..800.0);
+        let y = rng.random_range(0.0..600.0);
+        let w = rng.random_range(20.0..60.0);
+        let h = rng.random_range(8.0..20.0);
         let color = Color::from_rgba(
-            rng.gen_range(60..120),
-            rng.gen_range(160..220),
-            rng.gen_range(60..120),
+            rng.random_range(60..120),
+            rng.random_range(160..220),
+            rng.random_range(60..120),
             60,
         );
         let ellipse = graphics::Mesh::new_ellipse(ctx, DrawMode::fill(), [x, y], w, h, 0.5, color)?;
@@ -78,7 +78,10 @@ pub fn draw_rustler(ctx: &mut Context, canvas: &mut Canvas, pos: Vec2) -> ggez::
 }
 
 pub fn draw_crab(ctx: &mut Context, canvas: &mut Canvas, crab: &Crab) -> ggez::GameResult {
-    // Crab body
+    // Animate legs: wiggle based on time and crab position
+    let time = ctx.time.time_since_start().as_secs_f32();
+    let phase = (crab.pos.x + crab.pos.y) * 0.05; // unique phase per crab
+                                                  // Crab body
     let crab_body = Mesh::new_circle(
         ctx,
         DrawMode::fill(),
@@ -92,7 +95,10 @@ pub fn draw_crab(ctx: &mut Context, canvas: &mut Canvas, crab: &Crab) -> ggez::G
     let leg_len = CRAB_SIZE * 0.7;
     let leg_color = Color::from_rgb(200, 50, 50);
     for i in 0..6 {
-        let angle = std::f32::consts::PI * (0.25 + i as f32 / 6.0);
+        let base_angle = std::f32::consts::PI * (0.25 + i as f32 / 6.0);
+        // Animate leg angle with a sine wave
+        let wiggle = (time * 4.0 + phase + i as f32).sin() * 0.18;
+        let angle = base_angle + wiggle;
         let x1 = (CRAB_SIZE / 2.0) * angle.cos();
         let y1 = (CRAB_SIZE / 2.0) * angle.sin();
         let x2 = (CRAB_SIZE / 2.0 + leg_len) * angle.cos();
@@ -134,6 +140,8 @@ pub fn draw_flashlight(
     canvas: &mut Canvas,
     player_pos: Vec2,
     dir: Vec2,
+    width: f32,
+    height: f32,
 ) -> ggez::GameResult {
     use ggez::glam::Vec2 as GVec2;
     use ggez::graphics::{DrawMode, DrawParam, Mesh};
@@ -141,7 +149,7 @@ pub fn draw_flashlight(
     let darkness = Mesh::new_rectangle(
         ctx,
         DrawMode::fill(),
-        Rect::new(0.0, 0.0, 800.0, 600.0),
+        Rect::new(0.0, 0.0, width, height),
         Color::from_rgba(0, 0, 0, 200),
     )?;
     canvas.draw(&darkness, DrawParam::default());
