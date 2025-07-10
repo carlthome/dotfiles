@@ -243,7 +243,7 @@ impl EventHandler for MainState {
                     .dest(Vec2::new(340.0, 120.0))
                     .color(Color::WHITE),
             );
-            let text = Text::new("Catch the crabs quickly!\n\nUse the arrow keys to move.\n\nPress Space or Enter to start.");
+            let text = Text::new("Catch all the crabs quickly!\n\nUse the arrow keys to move.\n\nPress Space or Enter to start.");
             virtual_canvas.draw(
                 &text,
                 DrawParam::default()
