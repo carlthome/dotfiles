@@ -48,8 +48,7 @@ let
     tamasfe.even-better-toml
     tomoki1207.pdf
     twxs.cmake
-    #TODO Broken on darwin.
-    #ms-vscode.cpptools
+    ms-vscode.cpptools
     #ms-vsliveshare.vsliveshare
   ];
 
@@ -61,6 +60,7 @@ let
     liviuschera.noctis
     markthomasmiller.sorcerer
     miladfathy.dragan-color-theme
+    ms-azuretools.vscode-containers
     # TODO This extension is too buggy.
     #stateful.runme
   ];
