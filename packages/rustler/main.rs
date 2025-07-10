@@ -2,6 +2,7 @@ use rand::Rng;
 
 use ggez::audio::{SoundSource, Source};
 use ggez::glam::Vec2;
+use ggez::graphics::{Canvas, Color, DrawParam, Rect};
 use ggez::{
     conf::WindowMode,
     event::{self, EventHandler},
@@ -90,27 +91,9 @@ impl MainState {
             time_since_catch: 0.0,
         })
     }
-}
 
-impl EventHandler for MainState {
-    fn update(&mut self, ctx: &mut Context) -> GameResult {
-        if self.show_instructions {
-            return Ok(());
-        }
-        if self.game_over {
-            return Ok(());
-        }
-        let dt = ctx.time.delta().as_secs_f32();
-        self.time_elapsed += dt;
-        self.time_since_catch += dt;
-        if self.shake_timer > 0.0 {
-            self.shake_timer -= dt;
-            if self.shake_timer < 0.0 {
-                self.shake_timer = 0.0;
-            }
-        }
+    fn handle_player_movement(&mut self, ctx: &mut Context, dt: f32) {
         let mut dir = Vec2::ZERO;
-
         if ctx.keyboard.is_key_pressed(KeyCode::Up) {
             dir.y -= 1.0;
         }
@@ -125,16 +108,15 @@ impl EventHandler for MainState {
         }
         if dir != Vec2::ZERO {
             dir = dir.normalize();
-            let speed = SPEED * (1.0 + self.score as f32 * 0.1); // Increase speed with score
+            let speed = SPEED * (1.0 + self.score as f32 * 0.1);
             self.player_pos += dir * speed * dt;
-            self.last_dir = dir; // Update last movement direction
+            self.last_dir = dir;
         }
-
-        // Clamp player to window
         self.player_pos.x = self.player_pos.x.clamp(0.0, 1280.0 - PLAYER_SIZE);
         self.player_pos.y = self.player_pos.y.clamp(0.0, 960.0 - PLAYER_SIZE);
+    }
 
-        // Check for crab catches
+    fn handle_crab_catching(&mut self, ctx: &mut Context) {
         for crab in &mut self.crabs {
             if !crab.caught
                 && (self.player_pos.x - crab.pos.x).abs() < (PLAYER_SIZE + CRAB_SIZE) / 2.0
@@ -143,8 +125,7 @@ impl EventHandler for MainState {
                 crab.caught = true;
                 self.score += 1;
                 self.shake_timer = 0.4;
-                self.time_since_catch = 0.0; // Reset catch timer
-                                             // Play success.ogg most of the time, success2.ogg sometimes
+                self.time_since_catch = 0.0;
                 let mut rng = rand::rng();
                 if rng.random_range(0..10) == 0 {
                     let _ = self.success_sound2.play_detached(ctx);
@@ -153,14 +134,9 @@ impl EventHandler for MainState {
                 }
             }
         }
+    }
 
-        // End game if all crabs are caught
-        if self.crabs.iter().all(|c| c.caught) {
-            self.game_over = true;
-            return Ok(());
-        }
-
-        // Move crabs
+    fn update_crabs(&mut self, dt: f32) {
         for crab in &mut self.crabs {
             if !crab.caught {
                 crab.spawn_time += dt;
@@ -186,8 +162,9 @@ impl EventHandler for MainState {
                 }
             }
         }
+    }
 
-        self.spawn_timer += dt;
+    fn maybe_spawn_crab(&mut self) {
         if self.spawn_timer > 2.0 {
             let mut rng = rand::rng();
             let angle = rng.random_range(0.0..std::f32::consts::TAU);
@@ -208,71 +185,91 @@ impl EventHandler for MainState {
             self.crabs.push(new_crab);
             self.spawn_timer = 0.0;
         }
+    }
 
+    fn reset_game(&mut self) {
+        let virtual_width = 1280.0;
+        let virtual_height = 960.0;
+        let player_pos = Vec2::new(
+            virtual_width / 2.0 - PLAYER_SIZE / 2.0,
+            virtual_height / 2.0 - PLAYER_SIZE / 2.0,
+        );
+        let mut rng = rand::rng();
+        let center = Vec2::new(virtual_width / 2.0, virtual_height / 2.0);
+        let radius = 220.0;
+        self.crabs = (0..NUM_CRABS)
+            .map(|i| {
+                let angle = i as f32 * std::f32::consts::TAU / NUM_CRABS as f32;
+                let pos = center + Vec2::new(angle.cos(), angle.sin()) * radius;
+                let vel_angle = rng.random_range(0.0..std::f32::consts::TAU);
+                let vel = Vec2::new(vel_angle.cos(), vel_angle.sin());
+                let speed = rng.random_range(30.0..70.0);
+                Crab {
+                    pos,
+                    vel,
+                    speed,
+                    caught: false,
+                    size: rng.random_range(CRAB_SIZE * 0.8..=CRAB_SIZE * 1.3),
+                    spawn_time: 0.0,
+                }
+            })
+            .collect();
+        self.player_pos = player_pos;
+        self.score = 0;
+        self.spawn_timer = 0.0;
+        self.time_elapsed = 0.0;
+        self.game_over = false;
+    }
+
+    fn draw_instructions_screen(
+        &self,
+        ctx: &mut Context,
+        virtual_canvas: &mut Canvas,
+        virtual_width: f32,
+        virtual_height: f32,
+        _scale_x: f32,
+        _scale_y: f32,
+    ) -> GameResult {
+        // Draw a solid background to hide all graphics
+        let bg = Mesh::new_rectangle(
+            ctx,
+            ggez::graphics::DrawMode::fill(),
+            Rect::new(0.0, 0.0, virtual_width, virtual_height),
+            Color::BLACK,
+        )?;
+        virtual_canvas.draw(&bg, DrawParam::default());
+
+        // Draw game title centered.
+        let mut title = Text::new("Crab Rustler");
+        title.set_scale(96.0);
+        let title_width = title.measure(ctx)?.x;
+        let title_height = title.measure(ctx)?.y;
+        virtual_canvas.draw(
+            &title,
+            DrawParam::default()
+                .dest(Vec2::new(
+                    (virtual_width - title_width) / 2.0,
+                    (virtual_height - title_height) / 4.0,
+                ))
+                .color(Color::from_rgb(255, 255, 255)),
+        );
+        // Draw instructions text centered
+        let text = Text::new("Catch all the crabs quickly!\n\nUse the arrow keys to move.\n\nPress Space or Enter to start.");
+        let text_width = text.measure(ctx)?.x;
+        let text_height = text.measure(ctx)?.y;
+        virtual_canvas.draw(
+            &text,
+            DrawParam::default()
+                .dest(Vec2::new(
+                    (virtual_width - text_width) / 2.0,
+                    (virtual_height - text_height) / 2.0 + 100.0,
+                ))
+                .color(Color::from_rgb(255, 255, 0)),
+        );
         Ok(())
     }
 
-    fn draw(&mut self, ctx: &mut Context) -> GameResult {
-        use ggez::graphics::{self, Canvas, Color, DrawParam, Rect};
-        let virtual_width = 1280.0;
-        let virtual_height = 960.0;
-        let window_size = ctx.gfx.window().inner_size();
-        let scale_x = window_size.width as f32 / virtual_width;
-        let scale_y = window_size.height as f32 / virtual_height;
-
-        // Render to a virtual-resolution canvas
-        let mut virtual_canvas = Canvas::from_frame(ctx, Color::from_rgb(100, 200, 100));
-        virtual_canvas.set_screen_coordinates(Rect::new(0.0, 0.0, virtual_width, virtual_height)); // removed ?
-        use ggez::graphics::BlendMode;
-        virtual_canvas.set_blend_mode(BlendMode::ALPHA); // use a valid blend mode
-        virtual_canvas.set_sampler(graphics::Sampler::nearest_clamp());
-
-        // Draw everything to the virtual canvas
-        draw_grass(ctx, &mut virtual_canvas)?;
-        draw_flashlight(
-            ctx,
-            &mut virtual_canvas,
-            self.player_pos,
-            self.last_dir,
-            virtual_width,
-            virtual_height,
-            self.time_since_catch, // pass to flashlight
-        )?; // Pass virtual_width and virtual_height
-
-        if self.show_instructions {
-            // Draw a solid background to hide all graphics
-            let bg = Mesh::new_rectangle(
-                ctx,
-                ggez::graphics::DrawMode::fill(),
-                Rect::new(0.0, 0.0, virtual_width, virtual_height),
-                Color::BLACK,
-            )?;
-            virtual_canvas.draw(&bg, DrawParam::default().scale([scale_x, scale_y]));
-
-            // Draw game title
-            let mut title = Text::new("Crab Rustler");
-            title.set_scale(96.0);
-            virtual_canvas.draw(
-                &title,
-                DrawParam::default()
-                    .dest(Vec2::new(340.0, 120.0))
-                    .color(Color::WHITE),
-            );
-            let text = Text::new("Catch all the crabs quickly!\n\nUse the arrow keys to move.\n\nPress Space or Enter to start.");
-            virtual_canvas.draw(
-                &text,
-                DrawParam::default()
-                    .dest(Vec2::new(220.0, 320.0))
-                    .color(Color::WHITE),
-            );
-            virtual_canvas.finish(ctx)?;
-            return Ok(());
-        }
-
-        // Draw player
-        if !self.game_over {
-            draw_rustler(ctx, &mut virtual_canvas, self.player_pos)?;
-        }
+    fn draw_crabs_with_shake(&self, ctx: &mut Context, virtual_canvas: &mut Canvas) -> GameResult {
         use rand::Rng;
         let mut rng = rand::rng();
         for (i, crab) in self.crabs.iter().enumerate() {
@@ -286,35 +283,109 @@ impl EventHandler for MainState {
                     pos.y += (t * 1.3).cos() * shake_strength
                         + rng.random_range(-shake_strength..=shake_strength) * 0.3;
                 }
-                draw_crab(ctx, &mut virtual_canvas, &Crab { pos, ..*crab })?;
+                draw_crab(ctx, virtual_canvas, &Crab { pos, ..*crab })?;
             }
         }
+        Ok(())
+    }
 
-        // Draw score or game over
+    fn draw_game_over_screen(&self, ctx: &mut Context, virtual_canvas: &mut Canvas) -> GameResult {
+        let box_width = 600.0;
+        let box_height = 200.0;
+        let box_x = 340.0;
+        let box_y = 380.0;
+        let bg_box = Mesh::new_rectangle(
+            ctx,
+            ggez::graphics::DrawMode::fill(),
+            Rect::new(box_x, box_y, box_width, box_height),
+            Color::from_rgba(0, 0, 0, 180),
+        )?;
+        virtual_canvas.draw(&bg_box, DrawParam::default());
+        let text = Text::new(format!(
+            "Game Over!\nTime: {:.2} seconds\nPress Esc to quit.\n\nPress Space or Enter to try again.",
+            self.time_elapsed
+        ));
+        virtual_canvas.draw(
+            &text,
+            DrawParam::default()
+                .dest(Vec2::new(370.0, 400.0))
+                .color(Color::WHITE),
+        );
+        Ok(())
+    }
+}
+
+impl EventHandler for MainState {
+    fn update(&mut self, ctx: &mut Context) -> GameResult {
+        if self.show_instructions {
+            return Ok(());
+        }
         if self.game_over {
-            // Draw a semi-transparent background box for readability
-            let box_width = 600.0;
-            let box_height = 200.0;
-            let box_x = 340.0;
-            let box_y = 380.0;
-            let bg_box = Mesh::new_rectangle(
+            return Ok(());
+        }
+        let dt = ctx.time.delta().as_secs_f32();
+        self.time_elapsed += dt;
+        self.time_since_catch += dt;
+        if self.shake_timer > 0.0 {
+            self.shake_timer -= dt;
+            if self.shake_timer < 0.0 {
+                self.shake_timer = 0.0;
+            }
+        }
+        self.handle_player_movement(ctx, dt);
+        self.handle_crab_catching(ctx);
+        // End game if all crabs are caught
+        if self.crabs.iter().all(|c| c.caught) {
+            self.game_over = true;
+            return Ok(());
+        }
+        self.update_crabs(dt);
+        self.spawn_timer += dt;
+        self.maybe_spawn_crab();
+        Ok(())
+    }
+
+    fn draw(&mut self, ctx: &mut Context) -> GameResult {
+        use ggez::graphics::{self, Canvas, Color, DrawParam, Rect};
+        let virtual_width = 1280.0;
+        let virtual_height = 960.0;
+        let window_size = ctx.gfx.window().inner_size();
+        let scale_x = window_size.width as f32 / virtual_width;
+        let scale_y = window_size.height as f32 / virtual_height;
+
+        // Render to a virtual-resolution canvas
+        let mut virtual_canvas = Canvas::from_frame(ctx, Color::from_rgb(100, 200, 100));
+        virtual_canvas.set_screen_coordinates(Rect::new(0.0, 0.0, virtual_width, virtual_height));
+        use ggez::graphics::BlendMode;
+        virtual_canvas.set_blend_mode(BlendMode::ALPHA);
+        virtual_canvas.set_sampler(graphics::Sampler::nearest_clamp());
+
+        if self.show_instructions {
+            self.draw_instructions_screen(
                 ctx,
-                ggez::graphics::DrawMode::fill(),
-                Rect::new(box_x, box_y, box_width, box_height),
-                Color::from_rgba(0, 0, 0, 180),
+                &mut virtual_canvas,
+                virtual_width,
+                virtual_height,
+                scale_x,
+                scale_y,
             )?;
-            virtual_canvas.draw(&bg_box, DrawParam::default());
-            let text = Text::new(format!(
-                "Game Over!\nTime: {:.2} seconds\nPress Esc to quit.\n\nPress Space or Enter to try again.",
-                self.time_elapsed
-            ));
-            virtual_canvas.draw(
-                &text,
-                DrawParam::default()
-                    .dest(Vec2::new(370.0, 400.0))
-                    .color(Color::WHITE),
-            );
-        } else {
+            virtual_canvas.finish(ctx)?;
+            return Ok(());
+        }
+
+        if !self.game_over {
+            draw_grass(ctx, &mut virtual_canvas)?;
+            draw_rustler(ctx, &mut virtual_canvas, self.player_pos)?;
+            draw_flashlight(
+                ctx,
+                &mut virtual_canvas,
+                self.player_pos,
+                self.last_dir,
+                virtual_width,
+                virtual_height,
+                self.time_since_catch,
+            )?;
+            self.draw_crabs_with_shake(ctx, &mut virtual_canvas)?;
             let text = Text::new(format!("Crabs caught: {}", self.score));
             virtual_canvas.draw(
                 &text,
@@ -322,7 +393,10 @@ impl EventHandler for MainState {
                     .dest(Vec2::new(10.0, 10.0))
                     .color(Color::WHITE),
             );
+        } else {
+            self.draw_game_over_screen(ctx, &mut virtual_canvas)?;
         }
+
         virtual_canvas.finish(ctx)?;
         Ok(())
     }
@@ -339,38 +413,7 @@ impl EventHandler for MainState {
         if self.game_over {
             if let Some(key) = input.keycode {
                 if key == KeyCode::Space || key == KeyCode::Return {
-                    // Reset game state
-                    let virtual_width = 1280.0;
-                    let virtual_height = 960.0;
-                    let player_pos = Vec2::new(
-                        virtual_width / 2.0 - PLAYER_SIZE / 2.0,
-                        virtual_height / 2.0 - PLAYER_SIZE / 2.0,
-                    );
-                    let mut rng = rand::rng();
-                    let center = Vec2::new(virtual_width / 2.0, virtual_height / 2.0);
-                    let radius = 220.0;
-                    self.crabs = (0..NUM_CRABS)
-                        .map(|i| {
-                            let angle = i as f32 * std::f32::consts::TAU / NUM_CRABS as f32;
-                            let pos = center + Vec2::new(angle.cos(), angle.sin()) * radius;
-                            let vel_angle = rng.random_range(0.0..std::f32::consts::TAU);
-                            let vel = Vec2::new(vel_angle.cos(), vel_angle.sin());
-                            let speed = rng.random_range(30.0..70.0);
-                            Crab {
-                                pos,
-                                vel,
-                                speed,
-                                caught: false,
-                                size: rng.random_range(CRAB_SIZE * 0.8..=CRAB_SIZE * 1.3),
-                                spawn_time: 0.0,
-                            }
-                        })
-                        .collect();
-                    self.player_pos = player_pos;
-                    self.score = 0;
-                    self.spawn_timer = 0.0;
-                    self.time_elapsed = 0.0;
-                    self.game_over = false;
+                    self.reset_game();
                     return Ok(());
                 }
             }
