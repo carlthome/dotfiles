@@ -1,8 +1,8 @@
+use ggez::Context;
 use ggez::glam::Vec2;
 use ggez::graphics::{self, Canvas, Color, DrawMode, DrawParam, Mesh, Rect};
-use ggez::Context;
 
-use crate::{Crab, CRAB_SIZE, PLAYER_SIZE};
+use crate::{CRAB_SIZE, Crab, PLAYER_SIZE};
 
 pub fn draw_grass(
     ctx: &mut Context,

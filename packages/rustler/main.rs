@@ -281,7 +281,9 @@ impl MainState {
         }
 
         // Draw instructions text centered
-        let text = Text::new("Catch all the crabs quickly!\n\nUse the arrow keys to move.\n\nPress Space or Enter to start.");
+        let text = Text::new(
+            "Catch all the crabs quickly!\n\nUse the arrow keys to move.\n\nPress Space or Enter to start.",
+        );
         let text_width = text.measure(ctx)?.x;
         let text_height = text.measure(ctx)?.y;
         virtual_canvas.draw(
