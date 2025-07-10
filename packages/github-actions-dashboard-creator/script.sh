@@ -2,7 +2,8 @@
 set -e
 
 user=${1:-carlthome}
-repos=$(gh repo list "$user" --source --json name --jq '.[].name')
+repos=$(gh repo list "$user" --no-archived --visibility=public --source --json name --jq '.[] | .name')
+echo "Collecting workflows from $(echo "$repos" | wc -l) repositories."
 
 # Truncate repos
 # Uncomment the line below to limit to a single repo for testing.
