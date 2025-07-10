@@ -4,12 +4,29 @@ use ggez::Context;
 
 use crate::{Crab, CRAB_SIZE, PLAYER_SIZE};
 
-pub fn draw_grass(ctx: &mut Context, canvas: &mut Canvas) -> ggez::GameResult {
+pub fn draw_grass(
+    ctx: &mut Context,
+    canvas: &mut Canvas,
+    width: f32,
+    height: f32,
+) -> ggez::GameResult {
     use rand::Rng;
     let mut rng = rand::rng();
+
+    // Draw a grassy background.
+    let grass_color = Color::from_rgba(0, 255, 0, 80);
+    let bg = graphics::Mesh::new_rectangle(
+        ctx,
+        DrawMode::fill(),
+        Rect::new(0.0, 0.0, width, height),
+        grass_color,
+    )?;
+    canvas.draw(&bg, DrawParam::default());
+
+    // Draw splots of grass.
     for _ in 0..80 {
-        let x = rng.random_range(0.0..800.0);
-        let y = rng.random_range(0.0..600.0);
+        let x = rng.random_range(0.0..width);
+        let y = rng.random_range(0.0..height);
         let w = rng.random_range(20.0..60.0);
         let h = rng.random_range(8.0..20.0);
         let color = Color::from_rgba(

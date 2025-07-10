@@ -2,11 +2,11 @@ use rand::Rng;
 
 use ggez::audio::{SoundSource, Source};
 use ggez::glam::Vec2;
-use ggez::graphics::{Canvas, Color, DrawParam, Rect};
+use ggez::graphics::{Canvas, Color, DrawParam, Rect, Text};
 use ggez::{
     conf::WindowMode,
     event::{self, EventHandler},
-    graphics::{Mesh, Text},
+    graphics::Mesh,
     input::keyboard::{KeyCode, KeyInput},
     Context, ContextBuilder, GameResult,
 };
@@ -239,20 +239,47 @@ impl MainState {
         )?;
         virtual_canvas.draw(&bg, DrawParam::default());
 
-        // Draw game title centered.
+        // Draw grass background
+        graphics::draw_grass(ctx, virtual_canvas, virtual_width, virtual_height)?;
+
+        // Draw game title centered with crazy effects.
         let mut title = Text::new("Crab Rustler");
-        title.set_scale(96.0);
+        title.set_scale(112.0);
         let title_width = title.measure(ctx)?.x;
         let title_height = title.measure(ctx)?.y;
+
+        // Draw shadow
         virtual_canvas.draw(
             &title,
             DrawParam::default()
                 .dest(Vec2::new(
-                    (virtual_width - title_width) / 2.0,
-                    (virtual_height - title_height) / 4.0,
+                    (virtual_width - title_width) / 2.0 + 8.0,
+                    (virtual_height - title_height) / 4.0 + 8.0,
                 ))
-                .color(Color::from_rgb(255, 255, 255)),
+                .color(Color::from_rgba(0, 0, 0, 180))
+                .rotation(0.05),
         );
+
+        // Draw main title with a wavy color effect
+        for (i, ch) in "Crab Rustler".chars().enumerate() {
+            let frag = ggez::graphics::TextFragment::new(ch).scale(112.0);
+            let ch_text = Text::new(frag);
+            let x = (virtual_width - title_width) / 2.0 + i as f32 * 60.0;
+            let y = (virtual_height - title_height) / 4.0 + (i as f32 * 0.5).sin() * 16.0;
+            let color = Color::from_rgb(
+                200 + ((i as f32 * 0.7).sin() * 55.0) as u8,
+                50 + ((i as f32 * 1.3).cos() * 100.0) as u8,
+                255 - (i as u8 * 10),
+            );
+            virtual_canvas.draw(
+                &ch_text,
+                DrawParam::default()
+                    .dest(Vec2::new(x, y))
+                    .color(color)
+                    .rotation((i as f32 * 0.1).sin() * 0.08),
+            );
+        }
+
         // Draw instructions text centered
         let text = Text::new("Catch all the crabs quickly!\n\nUse the arrow keys to move.\n\nPress Space or Enter to start.");
         let text_width = text.measure(ctx)?.x;
@@ -374,7 +401,7 @@ impl EventHandler for MainState {
         }
 
         if !self.game_over {
-            draw_grass(ctx, &mut virtual_canvas)?;
+            draw_grass(ctx, &mut virtual_canvas, virtual_width, virtual_height)?;
             draw_rustler(ctx, &mut virtual_canvas, self.player_pos)?;
             draw_flashlight(
                 ctx,
