@@ -402,7 +402,6 @@ impl EventHandler for MainState {
 
         if !self.game_over {
             draw_grass(ctx, &mut virtual_canvas, virtual_width, virtual_height)?;
-            draw_rustler(ctx, &mut virtual_canvas, self.player_pos)?;
             draw_flashlight(
                 ctx,
                 &mut virtual_canvas,
@@ -412,6 +411,7 @@ impl EventHandler for MainState {
                 virtual_height,
                 self.time_since_catch,
             )?;
+            draw_rustler(ctx, &mut virtual_canvas, self.player_pos)?;
             self.draw_crabs_with_shake(ctx, &mut virtual_canvas)?;
             let text = Text::new(format!("Crabs caught: {}", self.score));
             virtual_canvas.draw(
