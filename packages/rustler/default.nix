@@ -46,4 +46,7 @@ pkgs.rustPlatform.buildRustPackage {
     lockFile = ./Cargo.lock;
   };
   buildInputs = platformDeps;
+  postInstall = ''
+    cp -r resources $out/
+  '';
 }
