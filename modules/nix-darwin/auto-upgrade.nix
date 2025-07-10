@@ -77,6 +77,7 @@ in
       StartCalendarInterval = calendarIntervals.${cfg.frequency};
       StandardErrorPath = "/tmp/${upgradeScript.name}.err";
       StandardOutPath = "/tmp/${upgradeScript.name}.out";
+      RunAtLoad = true;
     };
   };
 }
