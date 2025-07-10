@@ -47,6 +47,6 @@ pkgs.rustPlatform.buildRustPackage {
   };
   buildInputs = platformDeps;
   postInstall = ''
-    cp -r resources $out/
+    cp -r resources $out/bin
   '';
 }
