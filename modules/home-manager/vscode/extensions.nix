@@ -49,7 +49,7 @@ let
     tomoki1207.pdf
     twxs.cmake
     ms-vscode.cpptools
-    #ms-vsliveshare.vsliveshare
+    ms-vsliveshare.vsliveshare
   ];
 
   communityPackagedExtensions = with vscode-extensions.vscode-marketplace; [
