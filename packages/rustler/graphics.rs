@@ -154,29 +154,27 @@ pub fn draw_flashlight(
     )?;
     canvas.draw(&darkness, DrawParam::default());
 
-    // Draw a cone-shaped flashlight (fan of triangles)
+    // Draw a cone-shaped flashlight (sector)
     let flashlight_len = 220.0;
-    let flashlight_width = 120.0;
+    let spread = 0.7; // radians, ~40 degrees
     let segments = 32;
-    let mut points = vec![GVec2::new(
+    let center = GVec2::new(
         player_pos.x + PLAYER_SIZE / 2.0,
         player_pos.y + PLAYER_SIZE / 2.0,
-    )];
+    );
     let angle = dir.y.atan2(dir.x);
+    let mut points = vec![center];
     for i in 0..=segments {
-        let theta = angle - 0.35 + 0.7 * (i as f32 / segments as f32);
-        let x = player_pos.x + PLAYER_SIZE / 2.0 + flashlight_len * theta.cos();
-        let y = player_pos.y + PLAYER_SIZE / 2.0 + flashlight_len * theta.sin();
-        points.push(GVec2::new(
-            x + flashlight_width * (theta - angle).sin(),
-            y - flashlight_width * (theta - angle).cos(),
-        ));
+        let theta = angle - spread / 2.0 + spread * (i as f32 / segments as f32);
+        let x = center.x + flashlight_len * theta.cos();
+        let y = center.y + flashlight_len * theta.sin();
+        points.push(GVec2::new(x, y));
     }
     let flashlight = Mesh::new_polygon(
         ctx,
         DrawMode::fill(),
         &points,
-        Color::from_rgba(255, 255, 200, 8), // very faint yellowish
+        Color::from_rgba(255, 255, 200, 24), // slightly more visible
     )?;
     canvas.draw(&flashlight, DrawParam::default());
     Ok(())
