@@ -275,10 +275,11 @@ impl MainState {
             let ch_text = Text::new(frag);
             let x = (virtual_width - title_width) / 2.0 + i as f32 * 60.0;
             let y = (virtual_height - title_height) / 4.0 + (i as f32 * 0.5).sin() * 16.0;
+
             let color = Color::from_rgb(
-                200 + ((i as f32 * 0.7).sin() * 55.0) as u8,
-                50 + ((i as f32 * 1.3).cos() * 100.0) as u8,
-                255 - (i as u8 * 10),
+                220 + ((i as f32 * 0.7).sin() * 35.0) as u8,
+                80 + ((i as f32 * 1.3).cos() * 140.0) as u8,
+                255 - (i as u8 * 7),
             );
             virtual_canvas.draw(
                 &ch_text,
@@ -336,7 +337,7 @@ impl MainState {
             ctx,
             ggez::graphics::DrawMode::fill(),
             Rect::new(box_x, box_y, box_width, box_height),
-            Color::from_rgba(0, 0, 0, 180),
+            Color::from_rgba(40, 0, 80, 180),
         )?;
         virtual_canvas.draw(&bg_box, DrawParam::default());
         let text = Text::new(format!(
@@ -441,7 +442,7 @@ impl EventHandler for MainState {
                 &text,
                 DrawParam::default()
                     .dest(Vec2::new(10.0, 10.0))
-                    .color(Color::WHITE),
+                    .color(Color::from_rgb(255, 255, 00)),
             );
         } else {
             self.draw_game_over_screen(ctx, &mut virtual_canvas)?;

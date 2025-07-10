@@ -1,8 +1,8 @@
-use ggez::Context;
 use ggez::glam::Vec2;
 use ggez::graphics::{self, Canvas, Color, DrawMode, DrawParam, Mesh, Rect};
+use ggez::Context;
 
-use crate::{CRAB_SIZE, Crab, PLAYER_SIZE};
+use crate::{Crab, CRAB_SIZE, PLAYER_SIZE};
 
 pub fn draw_grass(
     ctx: &mut Context,
@@ -181,51 +181,70 @@ pub fn draw_flashlight(
 ) -> ggez::GameResult {
     use ggez::glam::Vec2 as GVec2;
     use ggez::graphics::{DrawMode, DrawParam, Mesh};
-    // Draw a dark overlay
+
     let darkness = Mesh::new_rectangle(
         ctx,
         DrawMode::fill(),
         Rect::new(0.0, 0.0, width, height),
-        Color::from_rgba(0, 0, 0, 200),
+        Color::from_rgba(0, 0, 0, 230),
     )?;
     canvas.draw(&darkness, DrawParam::default());
 
     // Flicker logic
     let time = ctx.time.time_since_start().as_secs_f32();
-    // Flicker frequency and strength increase with time_since_catch
     let base_freq = 4.0;
     let max_freq = 18.0;
     let freq = base_freq + (max_freq - base_freq) * (time_since_catch / 12.0).min(1.0);
     let base_alpha = 24.0;
     let max_alpha = 90.0;
-    let flicker_strength = (time_since_catch / 12.0).min(1.0);
+    let flicker_strength = (time_since_catch / 3.0).min(2.0);
     let flicker = (time * freq + (player_pos.x + player_pos.y) * 0.01)
         .sin()
         .abs();
     let alpha = base_alpha + (max_alpha - base_alpha) * flicker * flicker_strength;
 
-    // Draw a cone-shaped flashlight (sector)
+    // Draw a cone-shaped flashlight (sector) with bloom/gradient
     let flashlight_len = 220.0;
-    let spread = 0.7; // radians, ~40 degrees
+    let spread = 0.7;
     let segments = 32;
     let center = GVec2::new(
         player_pos.x + PLAYER_SIZE / 2.0,
         player_pos.y + PLAYER_SIZE / 2.0,
     );
     let angle = dir.y.atan2(dir.x);
-    let mut points = vec![center];
-    for i in 0..=segments {
-        let theta = angle - spread / 2.0 + spread * (i as f32 / segments as f32);
-        let x = center.x + flashlight_len * theta.cos();
-        let y = center.y + flashlight_len * theta.sin();
-        points.push(GVec2::new(x, y));
+
+    // Parameterized bloom/gradient flashlight
+    let min_layers = 1;
+    let max_layers = 10;
+    let t_catch = (time_since_catch / 5.0).clamp(0.0, 1.0);
+    let num_layers =
+        (max_layers as f32 - (max_layers as f32 - min_layers as f32) * t_catch).round() as usize;
+    let min_scale = 0.7;
+    let max_scale = 1.4;
+    let min_alpha = 180.0;
+    let max_alpha = (alpha * 0.18).max(10.0);
+    let min_color = [255.0, 255.0, 255.0];
+    let max_color = [255.0, 255.0, 200.0];
+    for i in 0..num_layers {
+        let t = i as f32 / (num_layers - 1).max(1) as f32;
+        let scale = min_scale + (max_scale - min_scale) * t;
+        let segs = if i < 2 { 24 } else { 32 };
+
+        // Interpolate color and alpha.
+        let r = min_color[0] + (max_color[0] - min_color[0]) * t;
+        let g = min_color[1] + (max_color[1] - min_color[1]) * t;
+        let b = min_color[2] + (max_color[2] - min_color[2]) * t;
+        let a = min_alpha + (max_alpha - min_alpha) * t;
+        let color = Color::from_rgba(r as u8, g as u8, b as u8, a as u8);
+        let mut points = vec![center];
+        for j in 0..=segs {
+            let theta = angle - spread / 2.0 + spread * (j as f32 / segs as f32);
+            let x = center.x + flashlight_len * scale * theta.cos();
+            let y = center.y + flashlight_len * scale * theta.sin();
+            points.push(GVec2::new(x, y));
+        }
+        let flashlight = Mesh::new_polygon(ctx, DrawMode::fill(), &points, color)?;
+        canvas.draw(&flashlight, DrawParam::default());
     }
-    let flashlight = Mesh::new_polygon(
-        ctx,
-        DrawMode::fill(),
-        &points,
-        Color::from_rgba(255, 255, 200, alpha as u8),
-    )?;
-    canvas.draw(&flashlight, DrawParam::default());
     Ok(())
 }
