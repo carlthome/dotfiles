@@ -42,6 +42,8 @@ struct MainState {
     last_dir: Vec2,          // Last movement direction for flashlight
     shake_timer: f32,        // Timer for crab shake effect
     time_since_catch: f32,   // Time since last crab was caught
+    boost_timer: f32,        // Timer for speed boost
+    boost_cooldown: f32,     // Cooldown to prevent holding space
 }
 
 impl MainState {
@@ -89,6 +91,8 @@ impl MainState {
             last_dir: Vec2::new(0.0, -1.0), // Default facing up
             shake_timer: 0.0,
             time_since_catch: 0.0,
+            boost_timer: 0.0,
+            boost_cooldown: 0.0,
         })
     }
 
@@ -106,9 +110,12 @@ impl MainState {
         if ctx.keyboard.is_key_pressed(KeyCode::Right) {
             dir.x += 1.0;
         }
+        let mut speed = SPEED * (1.0 + self.score as f32 * 0.1);
+        if self.boost_timer > 0.0 {
+            speed *= 2.1;
+        }
         if dir != Vec2::ZERO {
             dir = dir.normalize();
-            let speed = SPEED * (1.0 + self.score as f32 * 0.1);
             self.player_pos += dir * speed * dt;
             self.last_dir = dir;
         }
@@ -219,6 +226,8 @@ impl MainState {
         self.spawn_timer = 0.0;
         self.time_elapsed = 0.0;
         self.game_over = false;
+        self.boost_timer = 0.0;
+        self.boost_cooldown = 0.0;
     }
 
     fn draw_instructions_screen(
@@ -361,6 +370,18 @@ impl EventHandler for MainState {
                 self.shake_timer = 0.0;
             }
         }
+        if self.boost_timer > 0.0 {
+            self.boost_timer -= dt;
+            if self.boost_timer < 0.0 {
+                self.boost_timer = 0.0;
+            }
+        }
+        if self.boost_cooldown > 0.0 {
+            self.boost_cooldown -= dt;
+            if self.boost_cooldown < 0.0 {
+                self.boost_cooldown = 0.0;
+            }
+        }
         self.handle_player_movement(ctx, dt);
         self.handle_crab_catching(ctx);
         // End game if all crabs are caught
@@ -445,6 +466,12 @@ impl EventHandler for MainState {
                     self.reset_game();
                     return Ok(());
                 }
+            }
+        }
+        if let Some(KeyCode::Space) = input.keycode {
+            if self.boost_cooldown <= 0.0 {
+                self.boost_timer = 0.18;
+                self.boost_cooldown = 0.08;
             }
         }
         if let Some(KeyCode::Escape) = input.keycode {
