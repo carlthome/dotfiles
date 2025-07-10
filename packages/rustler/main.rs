@@ -22,8 +22,10 @@ const NUM_CRABS: usize = 5;
 struct Crab {
     pos: Vec2,
     vel: Vec2,  // Velocity direction
-    speed: f32, // Speed
+    speed: f32, // Base speed
     caught: bool,
+    size: f32,       // Individual crab size
+    spawn_time: f32, // Time since this crab spawned
 }
 
 struct MainState {
@@ -38,6 +40,7 @@ struct MainState {
     show_instructions: bool, // Show instructions screen
     last_dir: Vec2,          // Last movement direction for flashlight
     shake_timer: f32,        // Timer for crab shake effect
+    time_since_catch: f32,   // Time since last crab was caught
 }
 
 impl MainState {
@@ -59,11 +62,14 @@ impl MainState {
                 let vel_angle = rng.random_range(0.0..std::f32::consts::TAU);
                 let vel = Vec2::new(vel_angle.cos(), vel_angle.sin());
                 let speed = rng.random_range(30.0..70.0);
+                let size = rng.random_range(CRAB_SIZE * 0.8..=CRAB_SIZE * 1.3);
                 Crab {
                     pos,
                     vel,
                     speed,
                     caught: false,
+                    size,
+                    spawn_time: 0.0,
                 }
             })
             .collect();
@@ -81,6 +87,7 @@ impl MainState {
             show_instructions: true,
             last_dir: Vec2::new(0.0, -1.0), // Default facing up
             shake_timer: 0.0,
+            time_since_catch: 0.0,
         })
     }
 }
@@ -95,6 +102,7 @@ impl EventHandler for MainState {
         }
         let dt = ctx.time.delta().as_secs_f32();
         self.time_elapsed += dt;
+        self.time_since_catch += dt;
         if self.shake_timer > 0.0 {
             self.shake_timer -= dt;
             if self.shake_timer < 0.0 {
@@ -134,8 +142,9 @@ impl EventHandler for MainState {
             {
                 crab.caught = true;
                 self.score += 1;
-                self.shake_timer = 0.4; // Start shake effect for all crabs
-                                        // Play success.ogg most of the time, success2.ogg sometimes
+                self.shake_timer = 0.4;
+                self.time_since_catch = 0.0; // Reset catch timer
+                                             // Play success.ogg most of the time, success2.ogg sometimes
                 let mut rng = rand::rng();
                 if rng.random_range(0..10) == 0 {
                     let _ = self.success_sound2.play_detached(ctx);
@@ -154,16 +163,18 @@ impl EventHandler for MainState {
         // Move crabs
         for crab in &mut self.crabs {
             if !crab.caught {
+                crab.spawn_time += dt;
                 // Calculate distance to player
                 let distance = self.player_pos.distance(crab.pos);
                 // If player is within 150 pixels, increase crab speed up to 2x
                 let mut speed_multiplier = 1.0;
                 if distance < 150.0 {
-                    // Linearly scale multiplier from 1.0 (far) to 2.0 (very close)
                     speed_multiplier = 2.0 - (distance / 150.0);
                     speed_multiplier = speed_multiplier.clamp(1.0, 2.0);
                 }
-                crab.pos += crab.vel * crab.speed * speed_multiplier * dt;
+                // Add speed boost for age
+                let age_boost = 1.0 + (crab.spawn_time / 10.0).min(1.5); // up to 2.5x
+                crab.pos += crab.vel * crab.speed * speed_multiplier * age_boost * dt;
                 // Bounce off walls
                 if crab.pos.x < 0.0 || crab.pos.x > 1280.0 - CRAB_SIZE {
                     crab.vel.x = -crab.vel.x;
@@ -181,7 +192,8 @@ impl EventHandler for MainState {
             let mut rng = rand::rng();
             let angle = rng.random_range(0.0..std::f32::consts::TAU);
             let vel = Vec2::new(angle.cos(), angle.sin());
-            let speed = rng.random_range(30.0..70.0);
+            let speed = rng.random_range(45.0..70.0);
+            let size = rng.random_range(CRAB_SIZE * 0.8..=CRAB_SIZE * 1.3);
             let new_crab = Crab {
                 pos: Vec2::new(
                     rng.random_range(50.0..1230.0),
@@ -190,6 +202,8 @@ impl EventHandler for MainState {
                 vel,
                 speed,
                 caught: false,
+                size,
+                spawn_time: 0.0,
             };
             self.crabs.push(new_crab);
             self.spawn_timer = 0.0;
@@ -222,6 +236,7 @@ impl EventHandler for MainState {
             self.last_dir,
             virtual_width,
             virtual_height,
+            self.time_since_catch, // pass to flashlight
         )?; // Pass virtual_width and virtual_height
 
         if self.show_instructions {
@@ -346,6 +361,8 @@ impl EventHandler for MainState {
                                 vel,
                                 speed,
                                 caught: false,
+                                size: rng.random_range(CRAB_SIZE * 0.8..=CRAB_SIZE * 1.3),
+                                spawn_time: 0.0,
                             }
                         })
                         .collect();

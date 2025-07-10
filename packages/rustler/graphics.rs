@@ -35,6 +35,7 @@ pub fn draw_rustler(ctx: &mut Context, canvas: &mut Canvas, pos: Vec2) -> ggez::
         Color::from_rgb(160, 82, 45),
     )?;
     canvas.draw(&head, DrawParam::default().dest(pos));
+
     // Body
     let body = Mesh::new_rectangle(
         ctx,
@@ -48,6 +49,7 @@ pub fn draw_rustler(ctx: &mut Context, canvas: &mut Canvas, pos: Vec2) -> ggez::
         Color::from_rgb(139, 69, 19),
     )?;
     canvas.draw(&body, DrawParam::default().dest(pos));
+
     // Hat brim
     let hat_brim = Mesh::new_rectangle(
         ctx,
@@ -61,6 +63,7 @@ pub fn draw_rustler(ctx: &mut Context, canvas: &mut Canvas, pos: Vec2) -> ggez::
         Color::from_rgb(80, 40, 20),
     )?;
     canvas.draw(&hat_brim, DrawParam::default().dest(pos));
+
     // Hat top
     let hat_top = Mesh::new_rectangle(
         ctx,
@@ -74,48 +77,61 @@ pub fn draw_rustler(ctx: &mut Context, canvas: &mut Canvas, pos: Vec2) -> ggez::
         Color::from_rgb(80, 40, 20),
     )?;
     canvas.draw(&hat_top, DrawParam::default().dest(pos));
+
     Ok(())
 }
 
 pub fn draw_crab(ctx: &mut Context, canvas: &mut Canvas, crab: &Crab) -> ggez::GameResult {
-    // Animate legs: wiggle based on time and crab position
-    let time = ctx.time.time_since_start().as_secs_f32();
-    let phase = (crab.pos.x + crab.pos.y) * 0.05; // unique phase per crab
-                                                  // Crab body
+    // Grow size with age
+    let grow_t = (crab.spawn_time / 10.0).min(1.0);
+    let size = crab.size * (0.6 + 0.4 * grow_t);
+
+    // Color: more red as crab ages
+    let t = (crab.spawn_time / 10.0).min(1.0);
+    let r = (255.0 * (0.6 + 0.4 * t)).min(255.0) as u8;
+    let g = (100.0 * (1.0 - t)) as u8;
+    let b = (100.0 * (1.0 - t)) as u8;
+    let crab_color = Color::from_rgb(r, g, b);
+
+    // Crab body
     let crab_body = Mesh::new_circle(
         ctx,
         DrawMode::fill(),
         [0.0, 0.0],
-        CRAB_SIZE / 2.0,
+        size / 2.0,
         0.5,
-        Color::from_rgb(255, 100, 100),
+        crab_color,
     )?;
+
     // Crab legs (6 lines)
     let mut leg_meshes = Vec::new();
-    let leg_len = CRAB_SIZE * 0.7;
+    let leg_len = size * 0.7;
     let leg_color = Color::from_rgb(200, 50, 50);
     for i in 0..6 {
         let base_angle = std::f32::consts::PI * (0.25 + i as f32 / 6.0);
-        // Animate leg angle with a sine wave
-        let wiggle = (time * 4.0 + phase + i as f32).sin() * 0.18;
+        let time = ctx.time.time_since_start().as_secs_f32();
+        let phase = (crab.pos.x + crab.pos.y) * 0.05;
+        let wiggle_speed = 2.0 + crab.speed * 0.08; // scale with crab speed
+        let wiggle = (time * wiggle_speed + phase + i as f32).sin() * 0.18;
         let angle = base_angle + wiggle;
-        let x1 = (CRAB_SIZE / 2.0) * angle.cos();
-        let y1 = (CRAB_SIZE / 2.0) * angle.sin();
-        let x2 = (CRAB_SIZE / 2.0 + leg_len) * angle.cos();
-        let y2 = (CRAB_SIZE / 2.0 + leg_len) * angle.sin();
+        let x1 = (size / 2.0) * angle.cos();
+        let y1 = (size / 2.0) * angle.sin();
+        let x2 = (size / 2.0 + leg_len) * angle.cos();
+        let y2 = (size / 2.0 + leg_len) * angle.sin();
         let leg = Mesh::new_line(ctx, &[[x1, y1], [x2, y2]], 2.0, leg_color)?;
         leg_meshes.push(leg);
     }
+
     // Crab claws (small circles)
-    let claw_offset = CRAB_SIZE * 0.7;
-    let claw_radius = CRAB_SIZE * 0.18;
+    let claw_offset = size * 0.7;
+    let claw_radius = size * 0.18;
     let left_claw = Mesh::new_circle(
         ctx,
         DrawMode::fill(),
         [-(claw_offset), -(claw_offset * 0.3)],
         claw_radius,
         0.5,
-        Color::from_rgb(255, 120, 120),
+        crab_color,
     )?;
     let right_claw = Mesh::new_circle(
         ctx,
@@ -123,8 +139,9 @@ pub fn draw_crab(ctx: &mut Context, canvas: &mut Canvas, crab: &Crab) -> ggez::G
         [claw_offset, -(claw_offset * 0.3)],
         claw_radius,
         0.5,
-        Color::from_rgb(255, 120, 120),
+        crab_color,
     )?;
+
     // Draw all parts at crab.pos
     canvas.draw(&crab_body, DrawParam::default().dest(crab.pos));
     for leg in &leg_meshes {
@@ -132,6 +149,7 @@ pub fn draw_crab(ctx: &mut Context, canvas: &mut Canvas, crab: &Crab) -> ggez::G
     }
     canvas.draw(&left_claw, DrawParam::default().dest(crab.pos));
     canvas.draw(&right_claw, DrawParam::default().dest(crab.pos));
+
     Ok(())
 }
 
@@ -142,6 +160,7 @@ pub fn draw_flashlight(
     dir: Vec2,
     width: f32,
     height: f32,
+    time_since_catch: f32,
 ) -> ggez::GameResult {
     use ggez::glam::Vec2 as GVec2;
     use ggez::graphics::{DrawMode, DrawParam, Mesh};
@@ -153,6 +172,20 @@ pub fn draw_flashlight(
         Color::from_rgba(0, 0, 0, 200),
     )?;
     canvas.draw(&darkness, DrawParam::default());
+
+    // Flicker logic
+    let time = ctx.time.time_since_start().as_secs_f32();
+    // Flicker frequency and strength increase with time_since_catch
+    let base_freq = 4.0;
+    let max_freq = 18.0;
+    let freq = base_freq + (max_freq - base_freq) * (time_since_catch / 12.0).min(1.0);
+    let base_alpha = 24.0;
+    let max_alpha = 90.0;
+    let flicker_strength = (time_since_catch / 12.0).min(1.0);
+    let flicker = (time * freq + (player_pos.x + player_pos.y) * 0.01)
+        .sin()
+        .abs();
+    let alpha = base_alpha + (max_alpha - base_alpha) * flicker * flicker_strength;
 
     // Draw a cone-shaped flashlight (sector)
     let flashlight_len = 220.0;
@@ -174,7 +207,7 @@ pub fn draw_flashlight(
         ctx,
         DrawMode::fill(),
         &points,
-        Color::from_rgba(255, 255, 200, 24), // slightly more visible
+        Color::from_rgba(255, 255, 200, alpha as u8),
     )?;
     canvas.draw(&flashlight, DrawParam::default());
     Ok(())
