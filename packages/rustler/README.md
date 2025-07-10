@@ -20,8 +20,11 @@ nix run github:carlthome/dotfiles#rustler
 ## Develop
 
 ```sh
-# Enter a development shell with Rust and ggez dependencies.
-nix develop .#rustler
+# Enter a development shell.
+nix develop github:carlthome/dotfiles#rustler
+
+# Write package source to working directory.
+unpackPhase
 
 # Build the project.
 cargo build
