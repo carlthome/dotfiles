@@ -1,25 +1,31 @@
 #!/bin/bash
-set -ex
+set -e
 
-user=carlthome
-repos=$(gh repo list --source --json name --jq '.[].name')
+user=${1:-carlthome}
+repos=$(gh repo list "$user" --source --json name --jq '.[].name')
+
+# Truncate repos
+# Uncomment the line below to limit to a single repo for testing.
+# repos=$(echo "$repos" | head -n 3)
 
 # Collect build status for each workflow in each repo.
-touch body.txt
+touch repos.json
+echo '{"repos": [' >repos.json
 for repo in $repos; do
 	echo "Listing workflows for $repo"
 
-	# Add a header for the repo.
-	echo "<h2>$repo</h2>" >>body.txt
-
 	# List all workflows in the repo.
-	workflows=$(gh workflow list --repo "$repo" --json path --jq '.[].path | sub("^.github/workflows/"; "")')
+	workflows=$(gh workflow list --repo "$user/$repo" --json path --jq '.[].path | sub("^.github/workflows/"; "")')
 
 	# Add a badge for each workflow.
+	echo "{\"repo\": \"$repo\", \"workflows\": [" >>repos.json
 	for workflow in $workflows; do
-		echo "<img src=\"https://github.com/$user/$repo/actions/workflows/$workflow/badge.svg\" />" >>body.txt
+		echo "\"$workflow\", " >>repos.json
 	done
+	echo "]}," >>repos.json
 done
+echo "]}" >>repos.json
 
-# Replace the placeholder with the actual content.
-sed -i 's|{{body}}|'"$(cat body.txt)"'|' template.html >index.html
+# Render the HTML template with the JSON data.
+JSON_DATA=$(tr -d '\n' <repos.json)
+sed "s|{{TEMPLATE_TAG}}|$JSON_DATA|g" "${TEMPLATE_PATH}" >index.html

@@ -1,14 +1,17 @@
-{
-  pkgs,
-  gh,
-  gnused,
-  ...
-}:
+{ pkgs, ... }:
+
+let
+  template = pkgs.writeText "template.html" (builtins.readFile ./template.html);
+  script = builtins.readFile ./script.sh;
+in
 pkgs.writeShellApplication {
   name = "github-actions-dashboard-creator";
   runtimeInputs = [
-    gh
-    gnused
+    pkgs.gh
+    pkgs.gnused
   ];
-  text = builtins.readFile ./script.sh;
+  text = ''
+    export TEMPLATE_PATH=${template}
+    ${script}
+  '';
 }
