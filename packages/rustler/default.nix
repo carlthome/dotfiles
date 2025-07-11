@@ -11,7 +11,6 @@ let
       ]
     else
       [
-        pkgs.pkg-config
         pkgs.glib
         pkgs.gtk3
         pkgs.cairo
@@ -45,6 +44,7 @@ pkgs.rustPlatform.buildRustPackage {
   cargoLock = {
     lockFile = ./Cargo.lock;
   };
+  nativeBuildInputs = [ pkgs.pkg-config ];
   buildInputs = platformDeps;
   postInstall = ''
     cp -r resources $out/bin
