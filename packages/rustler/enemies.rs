@@ -28,10 +28,10 @@ impl CrabType {
     }
     pub fn scale_range(&self) -> std::ops::RangeInclusive<f32> {
         match self {
-            CrabType::Normal => 28.0..=48.0,
-            CrabType::Fast => 24.0..=36.0,
-            CrabType::Big => 50.0..=80.0,
-            CrabType::Sneaky => 30.0..=40.0,
+            CrabType::Normal => 0.28..=0.48,
+            CrabType::Fast => 0.24..=0.36,
+            CrabType::Big => 0.50..=0.80,
+            CrabType::Sneaky => 0.30..=0.40,
         }
     }
 }
