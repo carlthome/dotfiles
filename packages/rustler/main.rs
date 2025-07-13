@@ -4,46 +4,58 @@ use ggez::audio::{SoundSource, Source};
 use ggez::glam::Vec2;
 use ggez::graphics::{Canvas, Color, DrawParam, Rect, Text};
 use ggez::{
+    Context, ContextBuilder, GameResult,
     conf::WindowMode,
     event::{self, EventHandler},
     graphics::Mesh,
-    input::keyboard::{KeyCode, KeyInput},
-    Context, ContextBuilder, GameResult,
+    input::keyboard::KeyInput,
 };
 use std::{env, path};
 
+mod controls;
+mod enemies;
 mod graphics;
+mod spawnings;
+use crate::controls::{handle_key_down_event, handle_player_movement};
+use crate::enemies::{CrabType, EnemyCrab};
 use crate::graphics::{draw_crab, draw_flashlight, draw_grass, draw_rustler};
+use crate::spawnings::{SpawnPattern, spawn_enemies};
 
 const PLAYER_SIZE: f32 = 48.0;
 const CRAB_SIZE: f32 = 36.0;
 const SPEED: f32 = 200.0;
 const NUM_CRABS: usize = 5;
 
-struct Crab {
-    pos: Vec2,
-    vel: Vec2,  // Velocity direction
-    speed: f32, // Base speed
-    caught: bool,
-    size: f32,       // Individual crab size
-    spawn_time: f32, // Time since this crab spawned
+struct LevelPattern {
+    pattern: SpawnPattern,
+    count: usize,
+    duration: f32,
+}
+
+struct Level {
+    patterns: Vec<LevelPattern>,
 }
 
 struct MainState {
-    player_pos: Vec2,
-    crabs: Vec<Crab>,
-    score: usize,
-    spawn_timer: f32,  // Timer for spawning new crabs
-    time_elapsed: f32, // Time since game start
-    game_over: bool,   // Game over flag
-    success_sound: Source,
-    success_sound2: Source,
+    player_pos: Vec2,        // Player position
+    crabs: Vec<EnemyCrab>,   // List of crabs in the game
+    score: usize,            // Current score
+    spawn_timer: f32,        // Timer for spawning new crabs
+    time_elapsed: f32,       // Time since game start
+    game_over: bool,         // Game over flag
+    success_sound: Source,   // Sound effect for catching crabs
+    success_sound2: Source,  // Sound effects for catching crabs
     show_instructions: bool, // Show instructions screen
     last_dir: Vec2,          // Last movement direction for flashlight
     shake_timer: f32,        // Timer for crab shake effect
     time_since_catch: f32,   // Time since last crab was caught
     boost_timer: f32,        // Timer for speed boost
     boost_cooldown: f32,     // Cooldown to prevent holding space
+    levels: Vec<Level>,      // List of levels with patterns
+    current_level: usize,    // Current level index
+    current_pattern: usize,  // Current pattern index within the level
+    pattern_timer: f32,      // Timer for current pattern duration
+    debug_mode: bool,        // Debug mode flag
 }
 
 impl MainState {
@@ -55,6 +67,7 @@ impl MainState {
             virtual_height / 2.0 - PLAYER_SIZE / 2.0,
         );
         let mut rng = rand::rng();
+
         // Place crabs in a circle around the center
         let center = Vec2::new(virtual_width / 2.0, virtual_height / 2.0);
         let radius = 220.0;
@@ -64,20 +77,67 @@ impl MainState {
                 let pos = center + Vec2::new(angle.cos(), angle.sin()) * radius;
                 let vel_angle = rng.random_range(0.0..std::f32::consts::TAU);
                 let vel = Vec2::new(vel_angle.cos(), vel_angle.sin());
-                let speed = rng.random_range(30.0..70.0);
-                let size = rng.random_range(CRAB_SIZE * 0.8..=CRAB_SIZE * 1.3);
-                Crab {
+                let crab_type = CrabType::random(&mut rng);
+                let speed = rng.random_range(crab_type.speed_range());
+                let scale = rng.random_range(crab_type.scale_range());
+                EnemyCrab {
                     pos,
                     vel,
                     speed,
                     caught: false,
-                    size,
+                    scale,
                     spawn_time: 0.0,
+                    crab_type,
                 }
             })
             .collect();
         let success_sound = Source::new(ctx, "/success.ogg")?;
         let success_sound2 = Source::new(ctx, "/success2.ogg")?;
+        let levels = vec![
+            Level {
+                patterns: vec![
+                    LevelPattern {
+                        pattern: SpawnPattern::UniformRandom,
+                        count: 5,
+                        duration: 8.0,
+                    },
+                    LevelPattern {
+                        pattern: SpawnPattern::SineWave,
+                        count: 7,
+                        duration: 10.0,
+                    },
+                    LevelPattern {
+                        pattern: SpawnPattern::Circle,
+                        count: 8,
+                        duration: 12.0,
+                    },
+                    LevelPattern {
+                        pattern: SpawnPattern::Cluster,
+                        count: 10,
+                        duration: 10.0,
+                    },
+                ],
+            },
+            Level {
+                patterns: vec![
+                    LevelPattern {
+                        pattern: SpawnPattern::Cluster,
+                        count: 12,
+                        duration: 10.0,
+                    },
+                    LevelPattern {
+                        pattern: SpawnPattern::SineWave,
+                        count: 10,
+                        duration: 12.0,
+                    },
+                    LevelPattern {
+                        pattern: SpawnPattern::Circle,
+                        count: 14,
+                        duration: 14.0,
+                    },
+                ],
+            },
+        ];
         Ok(MainState {
             player_pos,
             crabs,
@@ -93,41 +153,19 @@ impl MainState {
             time_since_catch: 0.0,
             boost_timer: 0.0,
             boost_cooldown: 0.0,
+            levels,
+            current_level: 0,
+            current_pattern: 0,
+            pattern_timer: 0.0,
+            debug_mode: false,
         })
-    }
-
-    fn handle_player_movement(&mut self, ctx: &mut Context, dt: f32) {
-        let mut dir = Vec2::ZERO;
-        if ctx.keyboard.is_key_pressed(KeyCode::Up) {
-            dir.y -= 1.0;
-        }
-        if ctx.keyboard.is_key_pressed(KeyCode::Down) {
-            dir.y += 1.0;
-        }
-        if ctx.keyboard.is_key_pressed(KeyCode::Left) {
-            dir.x -= 1.0;
-        }
-        if ctx.keyboard.is_key_pressed(KeyCode::Right) {
-            dir.x += 1.0;
-        }
-        let mut speed = SPEED * (1.0 + self.score as f32 * 0.1);
-        if self.boost_timer > 0.0 {
-            speed *= 2.1;
-        }
-        if dir != Vec2::ZERO {
-            dir = dir.normalize();
-            self.player_pos += dir * speed * dt;
-            self.last_dir = dir;
-        }
-        self.player_pos.x = self.player_pos.x.clamp(0.0, 1280.0 - PLAYER_SIZE);
-        self.player_pos.y = self.player_pos.y.clamp(0.0, 960.0 - PLAYER_SIZE);
     }
 
     fn handle_crab_catching(&mut self, ctx: &mut Context) {
         for crab in &mut self.crabs {
             if !crab.caught
-                && (self.player_pos.x - crab.pos.x).abs() < (PLAYER_SIZE + CRAB_SIZE) / 2.0
-                && (self.player_pos.y - crab.pos.y).abs() < (PLAYER_SIZE + CRAB_SIZE) / 2.0
+                && (self.player_pos.x - crab.pos.x).abs() < (PLAYER_SIZE + crab.scale) / 2.0
+                && (self.player_pos.y - crab.pos.y).abs() < (PLAYER_SIZE + crab.scale) / 2.0
             {
                 crab.caught = true;
                 self.score += 1;
@@ -147,25 +185,29 @@ impl MainState {
         for crab in &mut self.crabs {
             if !crab.caught {
                 crab.spawn_time += dt;
+
                 // Calculate distance to player
                 let distance = self.player_pos.distance(crab.pos);
+
                 // If player is within 150 pixels, increase crab speed up to 2x
                 let mut speed_multiplier = 1.0;
                 if distance < 150.0 {
                     speed_multiplier = 2.0 - (distance / 150.0);
                     speed_multiplier = speed_multiplier.clamp(1.0, 2.0);
                 }
+
                 // Add speed boost for age
                 let age_boost = 1.0 + (crab.spawn_time / 10.0).min(1.5); // up to 2.5x
                 crab.pos += crab.vel * crab.speed * speed_multiplier * age_boost * dt;
+
                 // Bounce off walls
-                if crab.pos.x < 0.0 || crab.pos.x > 1280.0 - CRAB_SIZE {
+                if crab.pos.x < 0.0 || crab.pos.x > 1280.0 - crab.scale {
                     crab.vel.x = -crab.vel.x;
-                    crab.pos.x = crab.pos.x.clamp(0.0, 1280.0 - CRAB_SIZE);
+                    crab.pos.x = crab.pos.x.clamp(0.0, 1280.0 - crab.scale);
                 }
-                if crab.pos.y < 0.0 || crab.pos.y > 960.0 - CRAB_SIZE {
+                if crab.pos.y < 0.0 || crab.pos.y > 960.0 - crab.scale {
                     crab.vel.y = -crab.vel.y;
-                    crab.pos.y = crab.pos.y.clamp(0.0, 960.0 - CRAB_SIZE);
+                    crab.pos.y = crab.pos.y.clamp(0.0, 960.0 - crab.scale);
                 }
             }
         }
@@ -176,9 +218,10 @@ impl MainState {
             let mut rng = rand::rng();
             let angle = rng.random_range(0.0..std::f32::consts::TAU);
             let vel = Vec2::new(angle.cos(), angle.sin());
-            let speed = rng.random_range(45.0..70.0);
-            let size = rng.random_range(CRAB_SIZE * 0.8..=CRAB_SIZE * 1.3);
-            let new_crab = Crab {
+            let crab_type = CrabType::random(&mut rng);
+            let speed = rng.random_range(crab_type.speed_range());
+            let scale = rng.random_range(crab_type.scale_range());
+            let new_crab = EnemyCrab {
                 pos: Vec2::new(
                     rng.random_range(50.0..1230.0),
                     rng.random_range(50.0..910.0),
@@ -186,12 +229,37 @@ impl MainState {
                 vel,
                 speed,
                 caught: false,
-                size,
+                scale,
                 spawn_time: 0.0,
+                crab_type,
             };
             self.crabs.push(new_crab);
             self.spawn_timer = 0.0;
         }
+    }
+
+    fn start_current_pattern(&mut self) {
+        let (w, h) = (1280.0, 960.0);
+        let mut rng = rand::rng();
+        let level = &self.levels[self.current_level];
+        let pat = &level.patterns[self.current_pattern];
+        self.crabs.extend(spawn_enemies(
+            pat.pattern.clone(),
+            pat.count,
+            (w, h),
+            &mut rng,
+        ));
+        self.pattern_timer = pat.duration;
+    }
+
+    fn advance_pattern(&mut self) {
+        self.current_pattern += 1;
+        let level = &self.levels[self.current_level];
+        if self.current_pattern >= level.patterns.len() {
+            self.current_level = (self.current_level + 1) % self.levels.len();
+            self.current_pattern = 0;
+        }
+        self.start_current_pattern();
     }
 
     fn reset_game(&mut self) {
@@ -210,14 +278,17 @@ impl MainState {
                 let pos = center + Vec2::new(angle.cos(), angle.sin()) * radius;
                 let vel_angle = rng.random_range(0.0..std::f32::consts::TAU);
                 let vel = Vec2::new(vel_angle.cos(), vel_angle.sin());
-                let speed = rng.random_range(30.0..70.0);
-                Crab {
+                let crab_type = CrabType::random(&mut rng);
+                let speed = rng.random_range(crab_type.speed_range());
+                let scale = rng.random_range(crab_type.scale_range());
+                EnemyCrab {
                     pos,
                     vel,
                     speed,
                     caught: false,
-                    size: rng.random_range(CRAB_SIZE * 0.8..=CRAB_SIZE * 1.3),
+                    scale,
                     spawn_time: 0.0,
+                    crab_type,
                 }
             })
             .collect();
@@ -228,6 +299,9 @@ impl MainState {
         self.game_over = false;
         self.boost_timer = 0.0;
         self.boost_cooldown = 0.0;
+        self.current_level = 0;
+        self.current_pattern = 0;
+        self.start_current_pattern();
     }
 
     fn draw_instructions_screen(
@@ -322,7 +396,7 @@ impl MainState {
                     pos.y += (t * 1.3).cos() * shake_strength
                         + rng.random_range(-shake_strength..=shake_strength) * 0.3;
                 }
-                draw_crab(ctx, virtual_canvas, &Crab { pos, ..*crab })?;
+                draw_crab(ctx, virtual_canvas, crab)?;
             }
         }
         Ok(())
@@ -356,10 +430,7 @@ impl MainState {
 
 impl EventHandler for MainState {
     fn update(&mut self, ctx: &mut Context) -> GameResult {
-        if self.show_instructions {
-            return Ok(());
-        }
-        if self.game_over {
+        if self.show_instructions || self.game_over {
             return Ok(());
         }
         let dt = ctx.time.delta().as_secs_f32();
@@ -383,16 +454,13 @@ impl EventHandler for MainState {
                 self.boost_cooldown = 0.0;
             }
         }
-        self.handle_player_movement(ctx, dt);
+        handle_player_movement(self, ctx, dt, SPEED);
         self.handle_crab_catching(ctx);
-        // End game if all crabs are caught
-        if self.crabs.iter().all(|c| c.caught) {
-            self.game_over = true;
-            return Ok(());
-        }
         self.update_crabs(dt);
-        self.spawn_timer += dt;
-        self.maybe_spawn_crab();
+        self.pattern_timer -= dt;
+        if self.crabs.iter().all(|c| c.caught) || self.pattern_timer <= 0.0 {
+            self.advance_pattern();
+        }
         Ok(())
     }
 
@@ -444,6 +512,27 @@ impl EventHandler for MainState {
                     .dest(Vec2::new(10.0, 10.0))
                     .color(Color::from_rgb(255, 255, 00)),
             );
+            if self.debug_mode {
+                use crate::spawnings::SpawnPattern;
+                let level = &self.levels[self.current_level];
+                let pat = &level.patterns[self.current_pattern];
+                let pattern_name = match &pat.pattern {
+                    SpawnPattern::UniformRandom => "UniformRandom",
+                    SpawnPattern::SineWave => "SineWave",
+                    SpawnPattern::Circle => "Circle",
+                    SpawnPattern::Cluster => "Cluster",
+                };
+                let debug_text = Text::new(format!(
+                    "[DEBUG] Pattern: {} | Time left: {:.2}s",
+                    pattern_name, self.pattern_timer
+                ));
+                virtual_canvas.draw(
+                    &debug_text,
+                    DrawParam::default()
+                        .dest(Vec2::new(10.0, 40.0))
+                        .color(Color::from_rgb(255, 100, 100)),
+                );
+            }
         } else {
             self.draw_game_over_screen(ctx, &mut virtual_canvas)?;
         }
@@ -453,30 +542,8 @@ impl EventHandler for MainState {
     }
 
     fn key_down_event(&mut self, ctx: &mut Context, input: KeyInput, _repeat: bool) -> GameResult {
-        if self.show_instructions {
-            if let Some(key) = input.keycode {
-                if key == KeyCode::Space || key == KeyCode::Return {
-                    self.show_instructions = false;
-                }
-            }
+        if handle_key_down_event(self, ctx, input.keycode) {
             return Ok(());
-        }
-        if self.game_over {
-            if let Some(key) = input.keycode {
-                if key == KeyCode::Space || key == KeyCode::Return {
-                    self.reset_game();
-                    return Ok(());
-                }
-            }
-        }
-        if let Some(KeyCode::Space) = input.keycode {
-            if self.boost_cooldown <= 0.0 {
-                self.boost_timer = 0.18;
-                self.boost_cooldown = 0.08;
-            }
-        }
-        if let Some(KeyCode::Escape) = input.keycode {
-            ctx.request_quit();
         }
         Ok(())
     }

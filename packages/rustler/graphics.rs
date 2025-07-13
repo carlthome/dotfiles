@@ -1,8 +1,9 @@
+use ggez::Context;
 use ggez::glam::Vec2;
 use ggez::graphics::{self, Canvas, Color, DrawMode, DrawParam, Mesh, Rect};
-use ggez::Context;
 
-use crate::{Crab, CRAB_SIZE, PLAYER_SIZE};
+use crate::enemies::EnemyCrab;
+use crate::{CRAB_SIZE, PLAYER_SIZE};
 
 pub fn draw_grass(
     ctx: &mut Context,
@@ -12,9 +13,10 @@ pub fn draw_grass(
 ) -> ggez::GameResult {
     use rand::Rng;
     let mut rng = rand::rng();
+    let time = ctx.time.time_since_start().as_secs_f32();
 
-    // Draw a grassy background.
-    let grass_color = Color::from_rgba(0, 255, 0, 80);
+    // Draw a soft grassy background.
+    let grass_color = Color::from_rgba(80, 200, 120, 100);
     let bg = graphics::Mesh::new_rectangle(
         ctx,
         DrawMode::fill(),
@@ -23,20 +25,57 @@ pub fn draw_grass(
     )?;
     canvas.draw(&bg, DrawParam::default());
 
-    // Draw splots of grass.
-    for _ in 0..80 {
-        let x = rng.random_range(0.0..width);
-        let y = rng.random_range(0.0..height);
-        let w = rng.random_range(20.0..60.0);
-        let h = rng.random_range(8.0..20.0);
-        let color = Color::from_rgba(
-            rng.random_range(60..120),
+    // Parameters for grass blades
+    let num_blades = (width / 6.0) as usize; // density
+    let base_y = height - 8.0;
+    let blade_min_h = height * 0.12;
+    let blade_max_h = height * 0.28;
+    let blade_min_w = 1.2;
+    let blade_max_w = 2.8;
+    let wind_speed = 1.2;
+    let wind_strength = 16.0;
+
+    for i in 0..num_blades {
+        let x = i as f32 * (width / num_blades as f32) + rng.random_range(-2.0..2.0);
+        let blade_height = rng.random_range(blade_min_h..blade_max_h);
+        let blade_width = rng.random_range(blade_min_w..blade_max_w);
+        let base_color = [
+            rng.random_range(60..100),
             rng.random_range(160..220),
-            rng.random_range(60..120),
-            60,
-        );
-        let ellipse = graphics::Mesh::new_ellipse(ctx, DrawMode::fill(), [x, y], w, h, 0.5, color)?;
-        canvas.draw(&ellipse, DrawParam::default());
+            rng.random_range(60..100),
+        ];
+        let tip_color = [
+            rng.random_range(120..180),
+            rng.random_range(220..255),
+            rng.random_range(120..180),
+        ];
+        let t = i as f32 / num_blades as f32;
+        // Animate sway with wind
+        let phase = t * 6.0 + rng.random_range(0.0..2.0);
+        let sway = (time * wind_speed + phase).sin() * wind_strength * (0.5 + t * 0.5);
+        let lean = sway + rng.random_range(-4.0..4.0);
+
+        // Control points for a simple bezier curve (simulate a blade)
+        let base = [x, base_y];
+        let ctrl = [x + lean * 0.4, base_y - blade_height * 0.5];
+        let tip = [x + lean, base_y - blade_height];
+
+        // Draw the blade as a thin, curved polygon (triangle strip)
+        let points = vec![
+            [base[0] - blade_width * 0.5, base[1]],
+            [ctrl[0] - blade_width * 0.2, ctrl[1]],
+            [tip[0], tip[1]],
+            [ctrl[0] + blade_width * 0.2, ctrl[1]],
+            [base[0] + blade_width * 0.5, base[1]],
+        ];
+        let color = Color::from_rgba(base_color[0], base_color[1], base_color[2], 180);
+        let tip_col = Color::from_rgba(tip_color[0], tip_color[1], tip_color[2], 210);
+        let mesh = Mesh::new_polygon(ctx, DrawMode::fill(), &points, color)?;
+        canvas.draw(&mesh, DrawParam::default());
+
+        // Optionally, draw a highlight along the blade for anime shine
+        let highlight = Mesh::new_line(ctx, &[[base[0], base[1]], [tip[0], tip[1]]], 0.7, tip_col)?;
+        canvas.draw(&highlight, DrawParam::default());
     }
     Ok(())
 }
@@ -98,17 +137,24 @@ pub fn draw_rustler(ctx: &mut Context, canvas: &mut Canvas, pos: Vec2) -> ggez::
     Ok(())
 }
 
-pub fn draw_crab(ctx: &mut Context, canvas: &mut Canvas, crab: &Crab) -> ggez::GameResult {
+pub fn draw_crab(ctx: &mut Context, canvas: &mut Canvas, crab: &EnemyCrab) -> ggez::GameResult {
     // Grow size with age
     let grow_t = (crab.spawn_time / 10.0).min(1.0);
-    let size = crab.size * (0.6 + 0.4 * grow_t);
+    let size = CRAB_SIZE * (0.6 + 0.4 * grow_t) * crab.scale;
 
-    // Color: more red as crab ages
+    // Color: more red as crab ages, and different color for type
     let t = (crab.spawn_time / 10.0).min(1.0);
-    let r = (255.0 * (0.6 + 0.4 * t)).min(255.0) as u8;
-    let g = (100.0 * (1.0 - t)) as u8;
-    let b = (100.0 * (1.0 - t)) as u8;
-    let crab_color = Color::from_rgb(r, g, b);
+    let (r, g, b) = match crab.crab_type {
+        crate::enemies::CrabType::Normal => (
+            (255.0 * (0.6 + 0.4 * t)),
+            (100.0 * (1.0 - t)),
+            (100.0 * (1.0 - t)),
+        ),
+        crate::enemies::CrabType::Fast => (255.0, 180.0 * (1.0 - t), 40.0),
+        crate::enemies::CrabType::Big => (180.0, 60.0, 180.0 * (1.0 - t)),
+        crate::enemies::CrabType::Sneaky => (120.0, 220.0, 220.0),
+    };
+    let crab_color = Color::from_rgb(r as u8, g as u8, b as u8);
 
     // Crab body
     let crab_body = Mesh::new_circle(
@@ -206,7 +252,6 @@ pub fn draw_flashlight(
     // Draw a cone-shaped flashlight (sector) with bloom/gradient
     let flashlight_len = 220.0;
     let spread = 0.7;
-    let segments = 32;
     let center = GVec2::new(
         player_pos.x + PLAYER_SIZE / 2.0,
         player_pos.y + PLAYER_SIZE / 2.0,
