@@ -37,6 +37,7 @@ pkgs.rustPlatform.buildRustPackage {
       freetype
       fontconfig
       zlib
+      udev
     ];
   postInstall = ''
     cp -r resources $out/bin
