@@ -3,10 +3,10 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[dockercompose]": {
-    "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+    "editor.defaultFormatter": "ms-azuretools.vscode-containers"
   },
   "[dockerfile]": {
-    "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+    "editor.defaultFormatter": "ms-azuretools.vscode-containers"
   },
   "[go]": {
     "editor.defaultFormatter": "golang.go"
@@ -119,11 +119,11 @@
   "notebook.formatOnSave.enabled": true,
   "notebook.globalToolbar": false,
   "notebook.output.scrolling": false,
-  "notebook.inlineValues": true,
+  "notebook.inlineValues": "on",
   "python.analysis.autoFormatStrings": true,
   "python.analysis.autoImportCompletions": false,
   "python.analysis.importFormat": "relative",
-  "python.analysis.inlayHints.callArgumentNames": true,
+  "python.analysis.inlayHints.callArgumentNames": "partial",
   "python.analysis.inlayHints.functionReturnTypes": true,
   "python.analysis.inlayHints.pytestParameters": true,
   "python.analysis.inlayHints.variableTypes": false,
