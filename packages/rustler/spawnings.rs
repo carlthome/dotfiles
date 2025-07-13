@@ -8,6 +8,7 @@ pub enum SpawnPattern {
     SineWave,
     Circle,
     Cluster,
+    SingleRandom,
 }
 
 pub fn spawn_enemies(
@@ -99,6 +100,31 @@ pub fn spawn_enemies(
                     let crab_type = CrabType::random(rng);
                     let speed = rng.random_range(crab_type.speed_range());
                     let scale = rng.random_range(crab_type.scale_range());
+                    EnemyCrab {
+                        pos,
+                        vel,
+                        speed,
+                        caught: false,
+                        scale,
+                        spawn_time: 0.0,
+                        crab_type,
+                    }
+                })
+                .collect()
+        }
+        SpawnPattern::SingleRandom => {
+            let count = count.max(1);
+            (0..count)
+                .map(|_| {
+                    let angle = rng.random_range(0.0..std::f32::consts::TAU);
+                    let vel = Vec2::new(angle.cos(), angle.sin());
+                    let crab_type = CrabType::random(rng);
+                    let speed = rng.random_range(crab_type.speed_range());
+                    let scale = rng.random_range(crab_type.scale_range());
+                    let pos = Vec2::new(
+                        rng.random_range(50.0..(width - 50.0)),
+                        rng.random_range(50.0..(height - 50.0)),
+                    );
                     EnemyCrab {
                         pos,
                         vel,

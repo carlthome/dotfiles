@@ -213,31 +213,6 @@ impl MainState {
         }
     }
 
-    fn maybe_spawn_crab(&mut self) {
-        if self.spawn_timer > 2.0 {
-            let mut rng = rand::rng();
-            let angle = rng.random_range(0.0..std::f32::consts::TAU);
-            let vel = Vec2::new(angle.cos(), angle.sin());
-            let crab_type = CrabType::random(&mut rng);
-            let speed = rng.random_range(crab_type.speed_range());
-            let scale = rng.random_range(crab_type.scale_range());
-            let new_crab = EnemyCrab {
-                pos: Vec2::new(
-                    rng.random_range(50.0..1230.0),
-                    rng.random_range(50.0..910.0),
-                ),
-                vel,
-                speed,
-                caught: false,
-                scale,
-                spawn_time: 0.0,
-                crab_type,
-            };
-            self.crabs.push(new_crab);
-            self.spawn_timer = 0.0;
-        }
-    }
-
     fn start_current_pattern(&mut self) {
         let (w, h) = (1280.0, 960.0);
         let mut rng = rand::rng();
@@ -521,6 +496,7 @@ impl EventHandler for MainState {
                     SpawnPattern::SineWave => "SineWave",
                     SpawnPattern::Circle => "Circle",
                     SpawnPattern::Cluster => "Cluster",
+                    SpawnPattern::SingleRandom => "SingleRandom",
                 };
                 let debug_text = Text::new(format!(
                     "[DEBUG] Pattern: {} | Time left: {:.2}s",
