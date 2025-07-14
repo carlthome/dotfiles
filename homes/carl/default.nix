@@ -18,7 +18,7 @@ home-manager.lib.homeManagerConfiguration {
   };
   modules = [
     ./home.nix
-    nix-index-database.hmModules.nix-index
+    nix-index-database.homeModules.nix-index
     nixvim.homeManagerModules.nixvim
     self.homeModules.${system}
     self.homeModules.auto-audit
