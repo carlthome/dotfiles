@@ -4,11 +4,11 @@ use ggez::audio::{SoundSource, Source};
 use ggez::glam::Vec2;
 use ggez::graphics::{Canvas, Color, DrawParam, Rect, Text};
 use ggez::{
-    Context, ContextBuilder, GameResult,
     conf::WindowMode,
     event::{self, EventHandler},
     graphics::Mesh,
     input::keyboard::KeyInput,
+    Context, ContextBuilder, GameResult,
 };
 use std::{env, path};
 
@@ -19,7 +19,7 @@ mod spawnings;
 use crate::controls::{handle_key_down_event, handle_player_movement};
 use crate::enemies::{CrabType, EnemyCrab};
 use crate::graphics::{draw_crab, draw_flashlight, draw_grass, draw_rustler};
-use crate::spawnings::{SpawnPattern, spawn_enemies};
+use crate::spawnings::{spawn_enemies, SpawnPattern};
 
 const PLAYER_SIZE: f32 = 48.0;
 const CRAB_SIZE: f32 = 36.0;

@@ -1,6 +1,6 @@
-use ggez::Context;
 use ggez::glam::Vec2;
 use ggez::graphics::{self, Canvas, Color, DrawMode, DrawParam, Mesh, Rect};
+use ggez::Context;
 
 use crate::enemies::EnemyCrab;
 use crate::{CRAB_SIZE, PLAYER_SIZE};

@@ -1,13 +1,17 @@
 {
   nixpkgs,
   mirpkgs,
+  cargo2nix,
   system,
   ...
 }@inputs:
 let
   pkgs = import nixpkgs {
     inherit system;
-    overlays = [ mirpkgs.overlays.default ];
+    overlays = [
+      mirpkgs.overlays.default
+      cargo2nix.overlays.default
+    ];
   };
   names = builtins.attrNames (
     nixpkgs.lib.filterAttrs (n: v: v == "directory") (builtins.readDir ./.)
