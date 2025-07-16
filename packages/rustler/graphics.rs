@@ -1,6 +1,6 @@
+use ggez::Context;
 use ggez::glam::Vec2;
 use ggez::graphics::{self, Canvas, Color, DrawMode, DrawParam, Mesh, Rect};
-use ggez::Context;
 
 use crate::enemies::EnemyCrab;
 use crate::{CRAB_SIZE, PLAYER_SIZE};
@@ -10,6 +10,7 @@ pub fn draw_grass(
     canvas: &mut Canvas,
     width: f32,
     height: f32,
+    dark: bool,
 ) -> ggez::GameResult {
     use rand::Rng;
     let mut rng = rand::rng();
@@ -26,7 +27,7 @@ pub fn draw_grass(
     canvas.draw(&bg, DrawParam::default());
 
     // Parameters for grass blades
-    let num_blades = (width / 6.0) as usize; // density
+    let num_blades = (width / 6.0) as usize;
     let base_y = height - 8.0;
     let blade_min_h = height * 0.12;
     let blade_max_h = height * 0.28;
@@ -50,6 +51,7 @@ pub fn draw_grass(
             rng.random_range(120..180),
         ];
         let t = i as f32 / num_blades as f32;
+
         // Animate sway with wind
         let phase = t * 6.0 + rng.random_range(0.0..2.0);
         let sway = (time * wind_speed + phase).sin() * wind_strength * (0.5 + t * 0.5);
@@ -76,6 +78,17 @@ pub fn draw_grass(
         // Optionally, draw a highlight along the blade for anime shine
         let highlight = Mesh::new_line(ctx, &[[base[0], base[1]], [tip[0], tip[1]]], 0.7, tip_col)?;
         canvas.draw(&highlight, DrawParam::default());
+
+        // Draw darkness overlay if requested
+        if dark {
+            let darkness = graphics::Mesh::new_rectangle(
+                ctx,
+                DrawMode::fill(),
+                Rect::new(0.0, 0.0, width, height),
+                Color::from_rgba(0, 0, 0, 100),
+            )?;
+            canvas.draw(&darkness, DrawParam::default());
+        }
     }
     Ok(())
 }
@@ -227,14 +240,6 @@ pub fn draw_flashlight(
 ) -> ggez::GameResult {
     use ggez::glam::Vec2 as GVec2;
     use ggez::graphics::{DrawMode, DrawParam, Mesh};
-
-    let darkness = Mesh::new_rectangle(
-        ctx,
-        DrawMode::fill(),
-        Rect::new(0.0, 0.0, width, height),
-        Color::from_rgba(0, 0, 0, 230),
-    )?;
-    canvas.draw(&darkness, DrawParam::default());
 
     // Flicker logic
     let time = ctx.time.time_since_start().as_secs_f32();

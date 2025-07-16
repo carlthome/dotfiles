@@ -35,6 +35,7 @@ pub fn spawn_enemies(
                     scale,
                     spawn_time: 0.0,
                     crab_type,
+                    spooked_timer: 0.0,
                 }
             })
             .collect(),
@@ -59,6 +60,7 @@ pub fn spawn_enemies(
                         scale,
                         spawn_time: 0.0,
                         crab_type,
+                        spooked_timer: 0.0,
                     }
                 })
                 .collect()
@@ -82,6 +84,7 @@ pub fn spawn_enemies(
                         scale,
                         spawn_time: 0.0,
                         crab_type,
+                        spooked_timer: 0.0,
                     }
                 })
                 .collect()
@@ -108,14 +111,16 @@ pub fn spawn_enemies(
                         scale,
                         spawn_time: 0.0,
                         crab_type,
+                        spooked_timer: 0.0,
                     }
                 })
                 .collect()
         }
         SpawnPattern::SingleRandom => {
             let count = count.max(1);
+            let delay = 0.5;
             (0..count)
-                .map(|_| {
+                .map(|i| {
                     let angle = rng.random_range(0.0..std::f32::consts::TAU);
                     let vel = Vec2::new(angle.cos(), angle.sin());
                     let crab_type = CrabType::random(rng);
@@ -131,8 +136,9 @@ pub fn spawn_enemies(
                         speed,
                         caught: false,
                         scale,
-                        spawn_time: 0.0,
+                        spawn_time: i as f32 * delay,
                         crab_type,
+                        spooked_timer: 0.0,
                     }
                 })
                 .collect()

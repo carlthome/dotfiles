@@ -45,4 +45,5 @@ pub struct EnemyCrab {
     pub scale: f32,
     pub spawn_time: f32,
     pub crab_type: CrabType,
+    pub spooked_timer: f32,
 }
