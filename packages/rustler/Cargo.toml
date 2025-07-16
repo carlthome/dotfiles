@@ -9,7 +9,7 @@ rand = "0.9.1"
 
 [[bin]]
 name = "rustler"
-path = "main.rs"
+path = "src/main.rs"
 
 [package.metadata.ggez]
 resources = ["resources"]
