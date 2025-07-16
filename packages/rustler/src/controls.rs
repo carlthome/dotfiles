@@ -44,19 +44,15 @@ pub fn handle_player_movement(
         let dir = dir.normalize();
         state.player_vel = state.player_vel * friction + dir * acceleration * dt;
         state.last_dir = dir;
-        println!("Player input direction: {:?}", dir);
     } else {
         // Decelerate player if no input is given.
         state.player_vel *= friction;
-        println!("No input, applying friction: {:?}", state.player_vel);
     }
 
     // Apply speed limit to player velocity.
     if state.player_vel.length() > move_speed {
         state.player_vel = state.player_vel.normalize() * move_speed;
     }
-
-    println!("Player velocity: {:?}", state.player_vel);
 
     // Update player position with velocity and clamp to screen bounds.
     state.player_pos += state.player_vel * dt;
