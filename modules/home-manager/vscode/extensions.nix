@@ -55,12 +55,14 @@ let
   communityPackagedExtensions = with vscode-extensions.vscode-marketplace; [
     # TODO Enable once stable.
     #ms-python.vscode-python-envs
+    anthropic.claude-code
     donjayamanne.python-environment-manager
     eliverlara.andromeda
     liviuschera.noctis
     markthomasmiller.sorcerer
     miladfathy.dragan-color-theme
     ms-azuretools.vscode-containers
+    wgsl-analyzer.wgsl-analyzer
     # TODO This extension is too buggy.
     #stateful.runme
   ];
