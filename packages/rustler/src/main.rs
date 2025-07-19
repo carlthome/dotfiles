@@ -615,8 +615,8 @@ impl MainState {
         )?;
         canvas.draw(&bg_box, DrawParam::default());
         let text = Text::new(format!(
-            "Game Over!\nTime: {:.2} seconds\nPress Esc to quit.\n\nPress Space or Enter to try again.",
-            self.time_elapsed
+            "Game Over!\nTime: {:.2} seconds\nBest Time: {:.2} seconds\nPress Esc to quit.\n\nPress Space or Enter to try again.",
+            self.time_elapsed, self.best_time
         ));
         canvas.draw(
             &text,
