@@ -27,8 +27,7 @@ pub fn handle_player_movement(
 
     // Increase player speed and speed boost based on score.
     let base_speed = speed * (1.0 + state.score as f32 * 0.1);
-    let speed_boost_multiplier = 2.1 + state.score as f32 * 0.1;
-
+    let speed_boost_multiplier = 30.0 + state.score as f32 * 0.2;
     let mut move_speed = base_speed;
 
     // Apply speed boost if available.
@@ -37,11 +36,15 @@ pub fn handle_player_movement(
     }
 
     // Handle player movement direction and velocity.
-    let acceleration = 1000.0;
-    let friction = 0.8;
+    let acceleration = if state.boost_timer > 0.0 {
+        6000.0
+    } else {
+        1000.0
+    };
+    let friction = if state.boost_timer > 0.0 { 0.95 } else { 0.8 };
     if dir != Vec2::ZERO {
-        // Accelerate player in the input direction.
         let dir = dir.normalize();
+        // Apply strong acceleration when boosting, like a rocket
         state.player_vel = state.player_vel * friction + dir * acceleration * dt;
         state.last_dir = dir;
     } else {

@@ -126,6 +126,7 @@ pub fn spawn_enemies(
                     let crab_type = CrabType::random(rng);
                     let speed = rng.random_range(crab_type.speed_range());
                     let scale = rng.random_range(crab_type.scale_range());
+                    let (width, height) = area;
                     let pos = Vec2::new(
                         rng.random_range(50.0..(width - 50.0)),
                         rng.random_range(50.0..(height - 50.0)),

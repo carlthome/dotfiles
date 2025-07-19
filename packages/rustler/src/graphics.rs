@@ -1,95 +1,44 @@
+use crate::enemies::EnemyCrab;
+use crate::{CRAB_SIZE, Flashlight, PLAYER_SIZE};
+use crevice::std140::AsStd140;
 use ggez::Context;
 use ggez::glam::Vec2;
-use ggez::graphics::{self, Canvas, Color, DrawMode, DrawParam, Mesh, Rect};
+use ggez::graphics::{Canvas, Color, DrawMode, DrawParam, Mesh, Rect, Shader, ShaderParamsBuilder};
 
-use crate::enemies::EnemyCrab;
-use crate::{CRAB_SIZE, PLAYER_SIZE};
+#[derive(Copy, Clone, Debug, AsStd140)]
+pub struct ResolutionUniform {
+    pub width: f32,
+    pub height: f32,
+}
 
 pub fn draw_grass(
     ctx: &mut Context,
     canvas: &mut Canvas,
     width: f32,
     height: f32,
-    dark: bool,
+    shader: &Shader,
 ) -> ggez::GameResult {
-    use rand::Rng;
-    let mut rng = rand::rng();
-    let time = ctx.time.time_since_start().as_secs_f32();
-
-    // Draw a soft grassy background.
-    let grass_color = Color::from_rgba(80, 200, 120, 100);
-    let bg = graphics::Mesh::new_rectangle(
+    let solid_bg = Mesh::new_rectangle(
         ctx,
         DrawMode::fill(),
         Rect::new(0.0, 0.0, width, height),
-        grass_color,
+        Color::from_rgb(0, 100, 0),
     )?;
-    canvas.draw(&bg, DrawParam::default());
+    canvas.draw(&solid_bg, DrawParam::default());
 
-    // Parameters for grass blades
-    let num_blades = (width / 6.0) as usize;
-    let base_y = height - 8.0;
-    let blade_min_h = height * 0.12;
-    let blade_max_h = height * 0.28;
-    let blade_min_w = 1.2;
-    let blade_max_w = 2.8;
-    let wind_speed = 1.2;
-    let wind_strength = 16.0;
+    // Draw a full-screen quad using the grass shader.
+    let params = ShaderParamsBuilder::new(&ResolutionUniform { width, height }).build(ctx);
+    canvas.set_shader_params(&params);
+    canvas.set_shader(shader);
 
-    for i in 0..num_blades {
-        let x = i as f32 * (width / num_blades as f32) + rng.random_range(-2.0..2.0);
-        let blade_height = rng.random_range(blade_min_h..blade_max_h);
-        let blade_width = rng.random_range(blade_min_w..blade_max_w);
-        let base_color = [
-            rng.random_range(60..100),
-            rng.random_range(160..220),
-            rng.random_range(60..100),
-        ];
-        let tip_color = [
-            rng.random_range(120..180),
-            rng.random_range(220..255),
-            rng.random_range(120..180),
-        ];
-        let t = i as f32 / num_blades as f32;
-
-        // Animate sway with wind
-        let phase = t * 6.0 + rng.random_range(0.0..2.0);
-        let sway = (time * wind_speed + phase).sin() * wind_strength * (0.5 + t * 0.5);
-        let lean = sway + rng.random_range(-4.0..4.0);
-
-        // Control points for a simple bezier curve (simulate a blade)
-        let base = [x, base_y];
-        let ctrl = [x + lean * 0.4, base_y - blade_height * 0.5];
-        let tip = [x + lean, base_y - blade_height];
-
-        // Draw the blade as a thin, curved polygon (triangle strip)
-        let points = vec![
-            [base[0] - blade_width * 0.5, base[1]],
-            [ctrl[0] - blade_width * 0.2, ctrl[1]],
-            [tip[0], tip[1]],
-            [ctrl[0] + blade_width * 0.2, ctrl[1]],
-            [base[0] + blade_width * 0.5, base[1]],
-        ];
-        let color = Color::from_rgba(base_color[0], base_color[1], base_color[2], 180);
-        let tip_col = Color::from_rgba(tip_color[0], tip_color[1], tip_color[2], 210);
-        let mesh = Mesh::new_polygon(ctx, DrawMode::fill(), &points, color)?;
-        canvas.draw(&mesh, DrawParam::default());
-
-        // Optionally, draw a highlight along the blade for anime shine
-        let highlight = Mesh::new_line(ctx, &[[base[0], base[1]], [tip[0], tip[1]]], 0.7, tip_col)?;
-        canvas.draw(&highlight, DrawParam::default());
-
-        // Draw darkness overlay if requested
-        if dark {
-            let darkness = graphics::Mesh::new_rectangle(
-                ctx,
-                DrawMode::fill(),
-                Rect::new(0.0, 0.0, width, height),
-                Color::from_rgba(0, 0, 0, 100),
-            )?;
-            canvas.draw(&darkness, DrawParam::default());
-        }
-    }
+    let quad = Mesh::new_rectangle(
+        ctx,
+        DrawMode::fill(),
+        Rect::new(0.0, 0.0, width, height),
+        Color::RED,
+    )?;
+    canvas.draw(&quad, DrawParam::default());
+    canvas.set_default_shader();
     Ok(())
 }
 
@@ -234,13 +183,9 @@ pub fn draw_flashlight(
     canvas: &mut Canvas,
     player_pos: Vec2,
     dir: Vec2,
-    width: f32,
-    height: f32,
     time_since_catch: f32,
+    flashlight: &Flashlight,
 ) -> ggez::GameResult {
-    use ggez::glam::Vec2 as GVec2;
-    use ggez::graphics::{DrawMode, DrawParam, Mesh};
-
     // Flicker logic
     let time = ctx.time.time_since_start().as_secs_f32();
     let base_freq = 4.0;
@@ -254,10 +199,15 @@ pub fn draw_flashlight(
         .abs();
     let alpha = base_alpha + (max_alpha - base_alpha) * flicker * flicker_strength;
 
+    // Flashlight parameters
+    let laser_level = flashlight.laser_level;
+    let cone_angle = flashlight.cone_upgrade;
+    let range = flashlight.range_upgrade;
+
     // Draw a cone-shaped flashlight (sector) with bloom/gradient
-    let flashlight_len = 220.0;
-    let spread = 0.7;
-    let center = GVec2::new(
+    let flashlight_len = range.max(80.0);
+    let spread = cone_angle.max(0.15);
+    let center = Vec2::new(
         player_pos.x + PLAYER_SIZE / 2.0,
         player_pos.y + PLAYER_SIZE / 2.0,
     );
@@ -291,10 +241,30 @@ pub fn draw_flashlight(
             let theta = angle - spread / 2.0 + spread * (j as f32 / segs as f32);
             let x = center.x + flashlight_len * scale * theta.cos();
             let y = center.y + flashlight_len * scale * theta.sin();
-            points.push(GVec2::new(x, y));
+            points.push(Vec2::new(x, y));
         }
         let flashlight = Mesh::new_polygon(ctx, DrawMode::fill(), &points, color)?;
         canvas.draw(&flashlight, DrawParam::default());
+    }
+    // Crab Techno Rave: draw laser beams if upgraded
+    if laser_level > 0 {
+        let laser_colors = [
+            Color::from_rgb(255, 0, 255),
+            Color::from_rgb(0, 255, 255),
+            Color::from_rgb(255, 255, 0),
+            Color::from_rgb(0, 255, 0),
+            Color::from_rgb(255, 0, 0),
+        ];
+        let num_lasers = 2 + laser_level * 2;
+        let laser_len = flashlight_len * (1.2 + 0.2 * laser_level as f32);
+        for i in 0..num_lasers {
+            let t = i as f32 / num_lasers as f32;
+            let laser_angle = angle - spread / 2.0 + spread * t;
+            let color = laser_colors[(i as usize) % laser_colors.len()];
+            let end = center + Vec2::new(laser_angle.cos(), laser_angle.sin()) * laser_len;
+            let laser = Mesh::new_line(ctx, &[center, end], 6.0 + 2.0 * laser_level as f32, color)?;
+            canvas.draw(&laser, DrawParam::default());
+        }
     }
     Ok(())
 }

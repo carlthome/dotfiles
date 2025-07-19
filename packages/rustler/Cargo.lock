@@ -2052,6 +2052,7 @@ dependencies = [
 name = "rustler"
 version = "0.1.0"
 dependencies = [
+ "crevice",
  "ggez",
  "rand",
 ]
