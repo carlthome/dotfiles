@@ -12,7 +12,7 @@ use ggez::conf::WindowMode;
 use ggez::event::{self, EventHandler};
 use ggez::glam::Vec2;
 use ggez::graphics::{
-    BlendMode, Canvas, Color, DrawParam, Mesh, Rect, Sampler, ShaderBuilder, Text,
+    BlendMode, Canvas, ClampMode, Color, DrawParam, Image, Mesh, Rect, Sampler, ShaderBuilder, Text,
 };
 use ggez::input::keyboard::{KeyCode, KeyInput};
 use ggez::{Context, ContextBuilder, GameResult};
@@ -73,6 +73,7 @@ struct MainState {
     shader: ggez::graphics::Shader, // Shader for grass rendering
     level_title: String,            // Title of the current level
     level_title_timer: f32,         // Timer for displaying level title
+    texture: Image,                 // Grass texture for background
 }
 
 impl MainState {
@@ -93,6 +94,9 @@ impl MainState {
             success2: Source::new(ctx, "/success2.ogg")?,
             // Add more sounds here as needed
         };
+
+        // Load grass texture.
+        let texture = Image::from_path(ctx, "/grass.png")?;
 
         // Get levels.
         let levels = get_levels();
@@ -147,6 +151,7 @@ impl MainState {
             shader,
             level_title: String::new(),
             level_title_timer: 0.0,
+            texture,
         })
     }
 
@@ -399,7 +404,15 @@ impl MainState {
         height: f32,
     ) -> GameResult {
         // Draw grass background using the shader.
-        draw_grass(ctx, canvas, width, height, &self.shader)?;
+        draw_grass(
+            ctx,
+            canvas,
+            width,
+            height,
+            &self.texture,
+            &self.shader,
+            self.time_elapsed,
+        )?;
 
         // Calculate flashlight direction from player to mouse.
         if self.flashlight.on {

@@ -3,12 +3,16 @@ use crate::{CRAB_SIZE, Flashlight, PLAYER_SIZE};
 use crevice::std140::AsStd140;
 use ggez::Context;
 use ggez::glam::Vec2;
-use ggez::graphics::{Canvas, Color, DrawMode, DrawParam, Mesh, Rect, Shader, ShaderParamsBuilder};
+use ggez::graphics::{
+    BlendMode, Canvas, Color, DrawMode, DrawParam, FilterMode, Image, Mesh, Rect, Sampler, Shader,
+    ShaderParamsBuilder,
+};
 
 #[derive(Copy, Clone, Debug, AsStd140)]
 pub struct ResolutionUniform {
     pub width: f32,
     pub height: f32,
+    pub time: f32,
 }
 
 pub fn draw_grass(
@@ -16,8 +20,11 @@ pub fn draw_grass(
     canvas: &mut Canvas,
     width: f32,
     height: f32,
+    texture: &Image,
     shader: &Shader,
+    time: f32,
 ) -> ggez::GameResult {
+    let blend_mode = canvas.blend_mode();
     let solid_bg = Mesh::new_rectangle(
         ctx,
         DrawMode::fill(),
@@ -27,18 +34,36 @@ pub fn draw_grass(
     canvas.draw(&solid_bg, DrawParam::default());
 
     // Draw a full-screen quad using the grass shader.
-    let params = ShaderParamsBuilder::new(&ResolutionUniform { width, height }).build(ctx);
+    let params = ShaderParamsBuilder::new(&ResolutionUniform {
+        width,
+        height,
+        time,
+    })
+    .build(ctx);
     canvas.set_shader_params(&params);
     canvas.set_shader(shader);
-
     let quad = Mesh::new_rectangle(
         ctx,
         DrawMode::fill(),
-        Rect::new(0.0, 0.0, width, height),
+        Rect::new(-width / 2.0, -height / 2.0, width, height),
         Color::RED,
     )?;
     canvas.draw(&quad, DrawParam::default());
     canvas.set_default_shader();
+    canvas.set_blend_mode(BlendMode::MULTIPLY);
+
+    // Repeat a tiled grass texture across the screen.
+    let tile_w = texture.width() as f32;
+    let tile_h = texture.height() as f32;
+    let tiles_x = (width / tile_w).ceil() as i32;
+    let tiles_y = (height / tile_h).ceil() as i32;
+    for y in 0..tiles_y {
+        for x in 0..tiles_x {
+            let dest = [x as f32 * tile_w, y as f32 * tile_h];
+            canvas.draw(texture, DrawParam::default().dest(dest));
+        }
+    }
+    canvas.set_blend_mode(blend_mode);
     Ok(())
 }
 

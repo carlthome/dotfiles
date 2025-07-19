@@ -7,6 +7,7 @@ struct VertexOutput {
 struct ResolutionUniform {
     width: f32,
     height: f32,
+    time: f32,
 }
 
 @group(1) @binding(0)
@@ -22,7 +23,7 @@ var<uniform> resolution: ResolutionUniform;
 fn vs_main(@location(0) position: vec2<f32>) -> VertexOutput {
     var out: VertexOutput;
     out.position = vec4<f32>(position, 0.0, 1.0);
-    out.uv = position; // Pass screen coordinates through
+    out.uv = position * 0.5 + vec2<f32>(0.5, 0.5); // Remap NDC [-1,1] to [0,1], origin at bottom left
     out.color = vec4<f32>(1.0);
     return out;
 }
@@ -54,18 +55,18 @@ fn grass_blade(uv: vec2<f32>, pos: vec2<f32>, height: f32, width: f32, sway: f32
 
 @fragment
 fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
-    // Convert from screen coordinates to UV coordinates [0,1]
-    let uv = vec2<f32>(
-        in.uv.x / resolution.width,
-        in.uv.y / resolution.height
-    );
+    // Use UVs directly
+    let uv = in.uv;
 
     // Ground color
     var color = vec3<f32>(0.2, 0.6, 0.3);
 
     // Grass parameters
-    let blade_count = 80.0;
-    let blade_spacing = 1.0 / blade_count;
+    let blade_count = 10.0;
+    let blade_spacing = 100.0 / blade_count;
+
+    // Wind animation
+    let wind = sin(resolution.time * 1.5) * 0.05;
 
     // Generate grass blades
     for (var i = 0.0; i < blade_count; i += 1.0) {
@@ -74,13 +75,13 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
         // Blade position - spread across full width, at bottom of screen
         let pos = vec2<f32>(
             (i / blade_count) + rand * 0.01,
-            0.1
+            0.0
         );
 
-        // Calculate blade SDF
-        let height = mix(0.2, 0.4, hash(i + 1.0));
+        // Calculate blade SDF.
+        let height = mix(0.2, 0.9, hash(i + 1.0));
         let width = mix(0.01, 0.03, hash(i + 2.0));
-        let sway = mix(-0.05, 0.05, hash(i + 3.0));
+        let sway = mix(-0.05, 0.05, hash(i + 3.0)) + wind * hash(i + 7.0);
         let d = grass_blade(uv, pos, height, width, sway);
 
         // Apply a mask to blend the blade color.
