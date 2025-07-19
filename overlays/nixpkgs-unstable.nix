@@ -8,6 +8,7 @@ let
       pkg:
       builtins.elem (nixpkgs-unstable.lib.getName pkg) [
         "vscode"
+        "claude-code"
         "vscode-extension-github-copilot"
         "vscode-extension-github-copilot-chat"
         "vscode-extension-MS-python-vscode-pylance"
