@@ -2,23 +2,48 @@
   pkgs ? import <nixpkgs> { },
   ...
 }:
+let
+  numpyKernel = pkgs.python3.withPackages (
+    ps: with ps; [
+      ipykernel
+      librosa
+      matplotlib
+      numpy
+      pandas
+      pyarrow
+      scikit-learn
+      scipy
+    ]
+  );
+
+  jupyterEnv = pkgs.jupyter.override {
+    extraPackages = with pkgs; [
+      numpyKernel
+      ipywidgets
+      jupyter-console
+    ];
+    definitions = {
+      numpy = {
+        displayName = "NumPy ${pkgs.python3Packages.numpy.version}";
+        language = "python";
+        logo32 = null;
+        logo64 = null;
+        argv = [
+          "${numpyKernel.interpreter}"
+          "-m"
+          "ipykernel_launcher"
+          "-f"
+          "{connection_file}"
+        ];
+      };
+    };
+  };
+
+in
 pkgs.buildEnv {
   name = "pylab";
   paths = [
-    (pkgs.python3.withPackages (
-      ps: with ps; [
-        ipython
-        ipdb
-        jupyter
-        librosa
-        matplotlib
-        numpy
-        pandas
-        scikit-learn
-        scipy
-        pyarrow
-      ]
-    ))
+    jupyterEnv
   ];
   meta = {
     description = "Python environment for data science exploration";
