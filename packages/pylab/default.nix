@@ -17,11 +17,6 @@ let
   );
 
   jupyterEnv = pkgs.jupyter.override {
-    extraPackages = with pkgs; [
-      numpyKernel
-      ipywidgets
-      jupyter-console
-    ];
     definitions = {
       numpy = {
         displayName = "NumPy ${pkgs.python3Packages.numpy.version}";
