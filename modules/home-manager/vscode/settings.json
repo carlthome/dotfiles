@@ -96,6 +96,18 @@
   "jupyter.askForKernelRestart": false,
   "jupyter.debugJustMyCode": false,
   "jupyter.runStartupCommands": ["%load_ext autoreload", "%autoreload 2"],
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Gradio",
+        "type": "debugpy",
+        "request": "launch",
+        "program": "${workspaceFolder}/.venv/bin/gradio",
+        "args": ["${file}"]
+      }
+    ]
+  },
   "nix.enableLanguageServer": true,
   "nix.serverPath": "nil",
   "nix.serverSettings": {
