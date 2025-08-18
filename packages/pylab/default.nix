@@ -6,7 +6,7 @@ let
   numpyKernel = pkgs.python3.withPackages (
     ps: with ps; [
       ipykernel
-      librosa
+      #librosa # TODO Currently broken?
       matplotlib
       numpy
       pandas

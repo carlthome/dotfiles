@@ -71,7 +71,7 @@
     };
     awscli.enable = true;
     yt-dlp.enable = true;
-    nushell.enable = true;
+    nushell.enable = false; # TODO Currently broken?
     bash = {
       enable = true;
       shellOptions = [
