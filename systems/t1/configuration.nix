@@ -90,6 +90,34 @@
   # Enable cross-platform emulator
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
+  # Enable systemd services to avoid graphics quirks when waking from suspend.
+  hardware.nvidia.powerManagement.enable = true;
+
+  # Tune NVIDIA GPU power settings on boot.
+  systemd.services.configure-gpu = {
+    description = "Configure GPU power settings";
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${
+        pkgs.writeShellApplication {
+          name = "configure-gpu";
+          text = ''
+            # Enable persistence mode to keep the GPU initialized.
+            nvidia-smi --persistence-mode=1
+
+            # Limit power draw by default.
+            nvidia-smi --power-limit=200
+
+            # TODO "Undervolt" by offsetting graphics clocks speeds and reducing the maximum.
+            #nvidia-smi --lock-gpu-clocks=0,1875 --mode=1
+            #nvidia-settings -a [gpu:0]/GPUGraphicsClockOffsetAllPerformanceLevels=100
+          '';
+        }
+      }/bin/configure-gpu";
+    };
+  };
+
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave
