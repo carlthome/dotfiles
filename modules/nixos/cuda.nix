@@ -15,7 +15,6 @@
   };
 
   hardware.nvidia.open = true;
-  hardware.nvidia.modesetting.enable = true;
   hardware.nvidia-container-toolkit.enable = true;
   services.xserver.videoDrivers = [ "nvidia" ];
   environment.systemPackages = with pkgs; [
