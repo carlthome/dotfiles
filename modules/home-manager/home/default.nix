@@ -203,7 +203,8 @@
     rustup
     shellcheck
     skaffold
-    skypilot
+    # TODO Currently broken
+    #skypilot
     snyk
     sops
     sox
