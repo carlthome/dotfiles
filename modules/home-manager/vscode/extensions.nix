@@ -42,7 +42,8 @@ let
     ms-vscode.makefile-tools
     njpwerner.autodocstring
     pkief.material-icon-theme
-    rust-lang.rust-analyzer
+    # TODO Build error
+    #rust-lang.rust-analyzer
     stkb.rewrap
     svelte.svelte-vscode
     tamasfe.even-better-toml
