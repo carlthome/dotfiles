@@ -146,7 +146,7 @@
   "ruff.importStrategy": "useBundled",
   "telemetry.telemetryLevel": "off",
   "terminal.integrated.enableMultiLinePasteWarning": "auto",
-  "terminal.integrated.fontLigatures": true,
+  "terminal.integrated.fontLigatures.enabled": true,
   "terminal.integrated.fontSize": 14,
   "terminal.integrated.profiles.osx": {
     "tmux-workspace": {
