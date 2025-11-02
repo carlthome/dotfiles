@@ -31,6 +31,10 @@
   # TODO Enable sandboxing.
   nix.settings.sandbox = false;
 
+  # Set Nix daemon to use lower scheduling priority.
+  nix.daemonProcessType = "Background";
+  nix.daemonIOLowPriority = true;
+
   # Global shell aliases for all users.
   environment.shellAliases = {
     show-system = "nix derivation show /run/current-system";
