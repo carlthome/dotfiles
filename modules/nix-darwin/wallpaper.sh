@@ -2,35 +2,23 @@
 
 # Find image.
 DOMAIN="http://www.bing.com"
-LOCATION=$(curl -s "$DOMAIN/HPImageArchive.aspx?format=js&idx=0&n=50" | jq -re '.images[0].url')
+LOCATION=$(curl -s "$DOMAIN/HPImageArchive.aspx?format=js&idx=0&n=1" | jq -re '.images[0].url')
+
+# Extract image ID.
+ID=$(echo "$LOCATION" | grep -oE 'id=[^&]+' | cut -d'=' -f2 | head -n1)
 
 # Download image.
-WALLPAPER_URL="$DOMAIN$LOCATION"
-WALLPAPER_PATH="/tmp/wallpaper.jpg"
-echo "Downloading wallpaper from $WALLPAPER_URL to $WALLPAPER_PATH"
-curl -s "$WALLPAPER_URL" -o "$WALLPAPER_PATH"
+mkdir -p ~/Pictures/Wallpapers
+WALLPAPER_FILE="$HOME/Pictures/Wallpapers/$ID"
+if [ ! -f "$WALLPAPER_FILE" ]; then
+	WALLPAPER_URL="$DOMAIN$LOCATION"
+	echo "Downloading $WALLPAPER_URL to $WALLPAPER_FILE"
+	curl -s "$WALLPAPER_URL" -o "$WALLPAPER_FILE"
+fi
 
-# Create Photos album, import image, and set as desktop wallpaper.
+# Set desktop wallpaper.
 osascript <<EOF
-tell application "Photos"
-    activate
-    delay 3
-
-    set albumExists to false
-    try
-        set albumExists to (exists album "Wallpapers")
-    end try
-
-    if not albumExists then
-        make new album named "Wallpapers"
-    end if
-
-    import POSIX file "/tmp/wallpaper.jpg" into album "Wallpapers" skip check duplicates yes
-
-    delay 3
-    quit
+tell application "Finder"
+set desktop picture to POSIX file "$WALLPAPER_FILE"
 end tell
-
-tell application "Finder" to set desktop picture to POSIX file "/tmp/wallpaper.jpg"
-
 EOF
