@@ -11,7 +11,6 @@
   services.wallpaper = {
     enable = true;
     frequency = "daily";
-    category = "nature";
   };
 
   services.auto-upgrade = {
