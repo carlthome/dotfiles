@@ -40,12 +40,6 @@ in
       default = "daily";
       description = "How often to change the wallpaper (daily, hourly)";
     };
-
-    category = lib.mkOption {
-      type = lib.types.str;
-      default = "nature";
-      description = "Category of images to fetch from Unsplash";
-    };
   };
 
   config = lib.mkIf cfg.enable {
