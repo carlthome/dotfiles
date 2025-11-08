@@ -83,5 +83,4 @@
   # Set Nix daemon to use lower scheduling priority.
   nix.daemonCPUSchedPolicy = "idle";
   nix.daemonIOSchedClass = "idle";
-  nix.daemonProcessType = "background";
 }
