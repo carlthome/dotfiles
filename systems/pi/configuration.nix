@@ -101,6 +101,8 @@ in
       interfaces = [ "wlan0" ];
     };
 
+    networkmanager.enable = false;
+
     defaultGateway = {
       address = "192.168.0.1";
       interface = "wlan0";
