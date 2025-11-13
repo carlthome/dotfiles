@@ -65,6 +65,7 @@ let
     wgsl-analyzer.wgsl-analyzer
     # TODO This extension is too buggy.
     #stateful.runme
+    openai.chatgpt
   ];
 
   openVsxExtensions = with vscode-extensions.open-vsx; [
