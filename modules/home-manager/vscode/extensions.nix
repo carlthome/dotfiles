@@ -7,6 +7,7 @@
 let
   packagedExtensions = with pkgs.vscode-extensions; [
     charliermarsh.ruff
+    docker.docker
     davidanson.vscode-markdownlint
     dbaeumer.vscode-eslint
     esbenp.prettier-vscode
