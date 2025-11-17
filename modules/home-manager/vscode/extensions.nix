@@ -22,6 +22,7 @@ let
     jnoortheen.nix-ide
     mikestead.dotenv
     mkhl.direnv
+    ms-azuretools.vscode-containers
     ms-azuretools.vscode-docker
     ms-kubernetes-tools.vscode-kubernetes-tools
     ms-python.black-formatter
@@ -64,7 +65,6 @@ let
     liviuschera.noctis
     markthomasmiller.sorcerer
     miladfathy.dragan-color-theme
-    ms-azuretools.vscode-containers
     wgsl-analyzer.wgsl-analyzer
     # TODO This extension is too buggy.
     #stateful.runme
