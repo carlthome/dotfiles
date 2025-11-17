@@ -28,6 +28,8 @@ let
     ms-python.debugpy
     ms-python.flake8
     ms-python.isort
+    ms-python.mypy-type-checker
+    ms-python.pylint
     ms-python.python
     (if pkgs.config.allowUnfreePredicate "vscode" then ms-python.vscode-pylance else ms-pyright.pyright)
     ms-toolsai.datawrangler
