@@ -104,10 +104,10 @@
           name = "configure-gpu";
           text = ''
             # Enable persistence mode to keep the GPU initialized.
-            nvidia-smi --persistence-mode=1
+            /run/current-system/sw/bin/nvidia-smi --persistence-mode=1
 
             # Limit power draw by default.
-            nvidia-smi --power-limit=200
+            /run/current-system/sw/bin/nvidia-smi --power-limit=200
 
             # TODO "Undervolt" by offsetting graphics clocks speeds and reducing the maximum.
             #nvidia-smi --lock-gpu-clocks=0,1875 --mode=1
