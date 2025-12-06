@@ -6,7 +6,7 @@
   },
   {
     "command": "workbench.action.quickTextSearch",
-    "key": "ctrl+f",
+    "key": "ctrl+alt+f",
     "when": "editorTextFocus"
   }
 ]
