@@ -17,16 +17,23 @@ pkgs.python3Packages.buildPythonApplication {
 
   importChecks = [ "mnist" ];
 
-  propagatedBuildInputs = with pkgs.python3Packages; [
-    fire
-    torch
-    torchaudio
-    torchmetrics
-    torchvision
-    pytorch-lightning
-    onnx
-    onnxruntime
-    gradio
-    fastapi
-  ];
+  propagatedBuildInputs =
+    with pkgs.python3Packages;
+    let
+      onnx-ir = pkgs.callPackage ./onnx-ir.nix { };
+      onnxscript = pkgs.callPackage ./onnxscript.nix { inherit onnx-ir; };
+    in
+    [
+      fire
+      torch
+      torchaudio
+      torchmetrics
+      torchvision
+      pytorch-lightning
+      onnx
+      onnxscript
+      onnxruntime
+      gradio
+      fastapi
+    ];
 }
