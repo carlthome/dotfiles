@@ -59,7 +59,8 @@ let
   communityPackagedExtensions = with vscode-extensions.vscode-marketplace; [
     # TODO Enable once stable.
     #ms-python.vscode-python-envs
-    anthropic.claude-code
+    # TODO Re-enable when more stable.
+    #anthropic.claude-code
     donjayamanne.python-environment-manager
     eliverlara.andromeda
     liviuschera.noctis
@@ -68,7 +69,8 @@ let
     wgsl-analyzer.wgsl-analyzer
     # TODO This extension is too buggy.
     #stateful.runme
-    openai.chatgpt
+    # TODO Re-enable when more stable.
+    #openai.chatgpt
   ];
 
   openVsxExtensions = with vscode-extensions.open-vsx; [
