@@ -19,7 +19,7 @@ home-manager.lib.homeManagerConfiguration {
   modules = [
     ./home.nix
     nix-index-database.homeModules.nix-index
-    nixvim.homeManagerModules.nixvim
+    nixvim.homeModules.nixvim
     self.homeModules.${system}
     self.homeModules.auto-audit
     self.homeModules.auto-upgrade

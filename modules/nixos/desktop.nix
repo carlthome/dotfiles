@@ -1,14 +1,10 @@
 { config, pkgs, ... }:
 {
 
-  # Configure graphics settings.
+  # Configure graphics user interface.
   hardware.graphics.enable = true;
-  services.xserver = {
-    enable = true;
-    displayManager.gdm.enable = true;
-    desktopManager.gnome.enable = true;
-    xkb.layout = "se";
-  };
+  services.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true;
 
   # Configure audio settings.
   services.pulseaudio.enable = false;

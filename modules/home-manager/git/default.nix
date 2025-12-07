@@ -8,16 +8,6 @@
   programs.git = {
     enable = true;
     package = pkgs.gitFull;
-    aliases = {
-      ci = "commit";
-      co = "checkout";
-      s = "status";
-      l = "log";
-      b = "branch";
-      d = "diff";
-      find = "grep -w";
-      refresh = "!${self.packages.${pkgs.system}.git-refresh}/bin/git-refresh";
-    };
     signing = {
       signByDefault = true;
       key = "~/.ssh/id_ed25519";
@@ -32,7 +22,17 @@
       "*.swp"
       ".venv"
     ];
-    extraConfig = {
+    settings = {
+      aliases = {
+        ci = "commit";
+        co = "checkout";
+        s = "status";
+        l = "log";
+        b = "branch";
+        d = "diff";
+        find = "grep -w";
+        refresh = "!${self.packages.${pkgs.system}.git-refresh}/bin/git-refresh";
+      };
       branch.sort = "-committerdate";
       core.editor = "vim";
       core.fsmonitor = true;
