@@ -175,7 +175,8 @@
     nixos-rebuild
     nixpkgs-review
     nmap
-    nodejs
+    # TODO Disabled to avoid collision.
+    #nodejs
     nodePackages.npm
     nodePackages.prettier
     opusTools
