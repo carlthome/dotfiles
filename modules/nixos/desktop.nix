@@ -71,8 +71,9 @@
   # Include Steam for all users.
   programs.steam.enable = true;
 
-  # Add default web browser for all users.
-  programs.firefox.enable = true;
+  # TODO Add default web browser for all users.
+  # https://github.com/NixOS/nixpkgs/pull/457391#issuecomment-3622359217
+  # programs.firefox.enable = true;
 
   # Auto-build and reload shell.nix in the background.
   services.lorri.enable = true;
