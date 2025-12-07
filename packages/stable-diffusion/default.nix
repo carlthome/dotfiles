@@ -17,7 +17,7 @@ pkgs.python3Packages.buildPythonApplication {
 
   nativeBuildInputs = with pkgs.python3Packages; [
     setuptools
-    setuptools_scm
+    setuptools-scm
   ];
 
   importChecks = [ "main" ];

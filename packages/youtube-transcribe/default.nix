@@ -1,6 +1,6 @@
 {
   pkgs,
-  openai-whisper-cpp,
+  whisper-cpp,
   ffmpeg,
   yt-dlp,
   ...
@@ -8,7 +8,7 @@
 pkgs.writeShellApplication {
   name = "youtube-transcribe";
   runtimeInputs = [
-    openai-whisper-cpp
+    whisper-cpp
     ffmpeg
     yt-dlp
   ];
