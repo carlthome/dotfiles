@@ -11,5 +11,13 @@ nixpkgs.lib.nixosSystem {
     self.modules.default
     self.nixosModules.default
     self.nixosModules.server
+    {
+      virtualisation.vmVariant = {
+        virtualisation.host.pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        virtualisation.memorySize = 4 * 1024; # 4 GB
+        virtualisation.diskSize = 32 * 1024; # 32 GB
+        boot.kernelPackages = nixpkgs.lib.mkForce nixpkgs.legacyPackages.aarch64-linux.linuxPackages;
+      };
+    }
   ];
 }
