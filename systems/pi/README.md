@@ -8,12 +8,6 @@
 # Build OS image.
 nix build .#nixosConfigurations.pi.config.system.build.sdImage --print-build-logs
 
-# You can also launch a VM to test that the configuration works as intended.
-nix run .#nixosConfigurations.pi.config.system.build.vm -- -serial stdio
-
-# Or build a QEMU image for later use.
-nixos-rebuild build-vm --flake .#pi
-
 # Look up USB drive device name manually.
 lsblk
 device=/dev/sda
@@ -32,6 +26,16 @@ printf '\nHost pi\n  HostName pi.local\n  User pi\n  ForwardAgent yes\n' | tee -
 ```
 
 Plug the SD card (or USB drive) into the Raspberry Pi and power it up. You should be able to `ssh pi` into the machine.
+
+### Test configuration
+
+```sh
+# Launch a VM to test that the configuration works as intended.
+QEMU_NET_OPTS="hostfwd=tcp::2222-:22" nix run .#nixosConfigurations.pi.config.system.build.vm -- -serial stdio
+
+# Or build a QEMU image for later use.
+nixos-rebuild build-vm --flake .#pi
+```
 
 ### Update configuration
 
