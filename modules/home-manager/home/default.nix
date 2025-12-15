@@ -98,7 +98,8 @@
       };
     };
     gpg.enable = true;
-    gitui.enable = true;
+    # TODO Broken on macOS?
+    #gitui.enable = true;
     pyenv.enable = true;
     bun.enable = true;
     fd.enable = true;
