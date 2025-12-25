@@ -13,7 +13,7 @@ let
     name = "auto-upgrade-home-manager";
     text = ''
       echo "Starting Home Manager upgrade at $(date)"
-      home-manager switch --refresh --flake ${cfg.flake}
+      home-manager switch --print-build-logs --refresh --flake ${cfg.flake}
       echo "Home Manager upgrade completed at $(date)"
     '';
     runtimeInputs = with pkgs; [
