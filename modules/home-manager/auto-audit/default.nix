@@ -10,7 +10,7 @@ in
   launchd.agents.auto-audit = {
     enable = true;
     config = {
-      Program = "${script.outPath}/bin/${script.name}";
+      Program = lib.getExe script;
       ProcessType = "Background";
       StartCalendarInterval = [
         {
@@ -32,7 +32,7 @@ in
       };
     };
     services.auto-audit = {
-      Service.ExecStart = "${script.outPath}/bin/${script.name}";
+      Service.ExecStart = lib.getExe script;
     };
   };
 }

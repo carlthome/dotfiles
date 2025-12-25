@@ -1,9 +1,13 @@
 {
   config,
   pkgs,
+  lib,
   self,
   ...
 }:
+let
+  system = pkgs.stdenv.hostPlatform.system;
+in
 {
   programs.git = {
     enable = true;
@@ -31,7 +35,7 @@
         b = "branch";
         d = "diff";
         find = "grep -w";
-        refresh = "!${self.packages.${pkgs.system}.git-refresh}/bin/git-refresh";
+        refresh = "!${lib.getExe self.packages.${system}.git-refresh}";
       };
       branch.sort = "-committerdate";
       core.editor = "vim";

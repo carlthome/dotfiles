@@ -5,6 +5,9 @@
   self,
   ...
 }@inputs:
+let
+  system = pkgs.stdenv.hostPlatform.system;
+in
 {
 
   # Add each flake input to registry.
@@ -47,10 +50,10 @@
     search = "nix search";
     update = "nix flake update --commit-lock-file";
     switch-home = "nh home switch .";
-    pylab = "${self.packages.${pkgs.system}.pylab}/bin/jupyter";
     docker-cpu = "docker ps -q | xargs docker stats --no-stream";
-    pods = "${self.packages.${pkgs.system}.k8s-pods-logs}/bin/k8s-pods-logs";
     icat = "kitten icat";
+    pylab = lib.getExe self.packages.${system}.pylab;
+    pods = lib.getExe self.packages.${system}.k8s-pods-logs;
   };
 
   # Default startup setup when starting an IPython session.

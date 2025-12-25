@@ -1,6 +1,12 @@
-{ pkgs, self, ... }:
+{
+  pkgs,
+  lib,
+  self,
+  ...
+}:
 let
-  program = self.packages.${pkgs.system}.git-refresh.outPath + "/bin/git-refresh";
+  system = pkgs.stdenv.hostPlatform.system;
+  program = lib.getExe self.packages.${system}.git-refresh;
 in
 {
   launchd.agents.git-refresh = {

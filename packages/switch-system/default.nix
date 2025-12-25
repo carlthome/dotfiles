@@ -4,13 +4,16 @@
   nix-darwin,
   ...
 }:
+let
+  system = pkgs.stdenv.hostPlatform.system;
+in
 pkgs.writeShellApplication {
   name = "switch-system";
   runtimeInputs =
     if pkgs.stdenv.hostPlatform.isLinux then
       [ pkgs.nixos-rebuild ]
     else
-      [ nix-darwin.packages.${pkgs.system}.darwin-rebuild ];
+      [ nix-darwin.packages.${system}.darwin-rebuild ];
   text =
     if pkgs.stdenv.hostPlatform.isLinux then
       "sudo nixos-rebuild switch --flake ${self}"

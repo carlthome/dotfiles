@@ -4,6 +4,9 @@
   self,
   ...
 }:
+let
+  system = pkgs.stdenv.hostPlatform.system;
+in
 {
   programs.gh = {
     enable = true;
@@ -11,11 +14,9 @@
       git_protocol = "ssh";
       prompt = "enabled";
       aliases = {
-        clone-all = "!${self.packages.${pkgs.system}.github-clone-all}/bin/github-clone-all";
-        stats = "!${self.packages.${pkgs.system}.github-stats}/bin/github-stats";
-        dashboard = "!${
-          self.packages.${pkgs.system}.github-actions-dashboard-creator
-        }/bin/github-actions-dashboard-creator";
+        clone-all = "!${lib.getExe self.packages.${system}.github-clone-all}";
+        stats = "!${lib.getExe self.packages.${system}.github-stats}";
+        dashboard = "!${lib.getExe self.packages.${system}.github-actions-dashboard-creator}";
       };
     };
     gitCredentialHelper.enable = false;

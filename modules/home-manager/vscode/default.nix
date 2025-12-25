@@ -6,6 +6,7 @@
   ...
 }:
 let
+  system = pkgs.stdenv.hostPlatform.system;
   settings-directory =
     if pkgs.stdenv.hostPlatform.isDarwin then
       "$HOME/Library/Application Support/Code/User"
@@ -20,7 +21,7 @@ let
 
   extensions = import ./extensions.nix {
     inherit pkgs;
-    vscode-extensions = nix-vscode-extensions.extensions.${pkgs.system};
+    vscode-extensions = nix-vscode-extensions.extensions.${system};
   };
 in
 {

@@ -72,7 +72,7 @@ in
 
   config = lib.mkIf cfg.enable {
     launchd.daemons.auto-upgrade.serviceConfig = {
-      Program = "${toString upgradeScript}/bin/${upgradeScript.name}";
+      Program = lib.getExe upgradeScript;
       ProcessType = "Background";
       StartCalendarInterval = calendarIntervals.${cfg.frequency};
       StandardErrorPath = "/tmp/${upgradeScript.name}.err";

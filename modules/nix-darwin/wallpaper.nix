@@ -45,7 +45,7 @@ in
   config = lib.mkIf cfg.enable {
     launchd.agents.change-wallpaper = {
       serviceConfig = {
-        Program = "${toString script}/bin/${script.name}";
+        Program = lib.getExe script;
         ProcessType = "Background";
         StartCalendarInterval = calendarIntervals.${cfg.frequency};
         StandardErrorPath = "/tmp/change-wallpaper.err";

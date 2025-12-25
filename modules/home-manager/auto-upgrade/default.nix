@@ -91,7 +91,7 @@ in
           };
           services.auto-upgrade = {
             Unit.Description = "Home Manager upgrade";
-            Service.ExecStart = "${toString upgradeScript}/bin/${upgradeScript.name}";
+            Service.ExecStart = lib.getExe upgradeScript;
           };
         };
       };
@@ -99,7 +99,7 @@ in
         launchd.agents.auto-upgrade = {
           enable = true;
           config = {
-            Program = "${toString upgradeScript}/bin/${upgradeScript.name}";
+            Program = lib.getExe upgradeScript;
             ProcessType = "Background";
             StartCalendarInterval = calendarIntervals.${cfg.frequency};
             StandardErrorPath = "/tmp/${upgradeScript.name}.err";

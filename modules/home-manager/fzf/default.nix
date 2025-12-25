@@ -1,24 +1,27 @@
 {
   config,
   pkgs,
+  lib,
   self,
   ...
 }:
 
 let
+  system = pkgs.stdenv.hostPlatform.system;
+
   fzfFunctions = {
     fzf-rg = {
-      cmd = "${self.packages.${pkgs.system}.fzf-ripgrep}/bin/fzf-ripgrep";
+      cmd = lib.getExe self.packages.${system}.fzf-ripgrep;
       zshKey = "^F";
       bashKey = "\\C-f";
     };
     fzf-open = {
-      cmd = "${self.packages.${pkgs.system}.fzf-open}/bin/fzf-open";
+      cmd = lib.getExe self.packages.${system}.fzf-open;
       zshKey = "^P";
       bashKey = "\\C-p";
     };
     fzf-git = {
-      cmd = "${self.packages.${pkgs.system}.fzf-gitgrep}/bin/fzf-gitgrep";
+      cmd = lib.getExe self.packages.${system}.fzf-gitgrep;
       zshKey = "^G";
       bashKey = "\\C-g";
     };
@@ -72,7 +75,7 @@ in
   ];
 
   home.shellAliases = {
-    "." = "${self.packages.${pkgs.system}.fzf-open}/bin/fzf-open";
+    "." = lib.getExe self.packages.${system}.fzf-open;
   };
 
   programs.zsh.initContent = zshInit;
