@@ -5,6 +5,7 @@
   hardware.graphics.enable = true;
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
+  services.desktopManager.cosmic.enable = true;
 
   # Configure audio settings.
   services.pulseaudio.enable = false;
@@ -33,13 +34,7 @@
     {
       domain = "@audio";
       item = "nofile";
-      type = "soft";
-      value = "99999";
-    }
-    {
-      domain = "@audio";
-      item = "nofile";
-      type = "hard";
+      type = "-";
       value = "99999";
     }
   ];
