@@ -17,12 +17,13 @@ image=$(find result/sd-image -type f -name "*.img")
 sudo dd if=$image of=$device bs=4M status=progress oflag=sync
 
 # Preconfigure Wi-Fi access.
-sudo mkdir -p /run/media/$USER/NIXOS_SD1/etc/
-printf 'network={\n  ssid="My Network"\n  psk="My Password"\n}\n' | sudo tee /run/media/$USER/NIXOS_SD1/etc/wpa_supplicant.conf
+SSID="My Network"
+PSK="My Password"
+WPA_SUPPLICANT_CONF="/run/media/$USER/NIXOS_SD/boot/wpa_supplicant.conf"
+printf "network={\n  ssid=\"$SSID\"\n  psk=\"$PSK\"\n}\n" | sudo tee $WPA_SUPPLICANT_CONF
 
 # Update local SSH configuration.
 printf '\nHost pi\n  HostName pi.local\n  User pi\n  ForwardAgent yes\n' | tee --append ~/.ssh/config
-
 ```
 
 Plug the SD card (or USB drive) into the Raspberry Pi and power it up. You should be able to `ssh pi` into the machine.
@@ -57,3 +58,4 @@ Replace `test` with `switch` to apply the new configuration on reboot. Note that
 
 - https://xeiaso.net/blog/prometheus-grafana-loki-nixos-2020-11-20/
 - https://discourse.nixos.org/t/how-to-use-exported-grafana-dashboard/27739/2
+- https://frederikstroem.com/journal/bootstrapping-nixos-on-a-headless-raspberry-pi-4
