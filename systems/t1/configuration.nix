@@ -37,6 +37,11 @@
     };
   };
 
+  # Configure sudo to show a message on failure.
+  security.sudo.extraConfig = ''
+    Defaults badpass_message="Nice try, but incorrect password. Please try again."
+  '';
+
   services.restic.backups = {
     datasets = {
       repository = "rclone:gdrive:/Datasets";
