@@ -54,6 +54,9 @@ in
     icat = "kitten icat";
     pylab = lib.getExe self.packages.${system}.pylab;
     pods = lib.getExe self.packages.${system}.k8s-pods-logs;
+    datasets = "restic -r rclone:gdrive:Datasets -p /etc/nixos/secrets/restic/datasets";
+    browse-datasets = "restic -r rclone:gdrive:Datasets -p /etc/nixos/secrets/restic/datasets ls latest --ncdu | ncdu -f -";
+    datasets-snapshots = "restic -r rclone:gdrive:Datasets -p /etc/nixos/secrets/restic/datasets snapshots";
   };
 
   # Default startup setup when starting an IPython session.
