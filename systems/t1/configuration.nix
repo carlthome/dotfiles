@@ -23,6 +23,7 @@
   #   options = [ "x-systemd.automount" "x-systemd.idle-timeout=600" ];
   # };
 
+  # Configure default users (additional users can be created as regular).
   users.users = {
     carl = {
       isNormalUser = true;
@@ -42,6 +43,7 @@
     Defaults badpass_message="Nice try, but incorrect password. Please try again."
   '';
 
+  # Automatically backup datasets to Google Drive.
   services.restic.backups = {
     datasets = {
       repository = "rclone:gdrive:/Datasets";
@@ -56,6 +58,7 @@
     };
   };
 
+  # Enable Prometheus metrics.
   services.prometheus.exporters.node = {
     enable = true;
     enabledCollectors = [ "systemd" ];
@@ -83,6 +86,7 @@
     ];
   };
 
+  # Enable mDNS for local network discovery.
   services.avahi = {
     enable = true;
     nssmdns4 = true;
