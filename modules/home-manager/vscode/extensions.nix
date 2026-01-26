@@ -52,7 +52,7 @@ let
     tamasfe.even-better-toml
     tomoki1207.pdf
     twxs.cmake
-    ms-vscode.cpptools
+    (ms-vscode.cpptools.override { gdbUseFixed = false; })
     ms-vsliveshare.vsliveshare
   ];
 
