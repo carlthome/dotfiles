@@ -78,6 +78,8 @@ in
       StandardErrorPath = "/tmp/${upgradeScript.name}.err";
       StandardOutPath = "/tmp/${upgradeScript.name}.out";
       RunAtLoad = true;
+      TimeOut = 600;
+      KeepAlive = false;
     };
   };
 }
