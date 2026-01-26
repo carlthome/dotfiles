@@ -36,5 +36,6 @@ home-manager.lib.homeManagerConfiguration {
     self.homeModules.vim
     self.homeModules.vscode
     self.homeModules.zed
+    self.homeModules.direnv
   ];
 }
