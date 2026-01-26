@@ -52,7 +52,8 @@ in
     switch-home = "nh home switch .";
     docker-cpu = "docker ps -q | xargs docker stats --no-stream";
     icat = "kitten icat";
-    pylab = lib.getExe self.packages.${system}.pylab;
+    # TODO
+    #pylab = lib.getExe self.packages.${system}.pylab;
     pods = lib.getExe self.packages.${system}.k8s-pods-logs;
     datasets = "restic -r rclone:gdrive:Datasets -p /etc/nixos/secrets/restic/datasets";
     browse-datasets = "restic -r rclone:gdrive:Datasets -p /etc/nixos/secrets/restic/datasets ls latest --ncdu | ncdu -f -";
@@ -126,7 +127,7 @@ in
     black
     buildah
     buildkit
-    cachix
+    #cachix
     cmake
     comma
     commitizen
@@ -157,7 +158,7 @@ in
     isort
     jetbrains-mono
     jq
-    jupyter
+    #jupyter
     k9s
     #TODO Broken
     #keepassxc
@@ -184,8 +185,8 @@ in
     nmap
     # TODO Disabled to avoid collision.
     #nodejs
-    nodePackages.npm
-    nodePackages.prettier
+    #nodePackages.npm
+    #nodePackages.prettier
     opusTools
     pandoc
     pass
@@ -213,7 +214,7 @@ in
     skaffold
     # TODO Currently broken
     #skypilot
-    snyk
+    #snyk
     sops
     sox
     # TODO Broken on macOS?

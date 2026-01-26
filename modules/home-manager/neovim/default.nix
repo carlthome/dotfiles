@@ -22,7 +22,8 @@
       gitgutter.enable = true;
       goyo.enable = true;
       headlines.enable = true;
-      jupytext.enable = true;
+      # TODO
+      #jupytext.enable = true;
       neoscroll.enable = true;
       neotest.enable = true;
       nix-develop.enable = true;
