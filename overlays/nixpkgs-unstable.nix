@@ -3,7 +3,7 @@
 final: prev:
 let
   pkgs = import nixpkgs-unstable {
-    system = prev.system;
+    system = prev.stdenv.hostPlatform.system;
     config.allowUnfreePredicate =
       pkg:
       builtins.elem (nixpkgs-unstable.lib.getName pkg) [
