@@ -36,6 +36,7 @@ in
         d = "diff";
         find = "grep -w";
         refresh = "!${lib.getExe self.packages.${system}.git-refresh}";
+        sync = "!git fetch origin main:main"
       };
       branch.sort = "-committerdate";
       core.editor = "vim";
