@@ -136,7 +136,7 @@ in
     coreutils-full
     ctags
     curl
-    dbeaver
+    dbeaver-bin
     delve
     dive
     docker-client
