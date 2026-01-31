@@ -58,6 +58,7 @@ in
     datasets = "restic -r rclone:gdrive:Datasets -p /etc/nixos/secrets/restic/datasets";
     browse-datasets = "restic -r rclone:gdrive:Datasets -p /etc/nixos/secrets/restic/datasets ls latest --ncdu | ncdu -f -";
     datasets-snapshots = "restic -r rclone:gdrive:Datasets -p /etc/nixos/secrets/restic/datasets snapshots";
+    nix-profile = "nix eval --no-eval-cache --trace-function-calls --eval-profiler flamegraph && flamelens nix.profile";
   };
 
   # Default startup setup when starting an IPython session.
@@ -147,6 +148,7 @@ in
     fd
     fdupes
     ffmpeg-full
+    flamelens
     fx
     gcc
     gnumake
