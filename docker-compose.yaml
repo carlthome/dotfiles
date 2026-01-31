@@ -1,0 +1,25 @@
+services:
+  nix:
+    image: nixos/nix
+    volumes:
+      - store:/nix/store
+      - var:/nix/var
+      - cache:/root/.cache/nix
+      - .:/workspace
+    working_dir: /workspace
+    environment:
+      HOME: /home/carl
+      USER: carl
+      NIX_CONFIG: |
+        build-users-group = nixbld
+        experimental-features = nix-command flakes
+        allowed-users = root carl nixbld
+    entrypoint: ["nix", "shell"]
+    command: ["github:carlthome/dotfiles"]
+    stdin_open: true
+    tty: true
+
+volumes:
+  store:
+  var:
+  cache:
