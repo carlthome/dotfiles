@@ -6,6 +6,7 @@
 
 let
   packagedExtensions = with pkgs.vscode-extensions; [
+    anthropic.claude-code
     charliermarsh.ruff
     docker.docker
     davidanson.vscode-markdownlint
@@ -59,8 +60,6 @@ let
   communityPackagedExtensions = with vscode-extensions.vscode-marketplace; [
     # TODO Enable once stable.
     #ms-python.vscode-python-envs
-    # TODO Re-enable when more stable.
-    #anthropic.claude-code
     donjayamanne.python-environment-manager
     eliverlara.andromeda
     liviuschera.noctis
