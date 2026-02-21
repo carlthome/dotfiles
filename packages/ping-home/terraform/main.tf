@@ -24,8 +24,20 @@ resource "google_cloud_run_v2_service" "checker" {
   name     = "home-lan-checker"
   location = var.region
   template {
+    scaling {
+      min_instance_count = 0
+      max_instance_count = 1
+    }
+    max_instance_request_concurrency = 1
     containers {
       image = "us-docker.pkg.dev/cloudrun/container/hello"
+      resources {
+        limits = {
+          cpu    = "1000m"
+          memory = "256Mi"
+        }
+        cpu_idle = true # CPU only allocated during request processing
+      }
       env {
         name = "HOME_LAN_ENDPOINT"
         value_source { secret_key_ref { secret = "home-lan-endpoint", version = "latest" } }
