@@ -9,14 +9,16 @@ pkgs.python3Packages.buildPythonApplication {
   build-system = [ pkgs.python3Packages.setuptools ];
 
   dependencies = with pkgs.python3Packages; [
-    flask
-    gunicorn
+    fastapi
+    uvicorn
     requests
     pysocks
+    prometheus-client
   ];
 
-  nativeCheckInputs = [
-    pkgs.python3Packages.pytest
+  nativeCheckInputs = with pkgs.python3Packages; [
+    httpx
+    pytest
     pkgs.ruff
   ];
 

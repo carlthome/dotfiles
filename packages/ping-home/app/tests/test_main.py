@@ -1,15 +1,15 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
+from fastapi.testclient import TestClient
 
-import main
+from main import app
 
 
 @pytest.fixture
 def client(monkeypatch):
     monkeypatch.setenv("HOME_LAN_ENDPOINT", "http://192.168.1.1")
-    main.app.config["TESTING"] = True
-    return main.app.test_client()
+    return TestClient(app)
 
 
 def test_home_lan_up(client):
@@ -18,7 +18,7 @@ def test_home_lan_up(client):
         mock_get.return_value.raise_for_status.return_value = None
         response = client.get("/")
     assert response.status_code == 200
-    assert b"UP" in response.data
+    assert response.json()["status"] == "up"
 
 
 def test_home_lan_down(client):
@@ -26,4 +26,11 @@ def test_home_lan_down(client):
         mock_get.side_effect = Exception("Connection refused")
         response = client.get("/")
     assert response.status_code == 500
-    assert b"Failed" in response.data
+    assert response.json()["status"] == "down"
+
+
+def test_metrics_endpoint(client):
+    response = client.get("/metrics")
+    assert response.status_code == 200
+    assert b"home_lan_up" in response.content
+    assert b"home_lan_checks_total" in response.content

@@ -1,22 +1,29 @@
 import os
+
 import requests
-from flask import Flask
+from fastapi import FastAPI
+from fastapi.responses import JSONResponse
+from prometheus_client import Counter, Gauge, make_asgi_app
 
-app = Flask(__name__)
+app = FastAPI()
+app.mount("/metrics", make_asgi_app())
+
+home_lan_up = Gauge("home_lan_up", "1 if home LAN is reachable, 0 otherwise")
+checks_total = Counter("home_lan_checks_total", "Total home LAN checks", ["result"])
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.get("/")
 def check_home_lan():
     home_endpoint = os.environ.get("HOME_LAN_ENDPOINT")
     proxies = {"http": "socks5h://localhost:1055", "https": "socks5h://localhost:1055"}
     try:
-        response = requests.get(home_endpoint, proxies=proxies, timeout=10)
-        response.raise_for_status()
-        return "Home LAN is UP", 200
+        resp = requests.get(home_endpoint, proxies=proxies, timeout=10)
+        resp.raise_for_status()
+        home_lan_up.set(1)
+        checks_total.labels(result="up").inc()
+        return {"status": "up"}
     except Exception as e:
-        print(f"ERROR: Home LAN Health check failed: {str(e)}")
-        return f"Failed: {str(e)}", 500
-
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+        print(f"ERROR: Home LAN check failed: {e}")
+        home_lan_up.set(0)
+        checks_total.labels(result="down").inc()
+        return JSONResponse({"status": "down", "error": str(e)}, status_code=500)
