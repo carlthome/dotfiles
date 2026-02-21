@@ -1,7 +1,6 @@
 terraform {
   backend "gcs" {
-    # Set by bootstrap.sh or via: terraform init -backend-config="bucket=YOUR_BUCKET"
-    bucket = "YOUR_GCS_BUCKET_NAME"
+    # Bucket is passed at init time via -backend-config (set as GCS_BUCKET_NAME GitHub secret).
     prefix = "terraform/ping-home/state"
   }
   required_providers {

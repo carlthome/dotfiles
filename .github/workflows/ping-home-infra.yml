@@ -20,7 +20,7 @@ jobs:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
       - uses: hashicorp/setup-terraform@v3
-      - run: terraform init
+      - run: terraform init -backend-config="bucket=${{ secrets.GCS_BUCKET_NAME }}"
       - run: terraform plan -out=tfplan
         env:
           TF_VAR_project_id: ${{ env.PROJECT_ID }}

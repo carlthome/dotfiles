@@ -92,13 +92,7 @@ echo "🐙 Pushing WIF configuration to GitHub Secrets..."
 gh secret set GCP_WORKLOAD_IDENTITY_PROVIDER --body "$WIF_PROVIDER" --repo "$GITHUB_REPO"
 gh secret set GCP_SERVICE_ACCOUNT --body "$SA_EMAIL" --repo "$GITHUB_REPO"
 gh secret set GCP_PROJECT_ID --body "$GCP_PROJECT_ID" --repo "$GITHUB_REPO"
-
-# ==========================================
-# PHASE 6: INJECT BUCKET NAME INTO TERRAFORM
-# ==========================================
-echo "🪣 Injecting GCS bucket name into Terraform backend config..."
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-sed -i "s/YOUR_GCS_BUCKET_NAME/${GCS_BUCKET_NAME}/" "$SCRIPT_DIR/terraform/main.tf"
+gh secret set GCS_BUCKET_NAME --body "$GCS_BUCKET_NAME" --repo "$GITHUB_REPO"
 
 echo ""
 echo "✅ BOOTSTRAP COMPLETE!"
