@@ -15,5 +15,13 @@ pkgs.python3Packages.buildPythonApplication {
     pysocks
   ];
 
-  nativeCheckInputs = [ pkgs.python3Packages.pytest ];
+  nativeCheckInputs = [
+    pkgs.python3Packages.pytest
+    pkgs.ruff
+  ];
+
+  checkPhase = ''
+    ruff format --check .
+    pytest
+  '';
 }
