@@ -1,0 +1,9 @@
+[project]
+name = "ping-home"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+    "flask>=3.0",
+    "gunicorn>=21.0",
+    "requests[socks]>=2.0",
+]

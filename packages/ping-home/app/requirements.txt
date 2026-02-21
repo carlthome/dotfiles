@@ -1,3 +1,0 @@
-Flask==3.*
-gunicorn==21.*
-requests[socks]==2.*

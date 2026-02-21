@@ -2,8 +2,10 @@
 set -e
 
 echo "🚀 Welcome to the Turn-Key Ping-Home Setup!"
-echo "This will configure Workload Identity Federation, Secrets, and generate your files."
+echo "This will configure Workload Identity Federation and Secrets in GCP."
 echo "---------------------------------------------------------------------------------"
+echo "Prerequisites: gcloud auth login && gh auth login"
+echo ""
 
 # ==========================================
 # PHASE 1: INTERACTIVE PROMPTS
@@ -92,228 +94,14 @@ gh secret set GCP_SERVICE_ACCOUNT --body "$SA_EMAIL" --repo "$GITHUB_REPO"
 gh secret set GCP_PROJECT_ID --body "$GCP_PROJECT_ID" --repo "$GITHUB_REPO"
 
 # ==========================================
-# PHASE 6: FILE GENERATION
+# PHASE 6: INJECT BUCKET NAME INTO TERRAFORM
 # ==========================================
-echo "📝 Generating Repository Files..."
-mkdir -p .github/workflows packages/ping-home/app packages/ping-home/terraform
+echo "🪣 Injecting GCS bucket name into Terraform backend config..."
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+sed -i "s/YOUR_GCS_BUCKET_NAME/${GCS_BUCKET_NAME}/" "$SCRIPT_DIR/terraform/main.tf"
 
-# --- APP CI/CD WORKFLOW ---
-cat << EOF > .github/workflows/ping-home-app.yml
-name: Deploy Ping-Home App (Cloud Run)
-on:
-  push:
-    branches: [ main ]
-    paths: [ 'packages/ping-home/app/**' ]
-  workflow_dispatch:
-env:
-  PROJECT_ID: \${{ secrets.GCP_PROJECT_ID }}
-  REGION: "us-central1"
-  REPO_NAME: "lan-checker-repo"
-  SERVICE_NAME: "home-lan-checker"
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write  # REQUIRED FOR WIF OIDC
-    steps:
-      - uses: actions/checkout@v4
-      - uses: google-github-actions/auth@v2
-        with:
-          workload_identity_provider: '\${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}'
-          service_account: '\${{ secrets.GCP_SERVICE_ACCOUNT }}'
-      - uses: docker/setup-buildx-action@v3
-      - uses: docker/login-action@v3
-        with:
-          registry: \${{ env.REGION }}-docker.pkg.dev
-          username: oauth2accesstoken
-          password: \${{ env.GOOGLE_GHA_CREDS_TOKEN }} # Auto-populated by the auth action
-      - uses: docker/build-push-action@v5
-        with:
-          context: packages/ping-home/app
-          push: true
-          tags: \${{ env.REGION }}-docker.pkg.dev/\${{ env.PROJECT_ID }}/\${{ env.REPO_NAME }}/lan-checker:\${{ github.sha }}
-      - uses: google-github-actions/deploy-cloudrun@v2
-        with:
-          service: \${{ env.SERVICE_NAME }}
-          region: \${{ env.REGION }}
-          image: \${{ env.REGION }}-docker.pkg.dev/\${{ env.PROJECT_ID }}/\${{ env.REPO_NAME }}/lan-checker:\${{ github.sha }}
-EOF
-
-# --- INFRA TERRAFORM WORKFLOW ---
-cat << EOF > .github/workflows/ping-home-infra.yml
-name: Deploy Ping-Home Infra (Terraform)
-on:
-  workflow_dispatch:
-env:
-  PROJECT_ID: \${{ secrets.GCP_PROJECT_ID }}
-  REGION: "us-central1"
-jobs:
-  terraform:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write  # REQUIRED FOR WIF OIDC
-    defaults:
-      run:
-        working-directory: packages/ping-home/terraform
-    steps:
-      - uses: actions/checkout@v4
-      - uses: google-github-actions/auth@v2
-        with:
-          workload_identity_provider: '\${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}'
-          service_account: '\${{ secrets.GCP_SERVICE_ACCOUNT }}'
-      - uses: hashicorp/setup-terraform@v3
-      - run: terraform init
-      - run: terraform plan -out=tfplan
-        env:
-          TF_VAR_project_id: \${{ env.PROJECT_ID }}
-          TF_VAR_region: \${{ env.REGION }}
-      - run: terraform apply -auto-approve tfplan
-EOF
-
-# --- PYTHON FILES ---
-cat << 'EOF' > packages/ping-home/app/Dockerfile
-FROM python:3.10-slim
-RUN apt-get update && apt-get install -y curl
-RUN curl -fsSL https://tailscale.com/install.sh | sh
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-COPY . .
-RUN chmod +x start.sh
-CMD ["./start.sh"]
-EOF
-
-cat << 'EOF' > packages/ping-home/app/start.sh
-#!/bin/bash
-tailscaled --tun=userspace-networking --socks5-server=localhost:1055 &
-sleep 2
-tailscale up --authkey=${TAILSCALE_AUTH_KEY} --hostname=gcp-health-checker --accept-routes
-exec gunicorn --bind :8080 --workers 1 --threads 8 --timeout 0 main:app
-EOF
-
-cat << 'EOF' > packages/ping-home/app/requirements.txt
-Flask==3.*
-gunicorn==21.*
-requests[socks]==2.*
-EOF
-
-cat << 'EOF' > packages/ping-home/app/main.py
-import os
-import requests
-from flask import Flask
-
-app = Flask(__name__)
-
-@app.route("/", methods=["GET", "POST"])
-def check_home_lan():
-    home_endpoint = os.environ.get("HOME_LAN_ENDPOINT")
-    proxies = {"http": "socks5h://localhost:1055", "https": "socks5h://localhost:1055"}
-    try:
-        response = requests.get(home_endpoint, proxies=proxies, timeout=10)
-        response.raise_for_status()
-        return "Home LAN is UP", 200
-    except Exception as e:
-        print(f"ERROR: Home LAN Health check failed: {str(e)}")
-        return f"Failed: {str(e)}", 500
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
-EOF
-
-# --- TERRAFORM FILES ---
-cat << EOF > packages/ping-home/terraform/main.tf
-terraform {
-  backend "gcs" {
-    bucket = "${GCS_BUCKET_NAME}" # Dynamically injected!
-    prefix = "terraform/ping-home/state"
-  }
-  required_providers {
-    google = { source = "hashicorp/google", version = "~> 5.0" }
-  }
-}
-
-provider "google" {
-  project = var.project_id
-  region  = var.region
-}
-
-resource "google_artifact_registry_repository" "repo" {
-  location      = var.region
-  repository_id = "lan-checker-repo"
-  description   = "Docker repository for the Home LAN Checker"
-  format        = "DOCKER"
-}
-
-resource "google_cloud_run_v2_service" "checker" {
-  name     = "home-lan-checker"
-  location = var.region
-  template {
-    containers {
-      image = "us-docker.pkg.dev/cloudrun/container/hello"
-      env {
-        name = "HOME_LAN_ENDPOINT"
-        value_source { secret_key_ref { secret = "home-lan-endpoint", version = "latest" } }
-      }
-      env {
-        name = "TAILSCALE_AUTH_KEY"
-        value_source { secret_key_ref { secret = "tailscale-auth-key", version = "latest" } }
-      }
-    }
-  }
-  lifecycle { ignore_changes = [template[0].containers[0].image] }
-}
-
-resource "google_cloud_scheduler_job" "cron" {
-  name             = "trigger-lan-check"
-  description      = "Pings the home LAN every 5 minutes"
-  schedule         = "*/5 * * * *"
-  time_zone        = "UTC"
-  attempt_deadline = "30s"
-  http_target {
-    http_method = "GET"
-    uri         = google_cloud_run_v2_service.checker.uri
-    oidc_token { service_account_email = google_cloud_run_v2_service.checker.service_account_email }
-  }
-}
-EOF
-
-cat << 'EOF' > packages/ping-home/terraform/alerts.tf
-data "google_secret_manager_secret_version" "email" {
-  secret  = "alert-email"
-  project = var.project_id
-}
-
-resource "google_monitoring_notification_channel" "email" {
-  display_name = "Home LAN Alerts"
-  type         = "email"
-  labels = { email_address = data.google_secret_manager_secret_version.email.secret_data }
-}
-
-resource "google_monitoring_alert_policy" "lan_down" {
-  display_name = "Home LAN is DOWN"
-  combiner     = "OR"
-  conditions {
-    display_name = "Function Exception Logged"
-    condition_matched_log {
-      filter = "resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"${google_cloud_run_v2_service.checker.name}\" AND severity>=ERROR"
-    }
-  }
-  notification_channels = [google_monitoring_notification_channel.email.name]
-  alert_strategy {
-    notification_rate_limit { period = "3600s" }
-  }
-}
-EOF
-
-cat << 'EOF' > packages/ping-home/terraform/variables.tf
-variable "project_id" { type = string }
-variable "region" { type = string, default = "us-central1" }
-EOF
-
+echo ""
 echo "✅ BOOTSTRAP COMPLETE!"
 echo "---------------------------------------------------------------------------------"
-echo "Your infrastructure is ready. WIF is active. All files are generated."
-echo "Commit these files to 'main', then go to your GitHub Actions tab"
-echo "and manually run 'Deploy Ping-Home Infra' to launch!"
+echo "WIF is active. No static credentials exist anywhere."
+echo "Go to your GitHub Actions tab and manually run 'Deploy Ping-Home Infra' to launch!"
