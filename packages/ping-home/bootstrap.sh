@@ -84,13 +84,21 @@ gcloud iam service-accounts add-iam-policy-binding "$SA_EMAIL" \
 WIF_PROVIDER="projects/${PROJECT_NUMBER}/locations/global/workloadIdentityPools/github-pool/providers/github-provider"
 
 # ==========================================
-# PHASE 5: GITHUB SECRETS
+# PHASE 5: GITHUB ENVIRONMENT
 # ==========================================
-echo "🐙 Pushing WIF configuration to GitHub Secrets..."
-gh secret set GCP_WORKLOAD_IDENTITY_PROVIDER --body "$WIF_PROVIDER" --repo "$GITHUB_REPO"
-gh secret set GCP_SERVICE_ACCOUNT --body "$SA_EMAIL" --repo "$GITHUB_REPO"
-gh secret set GCP_PROJECT_ID --body "$GCP_PROJECT_ID" --repo "$GITHUB_REPO"
-gh secret set GCS_BUCKET_NAME --body "$GCS_BUCKET_NAME" --repo "$GITHUB_REPO"
+echo "🐙 Configuring GitHub Actions 'production' environment..."
+gh api repos/"$GITHUB_REPO"/environments/production -X PUT >/dev/null
+
+echo "   Setting secrets..."
+gh secret set GCP_WORKLOAD_IDENTITY_PROVIDER --env production --body "$WIF_PROVIDER" --repo "$GITHUB_REPO"
+gh secret set GCP_SERVICE_ACCOUNT --env production --body "$SA_EMAIL" --repo "$GITHUB_REPO"
+gh secret set GCP_PROJECT_ID --env production --body "$GCP_PROJECT_ID" --repo "$GITHUB_REPO"
+gh secret set GCS_BUCKET_NAME --env production --body "$GCS_BUCKET_NAME" --repo "$GITHUB_REPO"
+
+echo "   Setting variables..."
+gh variable set REGION --env production --body "europe-north1" --repo "$GITHUB_REPO"
+gh variable set REPO_NAME --env production --body "lan-checker-repo" --repo "$GITHUB_REPO"
+gh variable set SERVICE_NAME --env production --body "home-lan-checker" --repo "$GITHUB_REPO"
 
 echo ""
 echo "✅ BOOTSTRAP COMPLETE!"
