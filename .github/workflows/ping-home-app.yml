@@ -5,14 +5,10 @@ on:
     paths: ["packages/ping-home/app/**"]
     paths-ignore: ["**.md"]
   workflow_dispatch:
-env:
-  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  REGION: "europe-north1"
-  REPO_NAME: "lan-checker-repo"
-  SERVICE_NAME: "home-lan-checker"
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    environment: production
     permissions:
       contents: read
       id-token: write # REQUIRED FOR WIF OIDC
@@ -25,16 +21,16 @@ jobs:
       - uses: docker/setup-buildx-action@v3
       - uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGION }}-docker.pkg.dev
+          registry: ${{ vars.REGION }}-docker.pkg.dev
           username: oauth2accesstoken
           password: ${{ env.GOOGLE_GHA_CREDS_TOKEN }}
       - uses: docker/build-push-action@v5
         with:
           context: packages/ping-home/app
           push: true
-          tags: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/lan-checker:${{ github.sha }}
+          tags: ${{ vars.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ vars.REPO_NAME }}/lan-checker:${{ github.sha }}
       - uses: google-github-actions/deploy-cloudrun@v2
         with:
-          service: ${{ env.SERVICE_NAME }}
-          region: ${{ env.REGION }}
-          image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/lan-checker:${{ github.sha }}
+          service: ${{ vars.SERVICE_NAME }}
+          region: ${{ vars.REGION }}
+          image: ${{ vars.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ vars.REPO_NAME }}/lan-checker:${{ github.sha }}
