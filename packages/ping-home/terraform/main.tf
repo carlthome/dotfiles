@@ -13,17 +13,33 @@ provider "google" {
   region  = var.region
 }
 
+# APIs that are safe for Terraform to own.
+# secretmanager, storage, iam, iamcredentials, and cloudresourcemanager
+# are enabled by bootstrap.sh before Terraform runs for the first time.
+resource "google_project_service" "apis" {
+  for_each = toset([
+    "artifactregistry.googleapis.com",
+    "cloudscheduler.googleapis.com",
+    "monitoring.googleapis.com",
+    "run.googleapis.com",
+  ])
+  service            = each.value
+  disable_on_destroy = false
+}
+
 resource "google_artifact_registry_repository" "repo" {
   location      = var.region
   repository_id = "lan-checker-repo"
   description   = "Docker repository for the Home LAN Checker"
   format        = "DOCKER"
+  depends_on    = [google_project_service.apis]
 }
 
 resource "google_cloud_run_v2_service" "checker" {
   name     = "home-lan-checker"
   location = var.region
   template {
+    service_account = google_service_account.cloudrun.email
     scaling {
       min_instance_count = 0
       max_instance_count = 1
@@ -49,9 +65,15 @@ resource "google_cloud_run_v2_service" "checker" {
     }
   }
   lifecycle { ignore_changes = [template[0].containers[0].image] }
+  depends_on = [
+    google_project_service.apis,
+    google_secret_manager_secret_iam_member.cloudrun_home_lan_endpoint,
+    google_secret_manager_secret_iam_member.cloudrun_tailscale_auth_key,
+  ]
 }
 
 resource "google_cloud_scheduler_job" "cron" {
+  depends_on = [google_project_service.apis]
   name             = "trigger-lan-check"
   description      = "Pings the home LAN every 5 minutes"
   schedule         = "*/5 * * * *"

@@ -25,16 +25,14 @@ PROJECT_NUMBER=$(gcloud projects describe "$GCP_PROJECT_ID" --format="value(proj
 # ==========================================
 # PHASE 2: ENABLE APIS & CREATE BUCKET
 # ==========================================
-echo "🔄 Enabling necessary GCP APIs..."
+echo "🔄 Enabling bootstrap-prerequisite GCP APIs..."
+# Only what's needed before Terraform can authenticate and store state.
+# run, cloudscheduler, artifactregistry, and monitoring are owned by Terraform.
 gcloud services enable \
-  secretmanager.googleapis.com \
-  storage.googleapis.com \
-  run.googleapis.com \
-  cloudscheduler.googleapis.com \
-  artifactregistry.googleapis.com \
-  monitoring.googleapis.com \
+  cloudresourcemanager.googleapis.com \
   iamcredentials.googleapis.com \
-  cloudresourcemanager.googleapis.com
+  secretmanager.googleapis.com \
+  storage.googleapis.com
 
 echo "🪣 Creating GCS Bucket for Terraform State..."
 gcloud storage buckets create "gs://$GCS_BUCKET_NAME" --location=us-central1 2>/dev/null || echo "   Bucket already exists, continuing..."
