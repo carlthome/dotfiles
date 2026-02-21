@@ -35,7 +35,7 @@ gcloud services enable \
   storage.googleapis.com
 
 echo "🪣 Creating GCS Bucket for Terraform State..."
-gcloud storage buckets create "gs://$GCS_BUCKET_NAME" --location=us-central1 2>/dev/null || echo "   Bucket already exists, continuing..."
+gcloud storage buckets create "gs://$GCS_BUCKET_NAME" --location=europe-north1 2>/dev/null || echo "   Bucket already exists, continuing..."
 
 # ==========================================
 # PHASE 3: SECRETS MANAGER
