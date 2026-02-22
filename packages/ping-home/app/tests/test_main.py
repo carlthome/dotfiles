@@ -9,6 +9,7 @@ from main import app
 @pytest.fixture
 def client(monkeypatch):
     monkeypatch.setenv("HOME_LAN_ENDPOINT", "http://192.168.1.1")
+    monkeypatch.setenv("TS_SOCKS5_SERVER", "localhost:1055")
     return TestClient(app)
 
 

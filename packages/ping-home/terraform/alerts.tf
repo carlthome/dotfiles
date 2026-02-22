@@ -1,6 +1,6 @@
 data "google_secret_manager_secret_version" "email" {
   secret  = "alert-email"
-  project = var.project_id
+  project = data.google_client_config.current.project
 }
 
 resource "google_monitoring_notification_channel" "email" {

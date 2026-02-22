@@ -14,8 +14,9 @@ checks_total = Counter("home_lan_checks_total", "Total home LAN checks", ["resul
 
 @app.get("/")
 def check_home_lan():
-    home_endpoint = os.environ.get("HOME_LAN_ENDPOINT")
-    proxies = {"http": "socks5h://localhost:1055", "https": "socks5h://localhost:1055"}
+    home_endpoint = os.environ["HOME_LAN_ENDPOINT"]
+    socks5 = os.environ["TS_SOCKS5_SERVER"]
+    proxies = {"http": f"socks5h://{socks5}", "https": f"socks5h://{socks5}"}
     try:
         resp = requests.get(home_endpoint, proxies=proxies, timeout=10)
         resp.raise_for_status()

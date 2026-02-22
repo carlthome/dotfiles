@@ -1,26 +1,30 @@
-name: Deploy Ping-Home Infra (Terraform)
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - "main"
+    paths:
+      - ".github/workflows/ping-home-infra.yml"
+      - "packages/ping-home/terraform/**"
+
 jobs:
-  terraform:
+  plan-and-apply:
     runs-on: ubuntu-latest
     environment: production
     permissions:
       contents: read
-      id-token: write # REQUIRED FOR WIF OIDC
+      id-token: write
     defaults:
       run:
         working-directory: packages/ping-home/terraform
+    env:
+      GOOGLE_REGION: ${{ vars.GOOGLE_CLOUD_REGION }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: google-github-actions/auth@v2
+      - uses: actions/checkout@v6
+      - uses: google-github-actions/auth@v3
         with:
-          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ secrets.GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GOOGLE_CLOUD_SERVICE_ACCOUNT }}
       - uses: hashicorp/setup-terraform@v3
-      - run: terraform init -backend-config="bucket=${{ secrets.GCS_BUCKET_NAME }}"
+      - run: terraform init -backend-config="bucket=${{ secrets.TERRAFORM_STATE_BUCKET_NAME }}"
       - run: terraform plan -out=tfplan
-        env:
-          TF_VAR_project_id: ${{ secrets.GCP_PROJECT_ID }}
-          TF_VAR_region: ${{ vars.REGION }}
       - run: terraform apply -auto-approve tfplan

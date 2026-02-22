@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    # Bucket is passed at init time via -backend-config (set as GCS_BUCKET_NAME GitHub secret).
+    # Bucket is passed at init time via -backend-config (set as TERRAFORM_STATE_BUCKET_NAME GitHub secret).
     prefix = "terraform/ping-home/state"
   }
   required_providers {
@@ -9,13 +9,14 @@ terraform {
 }
 
 provider "google" {
-  project = var.project_id
-  region  = var.region
+  # Reads GOOGLE_CLOUD_PROJECT and GOOGLE_REGION from env vars.
 }
+
+data "google_client_config" "current" {}
 
 # APIs that are safe for Terraform to own.
 # secretmanager, storage, iam, iamcredentials, and cloudresourcemanager
-# are enabled by bootstrap.sh before Terraform runs for the first time.
+# are enabled by install.sh before Terraform runs for the first time.
 resource "google_project_service" "apis" {
   for_each = toset([
     "artifactregistry.googleapis.com",
@@ -28,7 +29,7 @@ resource "google_project_service" "apis" {
 }
 
 resource "google_artifact_registry_repository" "repo" {
-  location      = var.region
+  location      = data.google_client_config.current.region
   repository_id = "lan-checker-repo"
   description   = "Docker repository for the Home LAN Checker"
   format        = "DOCKER"
@@ -37,7 +38,7 @@ resource "google_artifact_registry_repository" "repo" {
 
 resource "google_cloud_run_v2_service" "checker" {
   name     = "home-lan-checker"
-  location = var.region
+  location = data.google_client_config.current.region
   template {
     service_account = google_service_account.cloudrun.email
     scaling {
@@ -59,8 +60,16 @@ resource "google_cloud_run_v2_service" "checker" {
         value_source { secret_key_ref { secret = "home-lan-endpoint", version = "latest" } }
       }
       env {
-        name = "TAILSCALE_AUTH_KEY"
+        name = "TS_AUTHKEY"
         value_source { secret_key_ref { secret = "tailscale-auth-key", version = "latest" } }
+      }
+      env {
+        name  = "TS_HOSTNAME"
+        value = "gcp-health-checker"
+      }
+      env {
+        name  = "TS_SOCKS5_SERVER"
+        value = "localhost:1055"
       }
     }
   }
