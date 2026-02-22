@@ -30,6 +30,9 @@
   users.defaultUserShell = pkgs.fish;
   programs.fish.enable = true;
 
+  # Enable Tailscale for mesh networking.
+  services.tailscale.enable = true;
+
   # Set a basic default environment for all users.
   environment = {
     systemPackages = with pkgs; [
