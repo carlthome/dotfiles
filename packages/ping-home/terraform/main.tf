@@ -57,11 +57,21 @@ resource "google_cloud_run_v2_service" "checker" {
       }
       env {
         name = "HOME_LAN_ENDPOINT"
-        value_source { secret_key_ref { secret = "home-lan-endpoint", version = "latest" } }
+        value_source {
+          secret_key_ref {
+            secret  = "home-lan-endpoint"
+            version = "latest"
+          }
+        }
       }
       env {
         name = "TS_AUTHKEY"
-        value_source { secret_key_ref { secret = "tailscale-auth-key", version = "latest" } }
+        value_source {
+          secret_key_ref {
+            secret  = "tailscale-auth-key"
+            version = "latest"
+          }
+        }
       }
       env {
         name  = "TS_HOSTNAME"
