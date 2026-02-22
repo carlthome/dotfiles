@@ -7,6 +7,17 @@
   services.desktopManager.gnome.enable = true;
   services.desktopManager.cosmic.enable = true;
 
+  # Enable lock screen by default.
+  programs.dconf.profiles.user.databases = [
+    {
+      settings = {
+        "org/gnome/desktop/lockdown" = {
+          disable-lock-screen = false;
+        };
+      };
+    }
+  ];
+
   # Configure audio settings.
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
