@@ -102,6 +102,16 @@
   # Enable systemd services to avoid graphics quirks when waking from suspend.
   hardware.nvidia.powerManagement.enable = true;
 
+  # Enable USB host controllers, hubs, and HID devices to wake system from suspend.
+  services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="usb", KERNEL=="usb*", TEST=="power/wakeup", ATTR{power/wakeup}="enabled"
+    ACTION=="add", SUBSYSTEM=="usb", KERNEL=="usb*", TEST=="power/control", ATTR{power/control}="on"
+    ACTION=="add", SUBSYSTEM=="usb", ATTR{bDeviceClass}=="09", TEST=="power/wakeup", ATTR{power/wakeup}="enabled"
+    ACTION=="add", SUBSYSTEM=="usb", ATTR{bDeviceClass}=="09", TEST=="power/control", ATTR{power/control}="on"
+    ACTION=="add", SUBSYSTEM=="usb", DRIVER=="usbhid", TEST=="power/wakeup", ATTR{power/wakeup}="enabled"
+    ACTION=="add", SUBSYSTEM=="usb", DRIVER=="usbhid", TEST=="power/control", ATTR{power/control}="on"
+  '';
+
   # Tune NVIDIA GPU power settings on boot.
   systemd.services.configure-gpu = {
     description = "Configure GPU power settings";
