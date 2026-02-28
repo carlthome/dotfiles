@@ -5,6 +5,7 @@ terraform {
   }
   required_providers {
     google = { source = "hashicorp/google", version = "~> 5.0" }
+    github = { source = "integrations/github", version = "~> 6.0" }
   }
 }
 
@@ -12,15 +13,19 @@ provider "google" {
   # Reads GOOGLE_CLOUD_PROJECT and GOOGLE_REGION from env vars.
 }
 
+provider "github" {
+  # Uses GITHUB_TOKEN environment variable
+}
+
 data "google_client_config" "current" {}
 
-# APIs that are safe for Terraform to own.
-# secretmanager, storage, iam, iamcredentials, and cloudresourcemanager
-# are enabled by install.sh before Terraform runs for the first time.
 resource "google_project_service" "apis" {
   for_each = toset([
     "artifactregistry.googleapis.com",
     "cloudscheduler.googleapis.com",
+    "iam.googleapis.com",
+    "iamcredentials.googleapis.com",
+    "logging.googleapis.com",
     "monitoring.googleapis.com",
     "run.googleapis.com",
   ])
@@ -29,7 +34,7 @@ resource "google_project_service" "apis" {
 }
 
 resource "google_artifact_registry_repository" "repo" {
-  location      = data.google_client_config.current.region
+  location      = var.google_region
   repository_id = "lan-checker-repo"
   description   = "Docker repository for the Home LAN Checker"
   format        = "DOCKER"
@@ -38,7 +43,7 @@ resource "google_artifact_registry_repository" "repo" {
 
 resource "google_cloud_run_v2_service" "checker" {
   name     = "home-lan-checker"
-  location = data.google_client_config.current.region
+  location = var.google_region
   template {
     service_account = google_service_account.cloudrun.email
     scaling {
@@ -53,7 +58,7 @@ resource "google_cloud_run_v2_service" "checker" {
           cpu    = "1000m"
           memory = "256Mi"
         }
-        cpu_idle = true # CPU only allocated during request processing
+        cpu_idle = true
       }
       env {
         name = "HOME_LAN_ENDPOINT"
@@ -92,8 +97,9 @@ resource "google_cloud_run_v2_service" "checker" {
 }
 
 resource "google_cloud_scheduler_job" "cron" {
-  depends_on = [google_project_service.apis]
+  depends_on       = [google_project_service.apis]
   name             = "trigger-lan-check"
+  region           = "europe-west1"
   description      = "Pings the home LAN every 5 minutes"
   schedule         = "*/5 * * * *"
   time_zone        = "UTC"
