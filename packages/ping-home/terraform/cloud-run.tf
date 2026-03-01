@@ -1,6 +1,7 @@
 resource "google_cloud_run_v2_service" "checker" {
   name     = "home-lan-checker"
   location = var.google_region
+  ingress  = "INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER"
   template {
     service_account = google_service_account.cloudrun.email
     scaling {
