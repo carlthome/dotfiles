@@ -17,6 +17,7 @@ jobs:
       run:
         working-directory: packages/ping-home/terraform
     env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       TF_VAR_github_repo: ${{ github.repository }}
       TF_VAR_google_project: ${{ vars.GOOGLE_CLOUD_PROJECT }}
       TF_VAR_google_region: ${{ vars.GOOGLE_CLOUD_REGION }}
