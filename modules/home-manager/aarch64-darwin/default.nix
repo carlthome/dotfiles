@@ -9,6 +9,7 @@
     allowUnfreePredicate =
       pkg:
       builtins.elem (lib.getName pkg) [
+        "claude-code"
         "roomeqwizard"
         "terraform"
         "vscode"
