@@ -42,7 +42,7 @@ manifest = JSON.generate(
   'hook_attributes'     => { 'active' => false, 'url' => 'https://example.com' },
   'redirect_url'        => "http://localhost:#{port}/callback",
   'public'              => false,
-  'default_permissions' => { 'contents' => 'read', 'actions' => 'write', 'administration' => 'write', 'secrets' => 'write' },
+  'default_permissions' => { 'contents' => 'read', 'actions' => 'write', 'administration' => 'write', 'secrets' => 'write', 'environments' => 'write' },
   'default_events'      => []
 )
 manifest_html = manifest.gsub('&', '&amp;').gsub('"', '&quot;')
