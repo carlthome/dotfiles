@@ -43,7 +43,7 @@ resource "google_cloud_run_v2_service" "checker" {
       }
       env {
         name  = "TS_HOSTNAME"
-        value = "gcp-health-checker"
+        value = "gcp"
       }
       env {
         name  = "TS_SOCKS5_SERVER"
