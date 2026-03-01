@@ -52,8 +52,7 @@ echo "CLOUDSDK_CORE_PROJECT=\"$CLOUDSDK_CORE_PROJECT\"" >>.env
 
 # Generate terraform.tfvars
 cat >terraform/terraform.tfvars <<EOF
-github_repo   = "$GITHUB_REPO"
-google_region = "$GOOGLE_CLOUD_REGION"
+github_repo    = "$GITHUB_REPO"
+google_project = "$GOOGLE_CLOUD_PROJECT"
+google_region  = "$GOOGLE_CLOUD_REGION"
 EOF
-
-export CLOUDSDK_CORE_PROJECT="$GOOGLE_CLOUD_PROJECT"

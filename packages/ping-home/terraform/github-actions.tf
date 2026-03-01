@@ -121,6 +121,13 @@ resource "github_actions_environment_secret" "terraform_service_account" {
   repository      = local.github_repo_name
 }
 
+resource "github_actions_environment_variable" "google_cloud_project" {
+  environment   = github_repository_environment.production.environment
+  variable_name = "GOOGLE_CLOUD_PROJECT"
+  value         = var.google_project
+  repository    = local.github_repo_name
+}
+
 resource "github_actions_environment_variable" "google_cloud_region" {
   environment   = github_repository_environment.production.environment
   variable_name = "GOOGLE_CLOUD_REGION"

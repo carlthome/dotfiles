@@ -3,6 +3,11 @@ variable "github_repo" {
   description = "GitHub repository in the format 'owner/repo'"
 }
 
+variable "google_project" {
+  type        = string
+  description = "GCP project ID"
+}
+
 variable "google_region" {
   type        = string
   description = "GCP region for resources (e.g., europe-north1)"

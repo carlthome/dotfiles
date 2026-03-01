@@ -10,7 +10,8 @@ terraform {
 }
 
 provider "google" {
-  # Reads GOOGLE_CLOUD_PROJECT and GOOGLE_REGION from env vars.
+  project = var.google_project
+  region  = var.google_region
 }
 
 provider "github" {
