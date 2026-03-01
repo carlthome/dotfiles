@@ -10,7 +10,7 @@ RUN apt-get update && \
     curl -fsSL https://tailscale.com/install.sh | sh && \
     rm -rf /var/lib/apt/lists/*
 WORKDIR /app
-COPY --from=builder /app/.venv /app/.venv
+COPY --from=build /app/.venv /app/.venv
 COPY . .
 ENV PATH="/app/.venv/bin:$PATH"
 RUN chmod +x start.sh
