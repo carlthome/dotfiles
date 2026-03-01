@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Start Tailscale in userspace networking mode with a SOCKS5 server.
-tailscaled --tun=userspace-networking --socks5-server="${TS_SOCKS5_SERVER}" &
+tailscaled --tun=userspace-networking --socks5-server="${TS_SOCKS5_SERVER}" 2>&1 | grep -i -E "error|warn|fatal" &
 sleep 2
 
 # Authenticate with Tailscale using the provided auth key.
