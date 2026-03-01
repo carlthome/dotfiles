@@ -34,15 +34,22 @@ resource "google_iam_workload_identity_pool_provider" "github" {
   display_name = "GitHub Provider"
 }
 
-# Service account for GitHub Actions.
-resource "google_service_account" "github_actions" {
-  account_id   = "github-actions"
-  display_name = "GitHub Actions Service Account"
+# Service account for Terraform (infra workflow).
+resource "google_service_account" "github_actions_terraform" {
+  account_id   = "github-actions-terraform"
+  display_name = "GitHub Actions Terraform Service Account"
   description  = "Used by GitHub Actions for Terraform deployments"
 }
 
-# Grant necessary roles to the GitHub Actions service account.
-resource "google_project_iam_member" "github_actions_roles" {
+# Service account for application build and deploy (app workflow).
+resource "google_service_account" "github_actions_deploy" {
+  account_id   = "github-actions-deploy"
+  display_name = "GitHub Actions Deploy Service Account"
+  description  = "Used by GitHub Actions for building and deploying the application"
+}
+
+# Grant admin roles to the Terraform service account.
+resource "google_project_iam_member" "github_actions_terraform_roles" {
   for_each = toset([
     "roles/run.admin",
     "roles/artifactregistry.admin",
@@ -58,17 +65,35 @@ resource "google_project_iam_member" "github_actions_roles" {
   ])
   project = data.google_client_config.current.project
   role    = each.value
-  member  = "serviceAccount:${google_service_account.github_actions.email}"
+  member  = "serviceAccount:${google_service_account.github_actions_terraform.email}"
 }
 
-# Allow GitHub Actions to impersonate the service account via WIF.
-resource "google_service_account_iam_member" "github_actions_wifu" {
-  service_account_id = google_service_account.github_actions.name
+# Grant minimal roles to the deploy service account.
+resource "google_project_iam_member" "github_actions_deploy_roles" {
+  for_each = toset([
+    "roles/artifactregistry.writer",
+    "roles/run.developer",
+  ])
+  project = data.google_client_config.current.project
+  role    = each.value
+  member  = "serviceAccount:${google_service_account.github_actions_deploy.email}"
+}
+
+# Allow Terraform SA to impersonate via WIF.
+resource "google_service_account_iam_member" "github_actions_terraform_wif" {
+  service_account_id = google_service_account.github_actions_terraform.name
   role               = "roles/iam.workloadIdentityUser"
   member             = "principalSet://iam.googleapis.com/projects/${data.google_project.current.number}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.github.workload_identity_pool_id}/attribute.repository/${var.github_repo}"
 }
 
-# Create GitHub Actions environment and secrets using the GitHub provider.
+# Allow deploy SA to impersonate via WIF.
+resource "google_service_account_iam_member" "github_actions_deploy_wif" {
+  service_account_id = google_service_account.github_actions_deploy.name
+  role               = "roles/iam.workloadIdentityUser"
+  member             = "principalSet://iam.googleapis.com/projects/${data.google_project.current.number}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.github.workload_identity_pool_id}/attribute.repository/${var.github_repo}"
+}
+
+# Create GitHub Actions environment and secrets.
 resource "github_repository_environment" "production" {
   environment = "production"
   repository  = local.github_repo_name
@@ -81,10 +106,17 @@ resource "github_actions_environment_secret" "workload_identity_provider" {
   repository      = local.github_repo_name
 }
 
-resource "github_actions_environment_secret" "service_account" {
+resource "github_actions_environment_secret" "deploy_service_account" {
   environment     = github_repository_environment.production.environment
-  secret_name     = "GOOGLE_CLOUD_SERVICE_ACCOUNT"
-  plaintext_value = google_service_account.github_actions.email
+  secret_name     = "GOOGLE_CLOUD_DEPLOY_SERVICE_ACCOUNT"
+  plaintext_value = google_service_account.github_actions_deploy.email
+  repository      = local.github_repo_name
+}
+
+resource "github_actions_environment_secret" "terraform_service_account" {
+  environment     = github_repository_environment.production.environment
+  secret_name     = "GOOGLE_CLOUD_TERRAFORM_SERVICE_ACCOUNT"
+  plaintext_value = google_service_account.github_actions_terraform.email
   repository      = local.github_repo_name
 }
 

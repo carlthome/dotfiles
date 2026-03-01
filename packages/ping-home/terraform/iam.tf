@@ -26,5 +26,5 @@ resource "google_secret_manager_secret_iam_member" "cloudrun_tailscale_auth_key"
 resource "google_service_account_iam_member" "cloudrun_deploy" {
   service_account_id = google_service_account.cloudrun.name
   role               = "roles/iam.serviceAccountUser"
-  member             = "serviceAccount:github-actions@${data.google_client_config.current.project}.iam.gserviceaccount.com"
+  member             = "serviceAccount:${google_service_account.github_actions_deploy.email}"
 }

@@ -24,7 +24,7 @@ jobs:
       - uses: google-github-actions/auth@v3
         with:
           workload_identity_provider: ${{ secrets.GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.GOOGLE_CLOUD_SERVICE_ACCOUNT }}
+          service_account: ${{ secrets.GOOGLE_CLOUD_TERRAFORM_SERVICE_ACCOUNT }}
       - uses: hashicorp/setup-terraform@v3
       - run: terraform init -backend-config="bucket=${{ secrets.TERRAFORM_STATE_BUCKET_NAME }}"
       - run: terraform plan -out=tfplan
