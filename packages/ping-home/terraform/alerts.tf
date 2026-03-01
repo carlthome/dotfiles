@@ -12,6 +12,7 @@ resource "google_monitoring_notification_channel" "email" {
 resource "google_monitoring_alert_policy" "lan_down" {
   display_name = "Home LAN is DOWN"
   combiner     = "OR"
+  severity     = "CRITICAL"
   conditions {
     display_name = "Function Exception Logged"
     condition_matched_log {
