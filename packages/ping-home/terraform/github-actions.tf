@@ -54,6 +54,7 @@ resource "google_project_iam_member" "github_actions_roles" {
     "roles/iam.serviceAccountUser",
     "roles/secretmanager.admin",
     "roles/storage.objectAdmin",
+    "roles/resourcemanager.projectIamAdmin",
   ])
   project = data.google_client_config.current.project
   role    = each.value

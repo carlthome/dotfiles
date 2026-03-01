@@ -109,6 +109,7 @@ resource "google_cloud_scheduler_job" "cron" {
     uri         = google_cloud_run_v2_service.checker.uri
     oidc_token {
       service_account_email = google_service_account.cloudrun.email
+      audience              = "${google_cloud_run_v2_service.checker.uri}/"
     }
   }
 }
