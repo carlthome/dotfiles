@@ -10,17 +10,7 @@ resource "google_cloud_run_v2_service" "checker" {
     }
     max_instance_request_concurrency = 1
     volumes {
-      name = "home-lan-endpoint"
-      secret {
-        secret = google_secret_manager_secret.home_lan_endpoint.secret_id
-        items {
-          version = "latest"
-          path    = "home-lan-endpoint"
-        }
-      }
-    }
-    volumes {
-      name = "tailscale-auth-key"
+      name = "secrets"
       secret {
         secret = google_secret_manager_secret.tailscale_auth_key.secret_id
         items {
@@ -39,12 +29,17 @@ resource "google_cloud_run_v2_service" "checker" {
         cpu_idle = true
       }
       volume_mounts {
-        name       = "home-lan-endpoint"
-        mount_path = "/secrets/home-lan-endpoint"
+        name       = "secrets"
+        mount_path = "/secrets"
       }
-      volume_mounts {
-        name       = "tailscale-auth-key"
-        mount_path = "/secrets/tailscale-auth-key"
+      env {
+        name = "HOME_LAN_ENDPOINT"
+        value_source {
+          secret_key_ref {
+            secret  = "home-lan-endpoint"
+            version = "latest"
+          }
+        }
       }
       env {
         name  = "TS_HOSTNAME"
