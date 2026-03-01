@@ -15,6 +15,7 @@ provider "google" {
 }
 
 provider "github" {
+  owner = split("/", var.github_repo)[0]
   # Uses GITHUB_TOKEN environment variable
 }
 
