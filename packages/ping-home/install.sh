@@ -32,8 +32,12 @@ terraform apply -auto-approve
 
 cd ..
 echo ""
-echo "Populating secrets..."
-./populate-secrets.sh
+echo "Setting up GitHub App for CI..."
+./create-github-app.sh
+
+echo ""
+echo "Populating application secrets..."
+./populate-application-secrets.sh
 
 echo ""
 echo "✓ Setup complete!"

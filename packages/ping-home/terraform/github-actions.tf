@@ -100,37 +100,37 @@ resource "github_repository_environment" "production" {
   repository  = local.github_repo_name
 }
 
-resource "github_actions_environment_variable" "workload_identity_provider" {
-  environment   = github_repository_environment.production.environment
-  variable_name = "GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER"
-  value         = "projects/${data.google_project.current.number}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.github.workload_identity_pool_id}/providers/${google_iam_workload_identity_pool_provider.github.workload_identity_pool_provider_id}"
-  repository    = local.github_repo_name
+resource "github_actions_environment_secret" "workload_identity_provider" {
+  environment     = github_repository_environment.production.environment
+  secret_name     = "GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER"
+  plaintext_value = "projects/${data.google_project.current.number}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.github.workload_identity_pool_id}/providers/${google_iam_workload_identity_pool_provider.github.workload_identity_pool_provider_id}"
+  repository      = local.github_repo_name
 }
 
-resource "github_actions_environment_variable" "deploy_service_account" {
-  environment   = github_repository_environment.production.environment
-  variable_name = "GOOGLE_CLOUD_DEPLOY_SERVICE_ACCOUNT"
-  value         = google_service_account.github_actions_deploy.email
-  repository    = local.github_repo_name
+resource "github_actions_environment_secret" "deploy_service_account" {
+  environment     = github_repository_environment.production.environment
+  secret_name     = "GOOGLE_CLOUD_DEPLOY_SERVICE_ACCOUNT"
+  plaintext_value = google_service_account.github_actions_deploy.email
+  repository      = local.github_repo_name
 }
 
-resource "github_actions_environment_variable" "terraform_service_account" {
-  environment   = github_repository_environment.production.environment
-  variable_name = "GOOGLE_CLOUD_TERRAFORM_SERVICE_ACCOUNT"
-  value         = google_service_account.github_actions_terraform.email
-  repository    = local.github_repo_name
+resource "github_actions_environment_secret" "terraform_service_account" {
+  environment     = github_repository_environment.production.environment
+  secret_name     = "GOOGLE_CLOUD_TERRAFORM_SERVICE_ACCOUNT"
+  plaintext_value = google_service_account.github_actions_terraform.email
+  repository      = local.github_repo_name
 }
 
-resource "github_actions_environment_variable" "google_cloud_project" {
-  environment   = github_repository_environment.production.environment
-  variable_name = "GOOGLE_CLOUD_PROJECT"
-  value         = var.google_project
-  repository    = local.github_repo_name
+resource "github_actions_environment_secret" "google_cloud_project" {
+  environment     = github_repository_environment.production.environment
+  secret_name     = "GOOGLE_CLOUD_PROJECT"
+  plaintext_value = var.google_project
+  repository      = local.github_repo_name
 }
 
-resource "github_actions_environment_variable" "google_cloud_region" {
-  environment   = github_repository_environment.production.environment
-  variable_name = "GOOGLE_CLOUD_REGION"
-  value         = var.google_region
-  repository    = local.github_repo_name
+resource "github_actions_environment_secret" "google_cloud_region" {
+  environment     = github_repository_environment.production.environment
+  secret_name     = "GOOGLE_CLOUD_REGION"
+  plaintext_value = var.google_region
+  repository      = local.github_repo_name
 }

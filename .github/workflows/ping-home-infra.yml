@@ -17,17 +17,27 @@ jobs:
       run:
         working-directory: packages/ping-home/terraform
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       TF_VAR_github_repo: ${{ github.repository }}
-      TF_VAR_google_project: ${{ vars.GOOGLE_CLOUD_PROJECT }}
-      TF_VAR_google_region: ${{ vars.GOOGLE_CLOUD_REGION }}
+      TF_VAR_google_project: ${{ secrets.GOOGLE_CLOUD_PROJECT }}
+      TF_VAR_google_region: ${{ secrets.GOOGLE_CLOUD_REGION }}
     steps:
       - uses: actions/checkout@v6
+      - uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ vars.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
       - uses: google-github-actions/auth@v3
         with:
-          workload_identity_provider: ${{ vars.GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ vars.GOOGLE_CLOUD_TERRAFORM_SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ secrets.GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GOOGLE_CLOUD_TERRAFORM_SERVICE_ACCOUNT }}
       - uses: hashicorp/setup-terraform@v3
       - run: terraform init -backend-config="bucket=${{ secrets.TERRAFORM_STATE_BUCKET_NAME }}"
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
       - run: terraform plan -out=tfplan
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
       - run: terraform apply -auto-approve tfplan
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
