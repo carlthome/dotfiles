@@ -1,6 +1,3 @@
-# GCP Secrets for the application.
-# Terraform creates the secret resources; populate values using populate-secrets.sh.
-
 resource "google_secret_manager_secret" "home_lan_endpoint" {
   secret_id = "home-lan-endpoint"
   replication {

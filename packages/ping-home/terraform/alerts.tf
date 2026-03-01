@@ -6,7 +6,7 @@ data "google_secret_manager_secret_version" "email" {
 resource "google_monitoring_notification_channel" "email" {
   display_name = "Home LAN Alerts"
   type         = "email"
-  labels = { email_address = data.google_secret_manager_secret_version.email.secret_data }
+  labels       = { email_address = data.google_secret_manager_secret_version.email.secret_data }
 }
 
 resource "google_monitoring_alert_policy" "lan_down" {
