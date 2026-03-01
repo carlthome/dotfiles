@@ -9,6 +9,26 @@ resource "google_cloud_run_v2_service" "checker" {
       max_instance_count = 1
     }
     max_instance_request_concurrency = 1
+    volumes {
+      name = "home-lan-endpoint"
+      secret {
+        secret = google_secret_manager_secret.home_lan_endpoint.secret_id
+        items {
+          version = "latest"
+          path    = "home-lan-endpoint"
+        }
+      }
+    }
+    volumes {
+      name = "tailscale-auth-key"
+      secret {
+        secret = google_secret_manager_secret.tailscale_auth_key.secret_id
+        items {
+          version = "latest"
+          path    = "tailscale-auth-key"
+        }
+      }
+    }
     containers {
       image = "us-docker.pkg.dev/cloudrun/container/hello"
       resources {
@@ -18,23 +38,13 @@ resource "google_cloud_run_v2_service" "checker" {
         }
         cpu_idle = true
       }
-      env {
-        name = "HOME_LAN_ENDPOINT"
-        value_source {
-          secret_key_ref {
-            secret  = "home-lan-endpoint"
-            version = "latest"
-          }
-        }
+      volume_mounts {
+        name       = "home-lan-endpoint"
+        mount_path = "/secrets/home-lan-endpoint"
       }
-      env {
-        name = "TS_AUTHKEY"
-        value_source {
-          secret_key_ref {
-            secret  = "tailscale-auth-key"
-            version = "latest"
-          }
-        }
+      volume_mounts {
+        name       = "tailscale-auth-key"
+        mount_path = "/secrets/tailscale-auth-key"
       }
       env {
         name  = "TS_HOSTNAME"
