@@ -28,3 +28,15 @@ resource "google_service_account_iam_member" "cloudrun_deploy" {
   role               = "roles/iam.serviceAccountUser"
   member             = "serviceAccount:${google_service_account.github_actions_deploy.email}"
 }
+
+resource "google_service_account" "scheduler" {
+  account_id   = "scheduler-invoker"
+  display_name = "Scheduler Invoker"
+}
+
+resource "google_cloud_run_service_iam_member" "invoker" {
+  service  = google_cloud_run_v2_service.checker.name
+  location = google_cloud_run_v2_service.checker.location
+  role     = "roles/run.invoker"
+  member   = "serviceAccount:${google_service_account.scheduler.email}"
+}
