@@ -62,6 +62,7 @@ resource "google_project_iam_member" "github_actions_terraform_roles" {
     "roles/secretmanager.admin",
     "roles/storage.objectAdmin",
     "roles/resourcemanager.projectIamAdmin",
+    "roles/iam.workloadIdentityPoolAdmin",
   ])
   project = data.google_client_config.current.project
   role    = each.value
