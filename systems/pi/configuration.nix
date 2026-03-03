@@ -397,6 +397,8 @@ in
     '';
   };
 
+  security.sudo.wheelNeedsPassword = false;
+
   security.acme = {
     defaults.email = "c@rlth.me";
     acceptTerms = true;
