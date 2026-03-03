@@ -5,28 +5,21 @@
 ### Installation
 
 ```sh
-# Build OS image.
-nix build .#nixosConfigurations.pi.config.system.build.sdImage --print-build-logs
-
-# Look up USB drive device name manually.
-lsblk
-device=/dev/sda
-
-# Write image to device.
-image=$(find result/sd-image -type f -name "*.img")
-sudo dd if=$image of=$device bs=4M status=progress oflag=sync
-
-# Preconfigure Wi-Fi access.
-SSID="My Network"
-PSK="My Password"
-WPA_SUPPLICANT_CONF="/run/media/$USER/NIXOS_SD/boot/wpa_supplicant.conf"
-printf "network={\n  ssid=\"$SSID\"\n  psk=\"$PSK\"\n}\n" | sudo tee $WPA_SUPPLICANT_CONF
-
-# Update local SSH configuration.
-printf '\nHost pi\n  HostName pi.local\n  User pi\n  ForwardAgent yes\n' | tee --append ~/.ssh/config
+./install.sh
 ```
 
-Plug the SD card (or USB drive) into the Raspberry Pi and power it up. You should be able to `ssh pi` into the machine.
+Plug the SD card (or USB drive) into the Raspberry Pi and power it up.
+
+Optionally, add to `~/.ssh/config`:
+
+```
+Host pi
+  HostName pi.local
+  User pi
+  ForwardAgent yes
+```
+
+Such that you'll be able to `ssh pi` into the machine.
 
 ### Test configuration
 

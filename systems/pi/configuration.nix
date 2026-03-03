@@ -99,6 +99,7 @@ in
     wireless = {
       enable = true;
       interfaces = [ "wlan0" ];
+      allowAuxiliaryImperativeNetworks = true;
     };
 
     networkmanager.enable = false;
