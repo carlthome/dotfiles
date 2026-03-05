@@ -1,0 +1,74 @@
+name: Plan and Apply ping-home Terraform
+description: Runs Terraform init, plan, and apply for the ping-home infrastructure.
+
+inputs:
+  workload_identity_provider:
+    description: Google Cloud Workload Identity Provider resource name
+    required: true
+  terraform_service_account:
+    description: Google Cloud service account email for Terraform
+    required: true
+  terraform_state_bucket:
+    description: GCS bucket name for Terraform remote state
+    required: true
+  gh_app_id:
+    description: GitHub App ID for creating tokens
+    required: true
+  gh_app_private_key:
+    description: GitHub App private key PEM
+    required: true
+  google_cloud_project:
+    description: Google Cloud project ID
+    required: true
+  google_cloud_region:
+    description: Google Cloud region
+    required: true
+  github_repository:
+    description: Repository in owner/repo format
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/create-github-app-token@v2
+      id: app-token
+      with:
+        app-id: ${{ inputs.gh_app_id }}
+        private-key: ${{ inputs.gh_app_private_key }}
+
+    - uses: google-github-actions/auth@v3
+      with:
+        workload_identity_provider: ${{ inputs.workload_identity_provider }}
+        service_account: ${{ inputs.terraform_service_account }}
+
+    - uses: hashicorp/setup-terraform@v3
+
+    - name: Terraform init
+      shell: bash
+      working-directory: packages/ping-home/terraform
+      env:
+        GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+        TF_VAR_github_repo: ${{ inputs.github_repository }}
+        TF_VAR_google_project: ${{ inputs.google_cloud_project }}
+        TF_VAR_google_region: ${{ inputs.google_cloud_region }}
+      run: terraform init -backend-config="bucket=${{ inputs.terraform_state_bucket }}"
+
+    - name: Terraform plan
+      shell: bash
+      working-directory: packages/ping-home/terraform
+      env:
+        GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+        TF_VAR_github_repo: ${{ inputs.github_repository }}
+        TF_VAR_google_project: ${{ inputs.google_cloud_project }}
+        TF_VAR_google_region: ${{ inputs.google_cloud_region }}
+      run: terraform plan -out=tfplan
+
+    - name: Terraform apply
+      shell: bash
+      working-directory: packages/ping-home/terraform
+      env:
+        GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+        TF_VAR_github_repo: ${{ inputs.github_repository }}
+        TF_VAR_google_project: ${{ inputs.google_cloud_project }}
+        TF_VAR_google_region: ${{ inputs.google_cloud_region }}
+      run: terraform apply -auto-approve tfplan

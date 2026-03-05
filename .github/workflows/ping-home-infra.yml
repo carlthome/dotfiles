@@ -4,6 +4,7 @@ on:
       - "main"
     paths:
       - ".github/workflows/ping-home-infra.yml"
+      - "packages/ping-home/actions/infra/**"
       - "packages/ping-home/terraform/**"
 
 jobs:
@@ -13,31 +14,15 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    defaults:
-      run:
-        working-directory: packages/ping-home/terraform
-    env:
-      TF_VAR_github_repo: ${{ github.repository }}
-      TF_VAR_google_project: ${{ secrets.GOOGLE_CLOUD_PROJECT }}
-      TF_VAR_google_region: ${{ secrets.GOOGLE_CLOUD_REGION }}
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/create-github-app-token@v2
-        id: app-token
-        with:
-          app-id: ${{ vars.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-      - uses: google-github-actions/auth@v3
+      - uses: ./packages/ping-home/actions/infra
         with:
           workload_identity_provider: ${{ secrets.GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.GOOGLE_CLOUD_TERRAFORM_SERVICE_ACCOUNT }}
-      - uses: hashicorp/setup-terraform@v3
-      - run: terraform init -backend-config="bucket=${{ secrets.TERRAFORM_STATE_BUCKET_NAME }}"
-        env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-      - run: terraform plan -out=tfplan
-        env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-      - run: terraform apply -auto-approve tfplan
-        env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          terraform_service_account: ${{ secrets.GOOGLE_CLOUD_TERRAFORM_SERVICE_ACCOUNT }}
+          terraform_state_bucket: ${{ secrets.TERRAFORM_STATE_BUCKET_NAME }}
+          gh_app_id: ${{ vars.GH_APP_ID }}
+          gh_app_private_key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          google_cloud_project: ${{ secrets.GOOGLE_CLOUD_PROJECT }}
+          google_cloud_region: ${{ secrets.GOOGLE_CLOUD_REGION }}
+          github_repository: ${{ github.repository }}
