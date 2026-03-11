@@ -1,9 +1,12 @@
 { config, pkgs, ... }:
 {
-
-  # Configure graphics user interface.
+  # Enable hardware-accelerated graphics.
   hardware.graphics.enable = true;
+
+  # Use GDM as the display manager.
   services.displayManager.gdm.enable = true;
+
+  # Install GNOME and COSMIC desktop environments.
   services.desktopManager.gnome.enable = true;
   services.desktopManager.cosmic.enable = true;
 
@@ -18,7 +21,7 @@
     }
   ];
 
-  # Configure audio settings.
+  # Use PipeWire for audio instead of PulseAudio.
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -29,6 +32,7 @@
     jack.enable = false;
   };
 
+  # Allow real-time priority for audio applications.
   security.pam.loginLimits = [
     {
       domain = "@audio";
@@ -59,7 +63,7 @@
   # Don't find printers automatically.
   services.printing.enable = false;
 
-  # To get systray icons support.
+  # Enable systray icons in GNOME.
   services.udev.packages = with pkgs; [ gnome-settings-daemon ];
 
   # Add additional software for all users.
