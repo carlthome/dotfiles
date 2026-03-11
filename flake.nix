@@ -67,11 +67,12 @@
           buildInputs = self.checks.${system}.pre-commit-check.enabledPackages;
         };
       };
+      allSystems = import ./systems inputs;
     in
     flake-utils.lib.eachSystem systems mkSystem
     // {
-      nixosConfigurations = import ./systems inputs;
-      darwinConfigurations = import ./systems inputs;
+      nixosConfigurations = allSystems.nixosConfigurations;
+      darwinConfigurations = allSystems.darwinConfigurations;
       nixosModules = import ./modules/nixos inputs;
       darwinModules = import ./modules/nix-darwin inputs;
       homeModules = import ./modules/home-manager inputs;
