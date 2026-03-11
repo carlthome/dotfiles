@@ -25,6 +25,7 @@ in
       "*~"
       "*.swp"
       ".venv"
+      ".worktrees"
     ];
     settings = {
       aliases = {
