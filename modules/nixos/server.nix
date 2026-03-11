@@ -1,30 +1,36 @@
 { config, pkgs, ... }:
 {
-
-  # Configure key-based remote SSH access.
+  # Enable SSH daemon for remote access.
   services.openssh.enable = true;
+
+  # Require SSH keys instead of passwords.
   services.openssh.settings.PermitRootLogin = "no";
   services.openssh.settings.PasswordAuthentication = false;
+
+  # Allow sudo via forwarded SSH agent instead of password.
   security.pam.sshAgentAuth.enable = true;
   security.pam.services.sudo.sshAgentAuth = true;
 
-  # Insist all users are declaratively defined.
+  # Use memory-safe Rust implementation of sudo.
+  security.sudo-rs.enable = true;
+
+  # Require all users to be declared in configuration.
   users.mutableUsers = false;
 
-  # Clear out the default user environment.
+  # Remove default packages like nano and perl.
   environment.defaultPackages = [ ];
 
-  # Skip installing documentation on the server.
+  # Skip man pages and other documentation.
   documentation.enable = false;
   documentation.doc.enable = false;
   documentation.info.enable = false;
   documentation.man.enable = false;
   documentation.nixos.enable = false;
 
-  # Skip the program that suggests installable software.
+  # Disable "command not found" package suggestions.
   programs.command-not-found.enable = false;
 
-  # Disable desktop-specific functionality.
+  # Skip desktop environment integrations.
   xdg.autostart.enable = false;
   xdg.icons.enable = false;
   xdg.mime.enable = false;
