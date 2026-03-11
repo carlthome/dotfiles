@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home Lab</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+          sans-serif;
+        background: #0d1117;
+        color: #c9d1d9;
+        min-height: 100vh;
+        padding: 2rem;
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        color: #f0f6fc;
+      }
+
+      .services {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .service-card {
+        background: #161b22;
+        border: 1px solid #30363d;
+        border-radius: 8px;
+        padding: 1.5rem;
+        text-decoration: none;
+        color: inherit;
+        transition:
+          border-color 0.2s,
+          transform 0.2s;
+      }
+
+      .service-card:hover {
+        border-color: #58a6ff;
+        transform: translateY(-2px);
+      }
+
+      .service-card h2 {
+        font-size: 1.25rem;
+        color: #f0f6fc;
+        margin-bottom: 0.5rem;
+      }
+
+      .service-card p {
+        font-size: 0.9rem;
+        color: #8b949e;
+        margin-bottom: 1rem;
+      }
+
+      .service-card .url {
+        font-size: 0.8rem;
+        color: #58a6ff;
+        font-family: monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Home Lab</h1>
+    <div class="services">{{SERVICES}}</div>
+  </body>
+</html>

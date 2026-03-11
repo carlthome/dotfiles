@@ -435,22 +435,93 @@ in
 
   services.nginx =
     let
-      mkVirtualHost = (
-        domain: port: {
-          addSSL = true;
-          enableACME = false;
-          sslCertificate = "/var/lib/nginx/self-signed.crt";
-          sslCertificateKey = "/var/lib/nginx/self-signed.key";
-          extraConfig = ''
-            ssl_stapling off;
-            ssl_stapling_verify off;
-          '';
+      services = {
+        "grafana.home" = {
+          port = config.services.grafana.settings.server.http_port;
+          name = "Grafana";
+          description = "Metrics dashboards";
+        };
+        "uptime-kuma.home" = {
+          port = config.services.uptime-kuma.settings.PORT;
+          name = "Uptime Kuma";
+          description = "Service monitoring";
+        };
+        "prometheus.home" = {
+          port = config.services.prometheus.port;
+          name = "Prometheus";
+          description = "Metrics database";
+        };
+        "alertmanager.home" = {
+          port = config.services.prometheus.alertmanager.port;
+          name = "Alertmanager";
+          description = "Alert routing";
+        };
+        "loki.home" = {
+          port = 3100;
+          name = "Loki";
+          description = "Log aggregation";
+        };
+        "jellyfin.home" = {
+          port = 8096;
+          name = "Jellyfin";
+          description = "Media server";
+        };
+        "home-assistant.home" = {
+          port = 8123;
+          name = "Home Assistant";
+          description = "Home automation";
+        };
+        "blocky.home" = {
+          port = 4000;
+          name = "Blocky";
+          description = "DNS ad-blocking";
+        };
+      };
+
+      mkServiceCard = domain: svc: ''
+        <a href="https://${domain}" class="service-card">
+          <h2>${svc.name}</h2>
+          <p>${svc.description}</p>
+          <div class="url">${domain}</div>
+        </a>
+      '';
+
+      html =
+        builtins.replaceStrings
+          [ "{{SERVICES}}" ]
+          [ (lib.concatStringsSep "\n" (lib.mapAttrsToList mkServiceCard services)) ]
+          (builtins.readFile ./www/index.html);
+
+      index = pkgs.writeTextDir "index.html" html;
+
+      sslConfig = {
+        addSSL = true;
+        enableACME = false;
+        sslCertificate = "/var/lib/nginx/self-signed.crt";
+        sslCertificateKey = "/var/lib/nginx/self-signed.key";
+        extraConfig = ''
+          ssl_stapling off;
+          ssl_stapling_verify off;
+        '';
+      };
+
+      mkVirtualHost =
+        domain: svc:
+        sslConfig
+        // {
           locations."/" = {
-            proxyPass = "http://127.0.0.1:${toString port}";
+            proxyPass = "http://127.0.0.1:${toString svc.port}";
             proxyWebsockets = true;
           };
-        }
-      );
+        };
+
+      wwwConfig = sslConfig // {
+        root = index;
+        locations."/" = {
+          index = "index.html";
+          tryFiles = "$uri $uri/ /index.html";
+        };
+      };
     in
     {
       enable = true;
@@ -459,16 +530,9 @@ in
       recommendedGzipSettings = true;
       recommendedTlsSettings = true;
 
-      virtualHosts = builtins.mapAttrs mkVirtualHost {
-        "${config.networking.hostName}.local" = config.services.uptime-kuma.settings.PORT;
-        "grafana.home" = config.services.grafana.settings.server.http_port;
-        "uptime-kuma.home" = config.services.uptime-kuma.settings.PORT;
-        "alertmanager.home" = config.services.prometheus.alertmanager.port;
-        "prometheus.home" = config.services.prometheus.port;
-        "loki.home" = 3100;
-        "jellyfin.home" = 8096;
-        "home-assistant.home" = 8123;
-        "blocky.home" = 4000;
+      virtualHosts = (lib.mapAttrs mkVirtualHost services) // {
+        "${config.networking.hostName}.local" = wwwConfig;
+        "www.${config.networking.hostName}.local" = wwwConfig;
       };
     };
 
