@@ -60,7 +60,7 @@
         legacyPackages.homeConfigurations = import ./homes (inputs // { inherit system; });
         packages = import ./packages (inputs // { inherit system; });
         checks = import ./pre-commit.nix (inputs // { inherit system; });
-        formatter = nixpkgs.legacyPackages.${system}.nixfmt-rfc-style;
+        formatter = nixpkgs.legacyPackages.${system}.nixfmt-tree;
         devShells.default = import ./shell.nix {
           pkgs = nixpkgs.legacyPackages.${system};
           shellHook = self.checks.${system}.pre-commit-check.shellHook;
