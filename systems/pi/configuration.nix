@@ -558,8 +558,11 @@ in
       recommendedTlsSettings = true;
 
       virtualHosts = (lib.mapAttrs mkVirtualHost services) // {
-        "${config.networking.hostName}.local" = wwwConfig;
-        "www.${config.networking.hostName}.local" = wwwConfig;
+        "www.home" = wwwConfig;
+        "${config.networking.hostName}.home" = wwwConfig;
+        "${config.networking.hostName}.local" = wwwConfig // {
+          default = true;
+        };
       };
     };
 
