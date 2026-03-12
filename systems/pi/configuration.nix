@@ -195,7 +195,6 @@ in
 
   services.jellyfin = {
     enable = true;
-    openFirewall = true;
   };
 
   services.dnsmasq = {
