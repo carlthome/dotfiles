@@ -332,6 +332,8 @@ in
 
   services.prometheus = {
     enable = true;
+    listenAddress = "127.0.0.1";
+    webExternalUrl = "https://prometheus.home";
     globalConfig = {
       scrape_interval = "15s";
       scrape_timeout = "10s";
@@ -378,6 +380,7 @@ in
     exporters = {
       node = {
         enable = true;
+        listenAddress = "127.0.0.1";
         enabledCollectors = [
           "systemd"
           "processes"
@@ -385,11 +388,14 @@ in
       };
       systemd = {
         enable = true;
+        listenAddress = "127.0.0.1";
       };
     };
 
     alertmanager = {
       enable = true;
+      listenAddress = "127.0.0.1";
+      webExternalUrl = "https://alertmanager.home";
       configText = builtins.readFile ./prometheus/alertmanager/config.yml;
       environmentFile = "/etc/nixos/secrets/alertmanager.env";
       checkConfig = false;
