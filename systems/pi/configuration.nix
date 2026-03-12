@@ -182,6 +182,11 @@ in
     };
   };
 
+  networking.firewall.trustedInterfaces = [ "tailscale0" ];
+  services.tailscale.extraSetFlags = [
+    "--advertise-routes=192.168.0.0/24"
+  ];
+
   services.journald.storage = "volatile";
 
   services.btrfs.autoScrub = {
