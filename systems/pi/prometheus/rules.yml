@@ -36,3 +36,120 @@ groups:
         annotations:
           summary: "Host out of disk space (instance {{ $labels.instance }})"
           description: "Disk is almost full (< 8% left)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+      - alert: HostFilesystemReadOnly
+        expr: node_filesystem_readonly == 1
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Filesystem is read-only (instance {{ $labels.instance }})"
+          description: "{{ $labels.mountpoint }} has become read-only, possibly due to disk errors"
+
+      - alert: HostMountFailed
+        expr: node_filesystem_device_error{mountpoint=~"/mnt/.*"} == 1
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Mount error on {{ $labels.mountpoint }}"
+          description: "Filesystem error detected - USB drive may have disconnected or failed"
+
+      - alert: HostHighTemperature
+        expr: node_hwmon_temp_celsius > 70
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High temperature ({{ $labels.instance }})"
+          description: "CPU temperature is {{ $value }}°C - Pi may throttle at 80°C"
+
+      - alert: HostThrottling
+        expr: node_hwmon_temp_celsius > 80
+        for: 0m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Thermal throttling ({{ $labels.instance }})"
+          description: "CPU at {{ $value }}°C - performance is being throttled"
+
+      - alert: HostHighLoadAverage
+        expr: node_load5 > 4
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High load average ({{ $labels.instance }})"
+          description: "5-minute load average is {{ $value }} (Pi has 4 cores)"
+
+      - alert: HostSwapUsage
+        expr: (node_memory_SwapTotal_bytes - node_memory_SwapFree_bytes) / node_memory_SwapTotal_bytes * 100 > 50
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High swap usage ({{ $labels.instance }})"
+          description: "Swap is {{ $value }}% used - system may be memory constrained"
+
+      - alert: HostOomKills
+        expr: increase(node_vmstat_oom_kill[5m]) > 0
+        for: 0m
+        labels:
+          severity: warning
+        annotations:
+          summary: "OOM killer active ({{ $labels.instance }})"
+          description: "System killed processes due to memory pressure"
+
+      - alert: HostNetworkErrors
+        expr: increase(node_network_receive_errs_total{device!="lo"}[5m]) > 10 or increase(node_network_transmit_errs_total{device!="lo"}[5m]) > 10
+        for: 0m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Network errors on {{ $labels.device }}"
+          description: "Interface {{ $labels.device }} has network errors"
+
+      - alert: HostClockDrift
+        expr: abs(node_timex_offset_seconds) > 0.5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Clock drift detected ({{ $labels.instance }})"
+          description: "System clock is off by {{ $value }}s - may affect Home Assistant automations"
+
+      - alert: HostSystemdServiceFailed
+        expr: node_systemd_unit_state{state="failed"} == 1
+        for: 0m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Service {{ $labels.name }} failed"
+          description: "Systemd unit {{ $labels.name }} has failed"
+
+      - alert: BlockyHighQueryFailures
+        expr: rate(blocky_query_total{response_type="BLOCKED"}[5m]) / rate(blocky_query_total[5m]) > 0.5
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High DNS block rate"
+          description: "Over 50% of DNS queries are being blocked - possible misconfiguration or malware"
+
+      - alert: SuspiciousDnsSpike
+        expr: rate(blocky_query_total[5m]) > 10 * avg_over_time(rate(blocky_query_total[5m])[1d:5m])
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Unusual DNS query spike"
+          description: "DNS queries are 10x higher than daily average - possible malware or DoS"
+
+      - alert: HighOutboundConnections
+        expr: node_netstat_Tcp_CurrEstab > 500
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High TCP connections ({{ $labels.instance }})"
+          description: "{{ $value }} established connections - possible compromise or misconfiguration"
