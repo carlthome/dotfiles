@@ -38,4 +38,17 @@ network={
 }
 EOF
 
+# Configure alertmanager secrets.
+read -rp "Enter Slack webhook URL (or press Enter to skip): " slack_url
+if [[ -n $slack_url ]]; then
+	read -rp "Enter Slack channel [#alerts]: " slack_channel
+	slack_channel=${slack_channel:-#alerts}
+	sudo mkdir -p etc/nixos/secrets
+	sudo tee etc/nixos/secrets/alertmanager.env <<-EOF
+		SLACK_API_URL=$slack_url
+		SLACK_CHANNEL=$slack_channel
+	EOF
+	sudo chmod 600 etc/nixos/secrets/alertmanager.env
+fi
+
 echo "Done. Insert the SD card into the Pi and power it on."
