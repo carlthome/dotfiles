@@ -97,11 +97,6 @@ in
       options = [ "size=1G" ];
     };
 
-    "/var/cache/jellyfin/transcodes" = {
-      fsType = "tmpfs";
-      options = [ "size=2G" ];
-    };
-
     "/mnt/datasets" = usbMount "datasets" [ "compress=zstd" ];
     "/mnt/media" = usbMount "media" [ ];
   };
