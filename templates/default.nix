@@ -3,7 +3,7 @@
   nix-jax-mnist = {
     path = (
       builtins.fetchTarball {
-        url = "https://github.com/carlthome/nix-jax-mnist/archive/refs/tags/v1.0.0.zip";
+        url = "https://github.com/carlthome/nix-jax-mnist/archive/refs/tags/v1.0.0.tar.gz";
         sha256 = "16pn51kc39c6ifvabr0mpgpvg4qnpr4j303g66jbr61ifk7ybyz5";
       }
     );
@@ -12,7 +12,7 @@
   poetry2nix-example = {
     path = (
       builtins.fetchTarball {
-        url = "https://github.com/carlthome/poetry2nix-example/archive/refs/tags/v1.0.0.zip";
+        url = "https://github.com/carlthome/poetry2nix-example/archive/refs/tags/v1.0.0.tar.gz";
         sha256 = "04fwkyddj1pc2nhsg49fc1xh4irjgwy2plcp9b1rbxa0qr5bmjz9";
       }
     );
@@ -21,7 +21,7 @@
   nix-pip-flake = {
     path = (
       builtins.fetchTarball {
-        url = "https://github.com/carlthome/nix-pip-flake/archive/refs/tags/v1.0.0.zip";
+        url = "https://github.com/carlthome/nix-pip-flake/archive/refs/tags/v1.0.0.tar.gz";
         sha256 = "1bswhb705kxpcr82a6yfifjwawifyj1ycdy1w4a471rzf3xkk03v";
       }
     );
