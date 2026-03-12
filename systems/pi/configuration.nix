@@ -31,6 +31,24 @@ let
       user = "home-assistant";
       mode = "0644";
     };
+    "home-assistant/automations.yaml" = {
+      source = ./home-assistant/automations.yaml;
+      group = "home-assistant";
+      user = "home-assistant";
+      mode = "0644";
+    };
+    "home-assistant/scripts.yaml" = {
+      source = ./home-assistant/scripts.yaml;
+      group = "home-assistant";
+      user = "home-assistant";
+      mode = "0644";
+    };
+    "home-assistant/scenes.yaml" = {
+      source = ./home-assistant/scenes.yaml;
+      group = "home-assistant";
+      user = "home-assistant";
+      mode = "0644";
+    };
   };
 in
 {
