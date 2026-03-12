@@ -47,6 +47,17 @@ nixos-rebuild --flake .#pi --fast --build-host pi --target-host pi --use-remote-
 
 Replace `test` with `switch` to apply the new configuration on reboot. Note that this can lead to permanent lock out without physical access. To recover, access the SD card on another machine and edit NIXOS_SD/boot/extlinux/extlinux.conf to temporarily boot into the last known working configuration.
 
+### Tailscale DNS
+
+To access `grafana.home`, `jellyfin.home`, etc. via Tailscale:
+
+1. Get the Pi's Tailscale IP: `ssh pi tailscale ip -4`
+2. Go to [Tailscale DNS settings](https://login.tailscale.com/admin/dns)
+3. Click "Add nameserver" → "Custom" → enter the Pi's IP → restrict to `home`
+4. Go to [Machines](https://login.tailscale.com/admin/machines) → Pi → approve the `192.168.0.0/24` route
+
+Done. All devices on your tailnet can now access `*.home` domains.
+
 ## References
 
 - https://xeiaso.net/blog/prometheus-grafana-loki-nixos-2020-11-20/
