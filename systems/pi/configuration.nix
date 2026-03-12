@@ -6,6 +6,19 @@
 }:
 
 let
+  usbMount = subvol: extraOptions: {
+    device = "/dev/disk/by-uuid/1409bcc2-5b89-4d7e-ac96-c1db331053d8";
+    fsType = "btrfs";
+    options = extraOptions ++ [
+      "noauto"
+      "nofail"
+      "x-systemd.automount"
+      "x-systemd.device-timeout=30s"
+      "x-systemd.mount-timeout=30s"
+      "subvol=${subvol}"
+    ];
+  };
+
   grafanaDashboards = lib.mapAttrs' (
     name: value:
     lib.nameValuePair ("grafana/dashboards/" + name) {
@@ -89,24 +102,8 @@ in
       options = [ "size=2G" ];
     };
 
-    "/mnt/datasets" = {
-      device = "/dev/disk/by-uuid/1409bcc2-5b89-4d7e-ac96-c1db331053d8";
-      fsType = "btrfs";
-      options = [
-        "nofail"
-        "compress=zstd"
-        "subvol=datasets"
-      ];
-    };
-
-    "/mnt/media" = {
-      device = "/dev/disk/by-uuid/1409bcc2-5b89-4d7e-ac96-c1db331053d8";
-      fsType = "btrfs";
-      options = [
-        "nofail"
-        "subvol=media"
-      ];
-    };
+    "/mnt/datasets" = usbMount "datasets" [ "compress=zstd" ];
+    "/mnt/media" = usbMount "media" [ ];
   };
 
   environment.etc = configFiles // grafanaDashboards // alertManagerTemplates;
