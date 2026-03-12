@@ -259,6 +259,9 @@ in
           $ORIGIN home.
           $TTL 86400
 
+          @  IN  A  192.168.0.2
+          www  IN  CNAME  @
+
           router  IN  A  192.168.0.1
           pi  IN  A  192.168.0.2
 
