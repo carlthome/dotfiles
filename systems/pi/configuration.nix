@@ -97,6 +97,11 @@ in
       options = [ "size=1G" ];
     };
 
+    "/var/cache/jellyfin" = {
+      fsType = "tmpfs";
+      options = [ "size=1G" ];
+    };
+
     "/mnt/datasets" = usbMount "datasets" [ "compress=zstd" ];
     "/mnt/media" = usbMount "media" [ ];
   };
