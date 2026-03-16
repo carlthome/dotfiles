@@ -28,16 +28,8 @@
     iterm2
   ];
 
-  # TODO Make sure applications show up on cmd+space on macOS.
-  # home.activation = {
-  #   copyApplications = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-  #     src="$genProfilePath/home-path/Applications/"
-  #     dst="${config.home.homeDirectory}/Applications/Home Manager Trampolines"
-  #     mkdir -p "$dst"
-  #     ${pkgs.rsync}/bin/rsync --archive --checksum --copy-unsafe-links --delete "$src" "$dst"
-  #     chmod -R 755 "$dst"
-  #   '';
-  # };
+  # Create wrapper apps so Spotlight can find Nix-installed GUI apps.
+  services.macos-spotlight-apps.enable = true;
 
   # Configure macOS settings.
   targets.darwin.defaults = {

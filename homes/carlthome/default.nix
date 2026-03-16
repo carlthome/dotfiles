@@ -36,5 +36,6 @@ home-manager.lib.homeManagerConfiguration {
     self.homeModules.vscode
     self.homeModules.zed
     self.homeModules.direnv
+    self.homeModules.macos-spotlight-apps
   ];
 }
