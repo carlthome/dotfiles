@@ -99,7 +99,7 @@ in
 
     "/var/cache/jellyfin" = {
       fsType = "tmpfs";
-      options = [ "size=1G" ];
+      options = [ "size=2G" ];
     };
 
     "/mnt/datasets" = usbMount "datasets" [ "compress=zstd" ];
