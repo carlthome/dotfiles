@@ -15,6 +15,8 @@
         "vscode"
       ];
     permittedInsecurePackages = [
+      "lima-additional-guestagents-1.2.2"
+      "lima-full-1.2.2"
       "python3.12-ecdsa-0.19.1"
     ];
   };
