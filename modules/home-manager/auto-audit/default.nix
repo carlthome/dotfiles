@@ -3,7 +3,11 @@ let
   script = pkgs.writeShellApplication {
     name = "auto-audit";
     text = builtins.readFile ./script.sh;
-    runtimeInputs = with pkgs; [ lynis ];
+    runtimeInputs =
+      with pkgs;
+      [ lynis ]
+      ++ lib.optionals stdenv.isDarwin [ terminal-notifier ]
+      ++ lib.optionals stdenv.isLinux [ libnotify ];
   };
 in
 {
