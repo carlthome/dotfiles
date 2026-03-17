@@ -193,7 +193,7 @@ in
   services.restic.backups = {
     datasets.paths = [ "/mnt/datasets" ];
     media = {
-      repository = "rclone:gdrive:/Backups/${config.networking.hostName}/media";
+      repository = "rclone:gdrive:/Media";
       # TODO Populate secrets automatically.
       passwordFile = "/etc/nixos/secrets/restic/media";
       rcloneConfigFile = "/etc/nixos/secrets/restic/rclone.conf";
