@@ -245,6 +245,10 @@ in
           ads = [
             "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
             "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/multi.txt"
+            "https://big.oisd.nl/domainswild"
+            "https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt"
+            "https://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext"
+            "https://urlhaus.abuse.ch/downloads/hostfile/"
           ];
         };
         clientGroupsBlock = {
