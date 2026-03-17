@@ -9,5 +9,6 @@ nixpkgs.lib.nixosSystem {
     self.nixosModules.cuda
     self.nixosModules.default
     self.nixosModules.desktop
+    self.nixosModules.restic
   ];
 }
