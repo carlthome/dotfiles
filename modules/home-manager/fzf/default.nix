@@ -14,16 +14,7 @@ let
       cmd = lib.getExe self.packages.${system}.fzf-ripgrep;
       zshKey = "^F";
       bashKey = "\\C-f";
-    };
-    fzf-open = {
-      cmd = lib.getExe self.packages.${system}.fzf-open;
-      zshKey = "^P";
-      bashKey = "\\C-p";
-    };
-    fzf-git = {
-      cmd = lib.getExe self.packages.${system}.fzf-gitgrep;
-      zshKey = "^G";
-      bashKey = "\\C-g";
+      fishKey = "\\cf";
     };
   };
 
