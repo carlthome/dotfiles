@@ -62,7 +62,11 @@
   services.prometheus.exporters.node = {
     enable = true;
     enabledCollectors = [ "systemd" ];
+    listenAddress = "127.0.0.1";
   };
+
+  # Only expose metrics over Tailscale.
+  networking.firewall.interfaces."tailscale0".allowedTCPPorts = [ 9100 ];
 
   # Enable container runtime.
   virtualisation.docker = {
