@@ -348,6 +348,7 @@ in
             targets = [
               "localhost:${toString config.services.prometheus.exporters.node.port}"
               "pi-zero.local:9100"
+              "t1:9100"
             ];
           }
         ];
