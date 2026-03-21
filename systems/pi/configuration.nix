@@ -68,6 +68,7 @@ in
   hardware.enableRedistributableFirmware = true;
 
   boot = {
+    supportedFilesystems.zfs = lib.mkForce false;
     kernelPackages = pkgs.linuxKernel.packages.linux_rpi4;
     initrd.availableKernelModules = [
       "xhci_pci"
