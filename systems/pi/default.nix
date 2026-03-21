@@ -10,6 +10,7 @@ nixpkgs.lib.nixosSystem {
     { sdImage.compressImage = false; }
     self.modules.default
     self.nixosModules.default
+    self.nixosModules.restic
     self.nixosModules.server
     {
       virtualisation.vmVariant = {
