@@ -153,3 +153,84 @@ groups:
         annotations:
           summary: "High TCP connections ({{ $labels.instance }})"
           description: "{{ $value }} established connections - possible compromise or misconfiguration"
+
+      - alert: HostUnstable
+        expr: changes(up[30m]) > 3
+        for: 0m
+        labels:
+          severity: warning
+        annotations:
+          summary: "{{ $labels.instance }} is unstable"
+          description: "Instance has gone up/down {{ $value }} times in the last 30 minutes - possible suspend/wake bug"
+
+      - alert: HostIdle
+        expr: (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[10m])) * 100) > 98 and on(instance) up == 1
+        for: 4h
+        labels:
+          severity: warning
+        annotations:
+          summary: "{{ $labels.instance }} idling"
+          description: "Instance has been running with >98% CPU idle for 4+ hours - should probably suspend"
+
+      - alert: HostRebooted
+        expr: time() - node_boot_time_seconds < 300
+        for: 0m
+        labels:
+          severity: warning
+        annotations:
+          summary: "{{ $labels.instance }} rebooted"
+          description: "Instance booted within the last 5 minutes"
+
+      - alert: BtrfsErrors
+        expr: node_btrfs_device_read_errs_total + node_btrfs_device_write_errs_total + node_btrfs_device_flush_errs_total + node_btrfs_device_corruption_errs_total > 0
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: "BTRFS errors on {{ $labels.instance }}"
+          description: "BTRFS device has errors - data may be corrupted"
+
+      - alert: NfsServerDown
+        expr: node_systemd_unit_state{name="nfs-server.service",state="active"} != 1
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "NFS server down on {{ $labels.instance }}"
+          description: "NFS server service is not running - T1 mounts will fail"
+
+      - alert: HostDiskIOSaturated
+        expr: rate(node_disk_io_time_seconds_total[5m]) > 0.9
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Disk I/O saturated on {{ $labels.instance }}"
+          description: "Disk {{ $labels.device }} is busy >90% of the time"
+
+      - alert: ZombieProcesses
+        expr: node_processes_state{state="Z"} > 5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Zombie processes on {{ $labels.instance }}"
+          description: "{{ $value }} zombie processes detected"
+
+      - alert: FileDescriptorExhaustion
+        expr: node_filefd_allocated / node_filefd_maximum > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "File descriptors running low on {{ $labels.instance }}"
+          description: "Over 80% of file descriptors in use"
+
+      - alert: HomeAssistantDown
+        expr: node_systemd_unit_state{name="docker-home-assistant.service",state="active"} != 1
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Home Assistant container down"
+          description: "Home Assistant Docker container is not running"
