@@ -14,16 +14,39 @@
 {{- end }}
 {{- end }}
 
+{{/* Base silence URL with alertname and instance matchers */}}
+{{ define "__silence.base" -}}
+{{ .ExternalURL }}/#/silences/new?filter=%7Balertname%3D%22{{ .CommonLabels.alertname }}%22%2Cinstance%3D%22{{ .CommonLabels.instance }}%22%7D
+{{- end }}
+
 {{ define "silence.1h.link" -}}
-{{ .ExternalURL }}/#/silences/new?filter=%7Balertname%3D%22{{ .CommonLabels.alertname }}%22%7D&comment=Snoozed%20from%20Slack
+{{ template "__silence.base" . }}&comment=1%20hour
 {{- end }}
 
-{{ define "silence.24h.link" -}}
-{{ .ExternalURL }}/#/silences/new?filter=%7Balertname%3D%22{{ .CommonLabels.alertname }}%22%7D&comment=Snoozed%20from%20Slack
+{{ define "silence.4h.link" -}}
+{{ template "__silence.base" . }}&comment=4%20hours
 {{- end }}
 
+{{ define "silence.tomorrow.link" -}}
+{{ template "__silence.base" . }}&comment=Until%20tomorrow
+{{- end }}
+
+{{ define "silence.week.link" -}}
+{{ template "__silence.base" . }}&comment=Until%20next%20week
+{{- end }}
+
+{{ define "silence.month.link" -}}
+{{ template "__silence.base" . }}&comment=Until%20next%20month
+{{- end }}
+
+{{/* Grafana dashboard link */}}
 {{ define "grafana.link" -}}
-https://grafana.home/explore?orgId=1&left=%7B%22datasource%22:%22prometheus%22,%22queries%22:%5B%7B%22expr%22:%22up%7Binstance%3D%5C%22{{ .Labels.instance }}%5C%22%7D%22%7D%5D%7D
+https://grafana.home/d/node-exporter/node-exporter?var-instance={{ .Labels.instance }}&from=now-1h&to=now
+{{- end }}
+
+{{/* Alertmanager alert view link */}}
+{{ define "alertmanager.link" -}}
+{{ .ExternalURL }}/#/alerts?filter=%7Balertname%3D%22{{ .Labels.alertname }}%22%7D
 {{- end }}
 
 {{ define "slack.text" -}}
@@ -31,6 +54,6 @@ https://grafana.home/explore?orgId=1&left=%7B%22datasource%22:%22prometheus%22,%
 *{{ .Labels.alertname }}* · {{ .Labels.instance }}
 {{ .Annotations.description }}
 {{ if eq .Status "firing" }}Since <!date^{{ .StartsAt.Unix }}^{date_short_pretty} {time}|{{ .StartsAt }}>{{ end }}
-<{{ .GeneratorURL }}|Prometheus> · <{{ template "grafana.link" . }}|Grafana>
+<{{ .GeneratorURL }}|Prometheus> · <{{ template "grafana.link" . }}|Grafana> · <{{ template "alertmanager.link" . }}|Alertmanager>
 {{ end }}
 {{- end }}

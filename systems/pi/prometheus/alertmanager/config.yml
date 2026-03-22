@@ -4,17 +4,25 @@ global:
 
 route:
   receiver: slack
-  group_by: [alertname]
+  group_by: [alertname, instance]
   group_wait: 30s
   group_interval: 5m
   repeat_interval: 3h
 
 inhibit_rules:
+  # Critical alerts suppress warnings for the same alert
   - source_matchers:
       - severity="critical"
     target_matchers:
       - severity="warning"
     equal: [alertname]
+
+  # If an instance is down, suppress all other alerts for it
+  - source_matchers:
+      - alertname="InstanceDown"
+    target_matchers:
+      - severity=~"warning|info"
+    equal: [instance]
 
 receivers:
   - name: slack
@@ -26,11 +34,20 @@ receivers:
         text: '{{ template "slack.text" . }}'
         actions:
           - type: button
-            text: "Silence 1h"
+            text: "1 hour"
             url: '{{ template "silence.1h.link" . }}'
           - type: button
-            text: "Silence 24h"
-            url: '{{ template "silence.24h.link" . }}'
+            text: "4 hours"
+            url: '{{ template "silence.4h.link" . }}'
+          - type: button
+            text: "Until tomorrow"
+            url: '{{ template "silence.tomorrow.link" . }}'
+          - type: button
+            text: "Until next week"
+            url: '{{ template "silence.week.link" . }}'
+          - type: button
+            text: "Until next month"
+            url: '{{ template "silence.month.link" . }}'
 
 templates:
   - "/etc/alertmanager/templates/*.tmpl"

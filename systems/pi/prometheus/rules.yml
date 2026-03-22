@@ -12,12 +12,12 @@ groups:
 
       - alert: HostHighCpuLoad
         expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100) > 80
-        for: 0m
+        for: 2m
         labels:
           severity: warning
         annotations:
-          summary: "Host high CPU load (instance {{ $labels.instance }})"
-          description: "CPU load is > 80%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+          summary: "High CPU load ({{ $labels.instance }})"
+          description: 'CPU load is {{ printf "%.1f" $value }}% on {{ $labels.instance }}.'
 
       - alert: HostOutOfMemory
         expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 < 10
@@ -25,8 +25,8 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "Host out of memory (instance {{ $labels.instance }})"
-          description: "Node memory is filling up (< 10% left)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+          summary: "Out of memory ({{ $labels.instance }})"
+          description: 'Only {{ printf "%.1f" $value }}% memory available on {{ $labels.instance }}.'
 
       - alert: HostOutOfDiskSpace
         expr: (node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes < 8 and ON (instance, device, mountpoint) node_filesystem_readonly == 0
@@ -34,17 +34,17 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "Host out of disk space (instance {{ $labels.instance }})"
-          description: "Disk is almost full (< 8% left)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+          summary: "Out of disk space ({{ $labels.instance }})"
+          description: 'Filesystem {{ $labels.mountpoint }} on {{ $labels.device }} has only {{ printf "%.1f" $value }}% free.'
 
       - alert: HostFilesystemReadOnly
-        expr: node_filesystem_readonly == 1
+        expr: node_filesystem_readonly{fstype!~"squashfs|tmpfs|overlay"} == 1
         for: 0m
         labels:
           severity: critical
         annotations:
-          summary: "Filesystem is read-only (instance {{ $labels.instance }})"
-          description: "{{ $labels.mountpoint }} has become read-only, possibly due to disk errors"
+          summary: "Filesystem is read-only ({{ $labels.instance }})"
+          description: "{{ $labels.mountpoint }} on {{ $labels.device }} has become read-only, possibly due to disk errors."
 
       - alert: HostMountFailed
         expr: node_filesystem_device_error{mountpoint=~"/mnt/.*"} == 1
@@ -52,35 +52,26 @@ groups:
         labels:
           severity: critical
         annotations:
-          summary: "Mount error on {{ $labels.mountpoint }}"
-          description: "Filesystem error detected - USB drive may have disconnected or failed"
+          summary: "Mount error on {{ $labels.mountpoint }} ({{ $labels.instance }})"
+          description: "Filesystem error on {{ $labels.device }} at {{ $labels.mountpoint }}. The drive may have disconnected or failed."
 
       - alert: HostHighTemperature
-        expr: node_hwmon_temp_celsius > 70
+        expr: node_hwmon_temp_celsius > 80
         for: 5m
         labels:
           severity: warning
         annotations:
           summary: "High temperature ({{ $labels.instance }})"
-          description: "CPU temperature is {{ $value }}°C - Pi may throttle at 80°C"
-
-      - alert: HostThrottling
-        expr: node_hwmon_temp_celsius > 80
-        for: 0m
-        labels:
-          severity: warning
-        annotations:
-          summary: "Thermal throttling ({{ $labels.instance }})"
-          description: "CPU at {{ $value }}°C - performance is being throttled"
+          description: 'CPU temperature is {{ printf "%.0f" $value }}°C on {{ $labels.instance }}. Performance may be throttled.'
 
       - alert: HostHighLoadAverage
-        expr: node_load5 > 4
-        for: 5m
+        expr: node_load5 > 6
+        for: 10m
         labels:
           severity: warning
         annotations:
           summary: "High load average ({{ $labels.instance }})"
-          description: "5-minute load average is {{ $value }} (Pi has 4 cores)"
+          description: '5-minute load average is {{ printf "%.2f" $value }} on {{ $labels.instance }}.'
 
       - alert: HostSwapUsage
         expr: (node_memory_SwapTotal_bytes - node_memory_SwapFree_bytes) / node_memory_SwapTotal_bytes * 100 > 50
@@ -89,7 +80,7 @@ groups:
           severity: warning
         annotations:
           summary: "High swap usage ({{ $labels.instance }})"
-          description: "Swap is {{ $value }}% used - system may be memory constrained"
+          description: 'Swap is {{ printf "%.1f" $value }}% used on {{ $labels.instance }}.'
 
       - alert: HostOomKills
         expr: increase(node_vmstat_oom_kill[5m]) > 0
@@ -98,7 +89,7 @@ groups:
           severity: warning
         annotations:
           summary: "OOM killer active ({{ $labels.instance }})"
-          description: "System killed processes due to memory pressure"
+          description: '{{ $labels.instance }} killed {{ printf "%.0f" $value }} processes due to memory pressure.'
 
       - alert: HostNetworkErrors
         expr: increase(node_network_receive_errs_total{device!="lo"}[5m]) > 10 or increase(node_network_transmit_errs_total{device!="lo"}[5m]) > 10
@@ -106,8 +97,8 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "Network errors on {{ $labels.device }}"
-          description: "Interface {{ $labels.device }} has network errors"
+          summary: "Network errors on {{ $labels.device }} ({{ $labels.instance }})"
+          description: 'Interface {{ $labels.device }} on {{ $labels.instance }} has {{ printf "%.0f" $value }} errors in the last 5 minutes.'
 
       - alert: HostClockDrift
         expr: abs(node_timex_offset_seconds) > 0.5
@@ -116,7 +107,7 @@ groups:
           severity: warning
         annotations:
           summary: "Clock drift detected ({{ $labels.instance }})"
-          description: "System clock is off by {{ $value }}s - may affect Home Assistant automations"
+          description: 'System clock on {{ $labels.instance }} is off by {{ printf "%.2f" $value }}s.'
 
       - alert: HostSystemdServiceFailed
         expr: node_systemd_unit_state{state="failed"} == 1
@@ -124,8 +115,8 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "Service {{ $labels.name }} failed"
-          description: "Systemd unit {{ $labels.name }} has failed"
+          summary: "Service {{ $labels.name }} failed ({{ $labels.instance }})"
+          description: "Systemd unit {{ $labels.name }} on {{ $labels.instance }} has failed."
 
       - alert: BlockyHighQueryFailures
         expr: rate(blocky_query_total{response_type="BLOCKED"}[5m]) / rate(blocky_query_total[5m]) > 0.5
@@ -133,8 +124,8 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "High DNS block rate"
-          description: "Over 50% of DNS queries are being blocked - possible misconfiguration or malware"
+          summary: "High DNS block rate ({{ $labels.instance }})"
+          description: "{{ $value | humanizePercentage }} of DNS queries are being blocked. This could indicate misconfiguration or malware."
 
       - alert: SuspiciousDnsSpike
         expr: rate(blocky_query_total[5m]) > 20 * avg_over_time(rate(blocky_query_total[5m])[1d:5m])
@@ -142,8 +133,8 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "Unusual DNS query spike"
-          description: "DNS queries are 20x higher than daily average - possible malware or DoS"
+          summary: "Unusual DNS query spike ({{ $labels.instance }})"
+          description: 'DNS query rate of {{ printf "%.1f" $value }}/s is much higher than daily average. This could indicate malware or a DoS attack.'
 
       - alert: HighOutboundConnections
         expr: node_netstat_Tcp_CurrEstab > 500
@@ -152,7 +143,7 @@ groups:
           severity: warning
         annotations:
           summary: "High TCP connections ({{ $labels.instance }})"
-          description: "{{ $value }} established connections - possible compromise or misconfiguration"
+          description: '{{ printf "%.0f" $value }} established connections on {{ $labels.instance }}.'
 
       - alert: HostUnstable
         expr: changes(up[30m]) > 3
@@ -161,25 +152,25 @@ groups:
           severity: warning
         annotations:
           summary: "{{ $labels.instance }} is unstable"
-          description: "Instance has gone up/down {{ $value }} times in the last 30 minutes - possible suspend/wake bug"
+          description: '{{ $labels.instance }} has gone up and down {{ printf "%.0f" $value }} times in the last 30 minutes.'
 
       - alert: HostIdle
         expr: (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[10m])) * 100) > 98 and on(instance) up == 1
         for: 4h
         labels:
-          severity: warning
+          severity: info
         annotations:
           summary: "{{ $labels.instance }} idling"
-          description: "Instance has been running with >98% CPU idle for 4+ hours - should probably suspend"
+          description: '{{ $labels.instance }} has been running with {{ printf "%.1f" $value }}% CPU idle for over 4 hours.'
 
       - alert: HostRebooted
         expr: time() - node_boot_time_seconds < 300
         for: 0m
         labels:
-          severity: warning
+          severity: info
         annotations:
           summary: "{{ $labels.instance }} rebooted"
-          description: "Instance booted within the last 5 minutes"
+          description: '{{ $labels.instance }} booted {{ printf "%.0f" $value }} seconds ago.'
 
       - alert: BtrfsErrors
         expr: node_btrfs_device_read_errs_total + node_btrfs_device_write_errs_total + node_btrfs_device_flush_errs_total + node_btrfs_device_corruption_errs_total > 0
@@ -187,8 +178,8 @@ groups:
         labels:
           severity: critical
         annotations:
-          summary: "BTRFS errors on {{ $labels.instance }}"
-          description: "BTRFS device has errors - data may be corrupted"
+          summary: "BTRFS errors ({{ $labels.instance }})"
+          description: 'BTRFS device {{ $labels.device }} has {{ printf "%.0f" $value }} errors. Data may be corrupted.'
 
       - alert: NfsServerDown
         expr: node_systemd_unit_state{name="nfs-server.service",state="active"} != 1
@@ -196,8 +187,8 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "NFS server down on {{ $labels.instance }}"
-          description: "NFS server service is not running - T1 mounts will fail"
+          summary: "NFS server down ({{ $labels.instance }})"
+          description: "NFS server service is not running on {{ $labels.instance }}."
 
       - alert: HostDiskIOSaturated
         expr: rate(node_disk_io_time_seconds_total[5m]) > 0.9
@@ -205,8 +196,8 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "Disk I/O saturated on {{ $labels.instance }}"
-          description: "Disk {{ $labels.device }} is busy >90% of the time"
+          summary: "Disk I/O saturated ({{ $labels.instance }})"
+          description: "Disk {{ $labels.device }} is busy {{ $value | humanizePercentage }} of the time."
 
       - alert: ZombieProcesses
         expr: node_processes_state{state="Z"} > 5
@@ -214,8 +205,8 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "Zombie processes on {{ $labels.instance }}"
-          description: "{{ $value }} zombie processes detected"
+          summary: "Zombie processes ({{ $labels.instance }})"
+          description: '{{ printf "%.0f" $value }} zombie processes detected on {{ $labels.instance }}.'
 
       - alert: FileDescriptorExhaustion
         expr: node_filefd_allocated / node_filefd_maximum > 0.8
@@ -223,8 +214,8 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "File descriptors running low on {{ $labels.instance }}"
-          description: "Over 80% of file descriptors in use"
+          summary: "File descriptors running low ({{ $labels.instance }})"
+          description: "{{ $value | humanizePercentage }} of file descriptors are in use on {{ $labels.instance }}."
 
       - alert: HomeAssistantDown
         expr: node_systemd_unit_state{name="docker-home-assistant.service",state="active"} != 1
@@ -232,5 +223,5 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "Home Assistant container down"
-          description: "Home Assistant Docker container is not running"
+          summary: "Home Assistant down ({{ $labels.instance }})"
+          description: "Home Assistant Docker container is not running on {{ $labels.instance }}."
