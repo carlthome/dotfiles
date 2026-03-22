@@ -273,6 +273,12 @@ in
         };
       };
 
+      conditional = {
+        mapping = {
+          "ts.net" = "tcp+udp:100.100.100.100";
+        };
+      };
+
       customDNS = {
         customTTL = "1h";
         filterUnmappedTypes = true;
