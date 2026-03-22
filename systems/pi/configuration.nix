@@ -275,7 +275,7 @@ in
 
       conditional = {
         mapping = {
-          "ts.net" = "tcp+udp:100.100.100.100";
+          "ts.net" = "100.100.100.100";
         };
       };
 
