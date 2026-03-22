@@ -50,7 +50,7 @@
   services.prometheus.exporters.node = {
     enable = true;
     enabledCollectors = [ "systemd" ];
-    listenAddress = "127.0.0.1";
+    listenAddress = "0.0.0.0";
   };
 
   # Only expose metrics over Tailscale.
