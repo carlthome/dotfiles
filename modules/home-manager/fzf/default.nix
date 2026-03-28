@@ -36,9 +36,21 @@ let
     "--style full"
   ];
   fzfCtrlTCommand = "fd --type f";
+  fzfAltCCommand = "fd --type d";
   fzfCtrlTOpts = [
     "--preview '${lib.getExe fzf-preview} {}'"
-    "--bind 'focus:transform-header:file --brief {}'"
+    "--bind 'focus:transform-preview-label:echo {}'"
+    "--bind '?:toggle-preview'"
+  ];
+  fzfAltCOpts = [
+    "--preview 'tree -C {}'"
+    "--bind 'focus:transform-preview-label:echo {}'"
+    "--bind '?:toggle-preview'"
+  ];
+  fzfCtrlROpts = [
+    "--preview 'echo {}'"
+    "--preview-window hidden"
+    "--bind '?:toggle-preview'"
   ];
 
   toOpts = lib.concatStringsSep " ";
@@ -50,12 +62,18 @@ in
     defaultOptions = fzfDefaultOpts;
     fileWidgetCommand = fzfCtrlTCommand;
     fileWidgetOptions = fzfCtrlTOpts;
+    changeDirWidgetCommand = fzfAltCCommand;
+    changeDirWidgetOptions = fzfAltCOpts;
+    historyWidgetOptions = fzfCtrlROpts;
   };
 
   programs.zsh.initContent = ''
     export FZF_DEFAULT_OPTS="${toOpts fzfDefaultOpts}"
     export FZF_CTRL_T_COMMAND="${fzfCtrlTCommand}"
     export FZF_CTRL_T_OPTS="${toOpts fzfCtrlTOpts}"
+    export FZF_ALT_C_COMMAND="${fzfAltCCommand}"
+    export FZF_ALT_C_OPTS="${toOpts fzfAltCOpts}"
+    export FZF_CTRL_R_OPTS="${toOpts fzfCtrlROpts}"
 
     fzf-rg() { ${fzf-rg} "$BUFFER"; zle reset-prompt; }
     zle -N fzf-rg
@@ -68,6 +86,9 @@ in
     export FZF_DEFAULT_OPTS="${toOpts fzfDefaultOpts}"
     export FZF_CTRL_T_COMMAND="${fzfCtrlTCommand}"
     export FZF_CTRL_T_OPTS="${toOpts fzfCtrlTOpts}"
+    export FZF_ALT_C_COMMAND="${fzfAltCCommand}"
+    export FZF_ALT_C_OPTS="${toOpts fzfAltCOpts}"
+    export FZF_CTRL_R_OPTS="${toOpts fzfCtrlROpts}"
 
     fzf-rg() { ${fzf-rg} "$READLINE_LINE"; }
     bind -x '"\C-f":fzf-rg'
@@ -79,10 +100,19 @@ in
     set -gx FZF_DEFAULT_OPTS "${toOpts fzfDefaultOpts}"
     set -gx FZF_CTRL_T_COMMAND "${fzfCtrlTCommand}"
     set -gx FZF_CTRL_T_OPTS "${toOpts fzfCtrlTOpts}"
+    set -gx FZF_ALT_C_COMMAND "${fzfAltCCommand}"
+    set -gx FZF_ALT_C_OPTS "${toOpts fzfAltCOpts}"
+    set -gx FZF_CTRL_R_OPTS "${toOpts fzfCtrlROpts}"
 
     function fzf-rg; ${fzf-rg} (commandline); commandline -f repaint; end
     bind \cf fzf-rg
     source ${pkgs.fzf-git-sh}/share/fzf-git-sh/fzf-git.fish
 
   '';
+
+  home.packages = with pkgs; [
+    fd
+    ripgrep
+    tree
+  ];
 }
