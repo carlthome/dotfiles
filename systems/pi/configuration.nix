@@ -63,6 +63,7 @@ let
       mode = "0644";
     };
   };
+
 in
 {
   hardware.enableRedistributableFirmware = true;
@@ -235,8 +236,32 @@ in
     };
   };
 
+  systemd.services.blocky-zone = {
+    before = [ "blocky.service" ];
+    requiredBy = [ "blocky.service" ];
+    after = [
+      "tailscaled.service"
+      "network-online.target"
+    ];
+    wants = [ "network-online.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      Restart = "on-failure";
+      RestartSec = "5s";
+    };
+    path = [ pkgs.tailscale ];
+    script = ''
+      ip=$(tailscale ip -4)
+      [[ $ip =~ ^100\. ]] || exit 1
+      mkdir -p /var/lib/blocky
+      echo "@ IN A $ip" > /var/lib/blocky/tailscale.zone
+      chmod 644 /var/lib/blocky/tailscale.zone
+    '';
+  };
+
   services.blocky = {
     enable = true;
+    enableConfigCheck = false;
     settings = {
       ports.dns = 53;
       ports.http = 4000;
@@ -285,21 +310,17 @@ in
         zone = ''
           $ORIGIN home.
           $TTL 86400
-
-          @  IN  A  192.168.0.2
+          $INCLUDE /var/lib/blocky/tailscale.zone
+          pi  IN  CNAME  @
           www  IN  CNAME  @
-
-          router  IN  A  192.168.0.1
-          pi  IN  A  192.168.0.2
-
-          grafana  IN  CNAME  pi
-          uptime-kuma  IN  CNAME  pi
-          alertmanager  IN  CNAME  pi
-          prometheus  IN  CNAME  pi
-          loki  IN  CNAME  pi
-          jellyfin  IN  CNAME  pi
-          home-assistant  IN  CNAME  pi
-          blocky  IN  CNAME  pi
+          grafana  IN  CNAME  @
+          uptime-kuma  IN  CNAME  @
+          alertmanager  IN  CNAME  @
+          prometheus  IN  CNAME  @
+          loki  IN  CNAME  @
+          jellyfin  IN  CNAME  @
+          home-assistant  IN  CNAME  @
+          blocky  IN  CNAME  @
         '';
       };
     };
