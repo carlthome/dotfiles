@@ -199,6 +199,33 @@ groups:
           summary: "Disk I/O saturated ({{ $labels.instance }})"
           description: "Disk {{ $labels.device }} is busy {{ $value | humanizePercentage }} of the time."
 
+      - alert: HostHighSdCardWrites
+        expr: rate(node_disk_written_bytes_total{device=~"mmcblk[0-9]+$"}[15m]) / 1024 / 1024 > 0.5
+        for: 30m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High SD card write rate ({{ $labels.instance }})"
+          description: 'SD card {{ $labels.device }} is writing {{ printf "%.2f" $value }} MB/s for 30 minutes. Sustained writes can reduce SD card lifespan.'
+
+      - alert: HostVeryHighSdCardWrites
+        expr: rate(node_disk_written_bytes_total{device=~"mmcblk[0-9]+$"}[5m]) / 1024 / 1024 > 2
+        for: 15m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Very high SD card write rate ({{ $labels.instance }})"
+          description: 'SD card {{ $labels.device }} is writing {{ printf "%.2f" $value }} MB/s for 15 minutes. This level of sustained writes can quickly wear SD cards.'
+
+      - alert: HostSdCardWriteVolume
+        expr: increase(node_disk_written_bytes_total{device=~\"mmcblk[0-9]+$\"}[24h]) / 1024 / 1024 / 1024 > 5
+        for: 0m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High daily SD card writes ({{ $labels.instance }})"
+          description: 'SD card {{ $labels.device }} wrote {{ printf "%.2f" $value }} GB in the last 24 hours. Repeated small writes can reduce SD card lifespan.'
+
       - alert: ZombieProcesses
         expr: node_processes_state{state="Z"} > 5
         for: 5m
