@@ -71,7 +71,10 @@ in
   # Enable user programs.
   programs = {
     home-manager.enable = true;
-    man.enable = true;
+    man = {
+      enable = true;
+      generateCaches = false;
+    };
     fish.enable = true;
     zsh = {
       enable = true;
