@@ -79,6 +79,7 @@ in
     zsh = {
       enable = true;
       autocd = true;
+      autosuggestion.enable = true;
     };
     awscli.enable = true;
     claude-code.enable = true;
