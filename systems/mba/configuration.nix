@@ -1,6 +1,9 @@
 { pkgs, ... }:
 {
   networking.hostName = "mba";
+  users.users.carl.openssh.authorizedKeys.keyFiles = [
+    ./carl.pub
+  ];
 
   # Since the disk is only 256 GB, garbage collect store paths when running out of space.
   nix.extraOptions = ''

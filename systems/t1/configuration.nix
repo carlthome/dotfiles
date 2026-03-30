@@ -34,6 +34,9 @@
         "docker"
         "audio"
       ];
+      openssh.authorizedKeys.keyFiles = [
+        ./carl.pub
+      ];
       packages = with pkgs; [ ];
     };
   };
