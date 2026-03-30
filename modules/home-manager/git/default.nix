@@ -7,8 +7,16 @@
 }:
 let
   system = pkgs.stdenv.hostPlatform.system;
+  allowedSigners = [
+    (self + /systems/mba/carl.pub)
+    (self + /systems/t1/carl.pub)
+  ];
 in
 {
+  home.file.".ssh/allowed_signers".text = lib.concatMapStrings (
+    path: "${config.programs.git.settings.user.email} ${builtins.readFile path}"
+  ) allowedSigners;
+
   programs.git = {
     enable = true;
     package = pkgs.gitFull;
