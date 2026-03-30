@@ -38,6 +38,7 @@ in
         find = "grep -w";
         refresh = "!${lib.getExe self.packages.${system}.git-refresh}";
         sync = "!git fetch origin main:main";
+        w = "worktree";
       };
       branch.sort = "-committerdate";
       checkout.defaultRemote = "origin";
