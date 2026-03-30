@@ -1,6 +1,9 @@
 { pkgs, ... }:
 {
   networking.hostName = "mba";
+
+  system.primaryUser = "carl";
+
   users.users.carl.openssh.authorizedKeys.keyFiles = [
     ./carl.pub
   ];
