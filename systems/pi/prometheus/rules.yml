@@ -218,7 +218,7 @@ groups:
           description: 'SD card {{ $labels.device }} is writing {{ printf "%.2f" $value }} MB/s for 15 minutes. This level of sustained writes can quickly wear SD cards.'
 
       - alert: HostSdCardWriteVolume
-        expr: increase(node_disk_written_bytes_total{device=~\"mmcblk[0-9]+$\"}[24h]) / 1024 / 1024 / 1024 > 5
+        expr: increase(node_disk_written_bytes_total{device=~"mmcblk[0-9]+$"}[24h]) / 1024 / 1024 / 1024 > 5
         for: 0m
         labels:
           severity: warning
