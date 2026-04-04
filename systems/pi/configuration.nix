@@ -185,9 +185,13 @@ in
   };
 
   networking.firewall.trustedInterfaces = [ "tailscale0" ];
-  services.tailscale.extraSetFlags = [
-    "--advertise-routes=192.168.0.0/24"
-  ];
+  services.tailscale = {
+    useRoutingFeatures = "server";
+    extraSetFlags = [
+      "--advertise-routes=192.168.0.0/24"
+      "--advertise-exit-node"
+    ];
+  };
 
   services.journald.storage = "volatile";
 
