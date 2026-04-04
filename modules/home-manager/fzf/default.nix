@@ -34,6 +34,7 @@ let
   fzfDefaultOpts = [
     "--height 100%"
     "--style full"
+    "--layout default"
   ];
   fzfCtrlTCommand = "fd --type f";
   fzfAltCCommand = "fd --type d";
