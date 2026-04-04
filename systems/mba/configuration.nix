@@ -14,8 +14,6 @@
     max-free = 1G
   '';
 
-  services.tailscale.enable = true;
-
   services.wallpaper = {
     enable = true;
     frequency = "daily";
