@@ -252,3 +252,12 @@ groups:
         annotations:
           summary: "Home Assistant down ({{ $labels.instance }})"
           description: "Home Assistant Docker container is not running on {{ $labels.instance }}."
+
+      - alert: UpgradeFailed
+        expr: node_systemd_unit_state{name="nixos-upgrade.service",state="failed"} == 1
+        for: 0m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Package upgrade failed ({{ $labels.instance }})"
+          description: "Automatic NixOS upgrade failed on {{ $labels.instance }}. Check logs with: journalctl -u nixos-upgrade.service"
