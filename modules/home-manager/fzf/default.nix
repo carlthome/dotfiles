@@ -36,14 +36,16 @@ let
     "--style full"
     "--layout default"
   ];
-  fzfCtrlTCommand = "fd --type f";
-  fzfAltCCommand = "fd --type d";
+  fzfCtrlTCommand = "fd --type f --color=always";
+  fzfAltCCommand = "fd --type d --color=always";
   fzfCtrlTOpts = [
+    "--ansi"
     "--preview '${lib.getExe fzf-preview} {}'"
     "--bind 'focus:transform-preview-label:echo {}'"
     "--bind '?:toggle-preview'"
   ];
   fzfAltCOpts = [
+    "--ansi"
     "--preview 'tree -C {}'"
     "--bind 'focus:transform-preview-label:echo {}'"
     "--bind '?:toggle-preview'"
