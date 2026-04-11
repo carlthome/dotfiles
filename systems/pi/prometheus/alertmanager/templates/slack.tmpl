@@ -16,7 +16,7 @@
 
 {{/* Base silence URL with alertname and instance matchers */}}
 {{ define "__silence.base" -}}
-{{ .ExternalURL }}/#/silences/new?filter=%7Balertname%3D%22{{ .CommonLabels.alertname }}%22%2Cinstance%3D%22{{ .CommonLabels.instance }}%22%7D
+https://alertmanager.home/#/silences/new?filter=%7Balertname%3D%22{{ .CommonLabels.alertname }}%22%2Cinstance%3D%22{{ .CommonLabels.instance }}%22%7D
 {{- end }}
 
 {{ define "silence.1h.link" -}}
@@ -46,7 +46,7 @@ https://grafana.home/d/node-exporter/node-exporter?var-instance={{ .Labels.insta
 
 {{/* Alertmanager alert view link */}}
 {{ define "alertmanager.link" -}}
-{{ .ExternalURL }}/#/alerts?filter=%7Balertname%3D%22{{ .Labels.alertname }}%22%7D
+https://alertmanager.home/#/alerts?filter=%7Balertname%3D%22{{ .Labels.alertname }}%22%7D
 {{- end }}
 
 {{ define "slack.text" -}}
