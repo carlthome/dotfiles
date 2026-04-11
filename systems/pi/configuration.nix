@@ -448,6 +448,12 @@ in
         ];
       }
       {
+        job_name = "process_exporter";
+        static_configs = [
+          { targets = [ "localhost:${toString config.services.prometheus.exporters.process.port}" ]; }
+        ];
+      }
+      {
         job_name = "blocky";
         static_configs = [
           {
@@ -485,6 +491,17 @@ in
       systemd = {
         enable = true;
         listenAddress = "127.0.0.1";
+      };
+      process = {
+        enable = true;
+        listenAddress = "127.0.0.1";
+        settings.process_names = [
+          {
+            name = "{{.Matches.Service}}";
+            cmdline = [ ".*" ];
+            exe = [ ".*" ];
+          }
+        ];
       };
     };
 
