@@ -27,6 +27,7 @@ let
           pkgs.coreutils
         ]
       }:$PATH"
+      export BAT_THEME="ansi"
       exec ${src} "$@"
     '';
 
@@ -71,6 +72,7 @@ in
   };
 
   programs.zsh.initContent = ''
+    export LS_COLORS=""
     export FZF_DEFAULT_OPTS="${toOpts fzfDefaultOpts}"
     export FZF_CTRL_T_COMMAND="${fzfCtrlTCommand}"
     export FZF_CTRL_T_OPTS="${toOpts fzfCtrlTOpts}"
@@ -86,6 +88,7 @@ in
   '';
 
   programs.bash.initExtra = ''
+    export LS_COLORS=""
     export FZF_DEFAULT_OPTS="${toOpts fzfDefaultOpts}"
     export FZF_CTRL_T_COMMAND="${fzfCtrlTCommand}"
     export FZF_CTRL_T_OPTS="${toOpts fzfCtrlTOpts}"
@@ -100,6 +103,7 @@ in
   '';
 
   programs.fish.interactiveShellInit = ''
+    set -gx LS_COLORS ""
     set -gx FZF_DEFAULT_OPTS "${toOpts fzfDefaultOpts}"
     set -gx FZF_CTRL_T_COMMAND "${fzfCtrlTCommand}"
     set -gx FZF_CTRL_T_OPTS "${toOpts fzfCtrlTOpts}"
