@@ -251,15 +251,17 @@ in
     serviceConfig = {
       Type = "oneshot";
       Restart = "on-failure";
-      RestartSec = "5s";
+      RestartSec = "10s";
     };
     path = [ pkgs.tailscale ];
     script = ''
-      ip=$(tailscale ip -4)
+      for i in {1..30}; do
+        ip=$(tailscale ip -4 2>/dev/null) && [[ $ip =~ ^100\. ]] && break
+        sleep 3
+      done
       [[ $ip =~ ^100\. ]] || exit 1
       mkdir -p /var/lib/blocky
-      echo "@ IN A $ip" > /var/lib/blocky/tailscale.zone
-      chmod 644 /var/lib/blocky/tailscale.zone
+      echo "@  IN  A  $ip" > /var/lib/blocky/zone
     '';
   };
 
