@@ -68,7 +68,7 @@ let
 
   grafanaDashboards = lib.mapAttrs' (
     name: value:
-    lib.nameValuePair ("grafana/dashboards/" + name) {
+    lib.nameValuePair "grafana/dashboards/${name}" {
       source = ./grafana/dashboards/${name};
       group = "grafana";
       user = "grafana";
@@ -77,7 +77,7 @@ let
 
   alertManagerTemplates = lib.mapAttrs' (
     name: value:
-    lib.nameValuePair ("alertmanager/templates/" + name) {
+    lib.nameValuePair "alertmanager/templates/${name}" {
       source = ./prometheus/alertmanager/templates/${name};
       group = "alertmanager";
       user = "alertmanager";
