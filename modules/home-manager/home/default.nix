@@ -113,7 +113,6 @@ in
     gpg.enable = true;
     # TODO Broken on macOS?
     #gitui.enable = true;
-    pyenv.enable = true;
     bun.enable = true;
     fd.enable = true;
     nh.enable = true;
@@ -207,7 +206,6 @@ in
     podman
     postgresql
     pre-commit
-    pyenv
     python3Packages.pip-tools
     python3Packages.tensorboard
     pyupgrade
