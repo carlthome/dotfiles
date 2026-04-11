@@ -6,6 +6,53 @@
 }:
 
 let
+
+  # Services exposed via nginx reverse proxy and DNS.
+  services = {
+    grafana = {
+      port = config.services.grafana.settings.server.http_port;
+      name = "Grafana";
+      description = "Metrics dashboards";
+    };
+    uptime-kuma = {
+      port = config.services.uptime-kuma.settings.PORT;
+      name = "Uptime Kuma";
+      description = "Service monitoring";
+    };
+    prometheus = {
+      port = config.services.prometheus.port;
+      name = "Prometheus";
+      description = "Metrics database";
+    };
+    alertmanager = {
+      port = config.services.prometheus.alertmanager.port;
+      name = "Alertmanager";
+      description = "Alert routing";
+    };
+    loki = {
+      port = 3100;
+      name = "Loki";
+      description = "Log aggregation";
+    };
+    jellyfin = {
+      port = 8096;
+      name = "Jellyfin";
+      description = "Media server";
+    };
+    home-assistant = {
+      port = 8123;
+      name = "Home Assistant";
+      description = "Home automation";
+    };
+    blocky = {
+      port = 4000;
+      name = "Blocky";
+      description = "DNS ad-blocking";
+    };
+  };
+
+  cnames = lib.concatStringsSep "\n" (map (name: "${name}  IN  CNAME  @") (lib.attrNames services));
+
   usbMount = subvol: extraOptions: {
     device = "/dev/disk/by-uuid/1409bcc2-5b89-4d7e-ac96-c1db331053d8";
     fsType = "btrfs";
@@ -313,21 +360,14 @@ in
       customDNS = {
         customTTL = "1h";
         filterUnmappedTypes = true;
-        zone = ''
-          $ORIGIN home.
-          $TTL 86400
-          $INCLUDE /var/lib/blocky/tailscale.zone
-          pi  IN  CNAME  @
-          www  IN  CNAME  @
-          grafana  IN  CNAME  @
-          uptime-kuma  IN  CNAME  @
-          alertmanager  IN  CNAME  @
-          prometheus  IN  CNAME  @
-          loki  IN  CNAME  @
-          jellyfin  IN  CNAME  @
-          home-assistant  IN  CNAME  @
-          blocky  IN  CNAME  @
-        '';
+        zone = lib.concatStringsSep "\n" [
+          "$ORIGIN home."
+          "$TTL 86400"
+          "$INCLUDE /var/lib/blocky/zone"
+          "www  IN  CNAME  @"
+          "${config.networking.hostName}  IN  CNAME  @"
+          cnames
+        ];
       };
     };
   };
@@ -372,7 +412,7 @@ in
         name = "Loki";
         type = "loki";
         access = "proxy";
-        url = "http://127.0.0.1:3100";
+        url = "http://127.0.0.1:${toString services.loki.port}";
         uid = "loki";
       }
     ];
@@ -412,7 +452,7 @@ in
         static_configs = [
           {
             targets = [
-              "127.0.0.1:4000"
+              "127.0.0.1:${toString services.blocky.port}"
             ];
           }
         ];
@@ -518,54 +558,11 @@ in
 
   services.nginx =
     let
-      services = {
-        "grafana.home" = {
-          port = config.services.grafana.settings.server.http_port;
-          name = "Grafana";
-          description = "Metrics dashboards";
-        };
-        "uptime-kuma.home" = {
-          port = config.services.uptime-kuma.settings.PORT;
-          name = "Uptime Kuma";
-          description = "Service monitoring";
-        };
-        "prometheus.home" = {
-          port = config.services.prometheus.port;
-          name = "Prometheus";
-          description = "Metrics database";
-        };
-        "alertmanager.home" = {
-          port = config.services.prometheus.alertmanager.port;
-          name = "Alertmanager";
-          description = "Alert routing";
-        };
-        "loki.home" = {
-          port = 3100;
-          name = "Loki";
-          description = "Log aggregation";
-        };
-        "jellyfin.home" = {
-          port = 8096;
-          name = "Jellyfin";
-          description = "Media server";
-        };
-        "home-assistant.home" = {
-          port = 8123;
-          name = "Home Assistant";
-          description = "Home automation";
-        };
-        "blocky.home" = {
-          port = 4000;
-          name = "Blocky";
-          description = "DNS ad-blocking";
-        };
-      };
-
-      mkServiceCard = domain: svc: ''
-        <a href="https://${domain}" class="service-card">
+      mkServiceCard = subdomain: svc: ''
+        <a href="https://${subdomain}.home" class="service-card">
           <h2>${svc.name}</h2>
           <p>${svc.description}</p>
-          <div class="url">${domain}</div>
+          <div class="url">${subdomain}.home</div>
         </a>
       '';
 
@@ -589,7 +586,7 @@ in
       };
 
       mkVirtualHost =
-        domain: svc:
+        subdomain: svc:
         sslConfig
         // {
           locations."/" = {
@@ -597,6 +594,10 @@ in
             proxyWebsockets = true;
           };
         };
+
+      virtualHosts = lib.mapAttrs' (
+        subdomain: svc: lib.nameValuePair "${subdomain}.home" (mkVirtualHost subdomain svc)
+      ) services;
 
       wwwConfig = sslConfig // {
         root = index;
@@ -613,7 +614,7 @@ in
       recommendedGzipSettings = true;
       recommendedTlsSettings = true;
 
-      virtualHosts = (lib.mapAttrs mkVirtualHost services) // {
+      virtualHosts = virtualHosts // {
         "www.home" = wwwConfig;
         "${config.networking.hostName}.home" = wwwConfig;
         "${config.networking.hostName}.local" = wwwConfig // {
