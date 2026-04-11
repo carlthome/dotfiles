@@ -18,6 +18,10 @@
         ];
       };
       shfmt.enable = true;
+      promtool-rules = {
+        enable = true;
+        files = "systems/pi/prometheus/rules.yml";
+      };
     };
   };
 }
