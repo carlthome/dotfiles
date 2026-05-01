@@ -31,6 +31,7 @@ jobs:
             --trigger-http \
             --allow-unauthenticated \
             --service-account=heartbeat-function@${{ steps.auth.outputs.project_id }}.iam.gserviceaccount.com \
+            --set-secrets=HEARTBEAT_SECRET=heartbeat-secret:latest \
             --memory=256Mi \
             --timeout=10s \
             --min-instances=0 \

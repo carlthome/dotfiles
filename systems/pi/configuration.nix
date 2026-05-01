@@ -650,7 +650,10 @@ in
       EnvironmentFile = "/etc/nixos/secrets/heartbeat.env";
     };
     script = ''
-      ${pkgs.curl}/bin/curl -sf -X POST "$HEARTBEAT_URL" || echo "Heartbeat failed"
+      set -euo pipefail
+      : "''${HEARTBEAT_URL:?missing}"
+      : "''${HEARTBEAT_SECRET:?missing}"
+      ${pkgs.curl}/bin/curl -sf -X POST -H "X-Heartbeat-Secret: $HEARTBEAT_SECRET" "$HEARTBEAT_URL"
     '';
   };
 
@@ -659,8 +662,8 @@ in
     timerConfig = {
       OnCalendar = "*:0/5";
       Persistent = true;
-      };
     };
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

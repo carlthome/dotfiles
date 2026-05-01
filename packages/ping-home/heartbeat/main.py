@@ -1,6 +1,8 @@
+import os
+import time
+
 import functions_framework
 from google.cloud import monitoring_v3
-import time
 
 PROJECT_ID = None  # Auto-detected from environment
 
@@ -8,6 +10,10 @@ PROJECT_ID = None  # Auto-detected from environment
 @functions_framework.http
 def heartbeat(request):
     """Receive heartbeat from home and write metric to Cloud Monitoring."""
+    secret = request.headers.get("X-Heartbeat-Secret")
+    if not secret or secret != os.environ["HEARTBEAT_SECRET"]:
+        return {"error": "unauthorized"}, 401
+
     client = monitoring_v3.MetricServiceClient()
     project_name = f"projects/{PROJECT_ID or _get_project_id()}"
 
