@@ -1,0 +1,37 @@
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/ping-home-heartbeat.yml
+      - packages/ping-home/heartbeat/**
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        id: auth
+        with:
+          workload_identity_provider: ${{ secrets.GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GOOGLE_CLOUD_DEPLOY_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - run: |
+          gcloud functions deploy home-heartbeat \
+            --gen2 \
+            --region=${{ secrets.GOOGLE_CLOUD_REGION }} \
+            --runtime=python312 \
+            --source=packages/ping-home/heartbeat \
+            --entry-point=heartbeat \
+            --trigger-http \
+            --allow-unauthenticated \
+            --service-account=heartbeat-function@${{ steps.auth.outputs.project_id }}.iam.gserviceaccount.com \
+            --memory=256Mi \
+            --timeout=10s \
+            --min-instances=0 \
+            --max-instances=1
