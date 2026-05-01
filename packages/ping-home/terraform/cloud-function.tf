@@ -15,6 +15,13 @@ resource "google_service_account_iam_member" "deploy_can_use_heartbeat" {
   member             = "serviceAccount:${google_service_account.github_actions_deploy.email}"
 }
 
+resource "google_monitoring_metric_descriptor" "heartbeat" {
+  type         = "custom.googleapis.com/home/heartbeat"
+  metric_kind  = "GAUGE"
+  value_type   = "INT64"
+  display_name = "Home Heartbeat"
+}
+
 resource "google_monitoring_alert_policy" "heartbeat_missing" {
   display_name = "Home heartbeat missing"
   combiner     = "OR"
@@ -23,7 +30,7 @@ resource "google_monitoring_alert_policy" "heartbeat_missing" {
   conditions {
     display_name = "No heartbeat for 10 minutes"
     condition_absent {
-      filter   = "resource.type = \"global\" AND metric.type = \"custom.googleapis.com/home/heartbeat\""
+      filter   = "resource.type = \"global\" AND metric.type = \"${google_monitoring_metric_descriptor.heartbeat.type}\""
       duration = "600s"
       aggregations {
         alignment_period   = "300s"
