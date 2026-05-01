@@ -73,6 +73,7 @@ resource "google_project_iam_member" "github_actions_terraform_roles" {
 resource "google_project_iam_member" "github_actions_deploy_roles" {
   for_each = toset([
     "roles/artifactregistry.writer",
+    "roles/cloudfunctions.developer",
     "roles/run.developer",
   ])
   project = data.google_client_config.current.project

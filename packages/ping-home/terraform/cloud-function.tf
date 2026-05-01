@@ -9,6 +9,12 @@ resource "google_project_iam_member" "heartbeat_metrics" {
   member  = "serviceAccount:${google_service_account.heartbeat.email}"
 }
 
+resource "google_service_account_iam_member" "deploy_can_use_heartbeat" {
+  service_account_id = google_service_account.heartbeat.name
+  role               = "roles/iam.serviceAccountUser"
+  member             = "serviceAccount:${google_service_account.github_actions_deploy.email}"
+}
+
 resource "google_monitoring_alert_policy" "heartbeat_missing" {
   display_name = "Home heartbeat missing"
   combiner     = "OR"
