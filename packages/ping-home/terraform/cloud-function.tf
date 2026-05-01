@@ -27,9 +27,6 @@ resource "google_monitoring_alert_policy" "heartbeat_missing" {
   }
 
   notification_channels = [google_monitoring_notification_channel.email.name]
-  alert_strategy {
-    notification_rate_limit { period = "3600s" }
-  }
 }
 
 output "heartbeat_service_account" {
