@@ -74,7 +74,7 @@ resource "google_project_iam_member" "github_actions_deploy_roles" {
   for_each = toset([
     "roles/artifactregistry.writer",
     "roles/cloudfunctions.developer",
-    "roles/run.developer",
+    "roles/run.admin",
   ])
   project = data.google_client_config.current.project
   role    = each.value
