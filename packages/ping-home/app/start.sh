@@ -16,5 +16,16 @@ tailscale up --authkey="${TS_AUTHKEY}" --hostname="${TS_HOSTNAME}" --advertise-t
 # Verify we got an IP.
 tailscale ip -4 || exit 1
 
+# Wait for SOCKS5 proxy to actually reach the home endpoint.
+echo "Waiting for Tailscale connectivity..."
+for i in {1..30}; do
+	if curl -x "socks5h://${TS_SOCKS5_SERVER}" -s --max-time 3 "${HOME_LAN_ENDPOINT}" >/dev/null 2>&1; then
+		echo "Tailscale connection established"
+		break
+	fi
+	echo "Attempt $i: waiting for tunnel..."
+	sleep 1
+done
+
 # Start the FastAPI application using Uvicorn.
 exec uvicorn --host 0.0.0.0 --port 8080 main:app
