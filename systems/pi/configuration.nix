@@ -640,6 +640,28 @@ in
       };
     };
 
+  # Push heartbeat every 5 minutes.
+  systemd.services.heartbeat = {
+    description = "Send heartbeat";
+    after = [ "network-online.target" ];
+    wants = [ "network-online.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      EnvironmentFile = "/etc/nixos/secrets/heartbeat.env";
+    };
+    script = ''
+      ${pkgs.curl}/bin/curl -sf -X POST "$HEARTBEAT_URL" || echo "Heartbeat failed"
+    '';
+  };
+
+  systemd.timers.heartbeat = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "*:0/5";
+      Persistent = true;
+      };
+    };
+
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave
