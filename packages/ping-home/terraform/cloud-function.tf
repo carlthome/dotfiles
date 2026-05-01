@@ -15,6 +15,27 @@ resource "google_service_account_iam_member" "deploy_can_use_heartbeat" {
   member             = "serviceAccount:${google_service_account.github_actions_deploy.email}"
 }
 
+resource "random_password" "heartbeat_secret" {
+  length  = 32
+  special = false
+}
+
+resource "google_secret_manager_secret" "heartbeat" {
+  secret_id = "heartbeat-secret"
+  replication { auto {} }
+}
+
+resource "google_secret_manager_secret_version" "heartbeat" {
+  secret      = google_secret_manager_secret.heartbeat.id
+  secret_data = random_password.heartbeat_secret.result
+}
+
+resource "google_secret_manager_secret_iam_member" "heartbeat_function_can_read" {
+  secret_id = google_secret_manager_secret.heartbeat.secret_id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${google_service_account.heartbeat.email}"
+}
+
 resource "google_monitoring_metric_descriptor" "heartbeat" {
   type         = "custom.googleapis.com/home/heartbeat"
   metric_kind  = "GAUGE"
