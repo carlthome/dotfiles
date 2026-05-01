@@ -41,6 +41,7 @@ resource "google_monitoring_metric_descriptor" "heartbeat" {
   metric_kind  = "GAUGE"
   value_type   = "INT64"
   display_name = "Home Heartbeat"
+  description  = "Heartbeat signal from home network"
 }
 
 resource "google_monitoring_alert_policy" "heartbeat_missing" {
