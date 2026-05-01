@@ -22,7 +22,9 @@ resource "random_password" "heartbeat_secret" {
 
 resource "google_secret_manager_secret" "heartbeat" {
   secret_id = "heartbeat-secret"
-  replication { auto {} }
+  replication {
+    auto {}
+  }
 }
 
 resource "google_secret_manager_secret_version" "heartbeat" {
