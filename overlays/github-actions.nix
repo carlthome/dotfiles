@@ -38,11 +38,11 @@ final: prev: {
           ];
       });
 
-      # Gradio's vite build is flaky/OOMs on GitHub Actions Linux runners.
+      # Gradio's vite build is flaky/OOMs on GitHub Actions runners.
       # We only need it for the optional UI in `packages/train-mnist`, so on
-      # Linux we replace it with a tiny stub to keep CI green.
+      # CI platforms we replace it with a tiny stub to keep builds green.
       gradio =
-        if final.stdenv.hostPlatform.isLinux then
+        if final.stdenv.hostPlatform.isLinux || final.stdenv.hostPlatform.isDarwin then
           pfinal.buildPythonPackage {
             pname = "gradio";
             version = "4.29.0";
@@ -60,13 +60,13 @@ final: prev: {
               )
               PY
               cat > "$out/gradio/__init__.py" <<'PY'
-              # CI stub. The real Gradio package is intentionally not built on Linux CI
-              # to avoid Node/vite build issues. This is enough for import-time.
+              # CI stub. The real Gradio package is intentionally not built on CI
+              # (Linux/macOS) to avoid Node/vite build issues. This is enough for import-time.
               class _Unavailable(RuntimeError):
                   pass
 
               def __getattr__(name):
-                  raise _Unavailable("gradio is stubbed out on CI (Linux)")
+                  raise _Unavailable("gradio is stubbed out on CI")
               PY
             '';
 
@@ -74,8 +74,7 @@ final: prev: {
             doCheck = false;
           }
         else
-          # On non-Linux (e.g. local Darwin), keep the real package but bump Node
-          # memory to reduce build flakiness.
+          # On other platforms, keep the real package but bump Node memory to reduce flakiness.
           pprev.gradio.overrideAttrs (old: {
             preBuild = ''
               ${old.preBuild or ""}
