@@ -36,6 +36,8 @@ jobs:
       - run: nix flake check --all-systems --no-build
       - id: detect
         run: .github/scripts/detect-builds.sh
+        env:
+          GITHUB_EVENT_BEFORE: ${{ github.event.before }}
 
   packages:
     needs: check

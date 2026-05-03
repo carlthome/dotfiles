@@ -8,9 +8,17 @@ START_TIME=$SECONDS
 # Allow BASE_REF to be passed directly for testing
 if [[ -z ${BASE_REF:-} ]]; then
 	if [[ -n ${GITHUB_BASE_REF:-} ]]; then
+		# Pull request: compare against the target branch
 		BASE_REF="github:${GITHUB_REPOSITORY}/${GITHUB_BASE_REF}"
+	elif [[ -n ${GITHUB_EVENT_BEFORE:-} && ${GITHUB_EVENT_BEFORE} != "0000000000000000000000000000000000000000" ]]; then
+		# Push event: compare against the previous commit (from event payload)
+		BASE_REF="github:${GITHUB_REPOSITORY}/${GITHUB_EVENT_BEFORE}"
 	elif [[ -n ${GITHUB_SHA:-} ]]; then
-		BASE_REF="github:${GITHUB_REPOSITORY}/${GITHUB_SHA}~1"
+		# Fallback: resolve parent commit locally
+		PARENT_SHA=$(git rev-parse "${GITHUB_SHA}^" 2>/dev/null) || PARENT_SHA=""
+		if [[ -n $PARENT_SHA ]]; then
+			BASE_REF="github:${GITHUB_REPOSITORY}/${PARENT_SHA}"
+		fi
 	fi
 fi
 
