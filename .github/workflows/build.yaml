@@ -15,10 +15,6 @@ on:
       - LICENSE
       - .gitignore
 
-concurrency:
-  group: build
-  cancel-in-progress: true
-
 permissions:
   contents: read
   id-token: write
@@ -26,6 +22,9 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
+    concurrency:
+      group: check-${{ github.ref }}
+      cancel-in-progress: true
     outputs:
       packages: ${{ steps.detect.outputs.packages }}
       systems: ${{ steps.detect.outputs.systems }}
@@ -45,6 +44,9 @@ jobs:
       matrix: ${{ fromJSON(needs.check.outputs.packages) }}
     runs-on: ${{ matrix.runs-on }}
     name: packages / ${{ matrix.name }} (${{ matrix.system }})
+    concurrency:
+      group: ${{ matrix.attr }}-${{ github.ref }}
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v6
       - uses: DeterminateSystems/nix-installer-action@main
@@ -61,6 +63,9 @@ jobs:
       fail-fast: false
       matrix: ${{ fromJSON(needs.check.outputs.systems) }}
     runs-on: ${{ matrix.runs-on }}
+    concurrency:
+      group: ${{ matrix.attr }}-${{ github.ref }}
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v6
       - uses: docker/setup-qemu-action@v3
@@ -84,6 +89,9 @@ jobs:
       fail-fast: false
       matrix: ${{ fromJSON(needs.check.outputs.homes) }}
     runs-on: ${{ matrix.runs-on }}
+    concurrency:
+      group: ${{ matrix.attr }}-${{ github.ref }}
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v6
       - uses: DeterminateSystems/nix-installer-action@main
