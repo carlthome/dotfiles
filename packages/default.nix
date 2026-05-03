@@ -1,4 +1,5 @@
 {
+  self,
   nixpkgs,
   mirpkgs,
   cargo2nix,
@@ -11,6 +12,7 @@ let
     overlays = [
       mirpkgs.overlays.default
       cargo2nix.overlays.default
+      self.overlays.github-actions
     ];
   };
   names = builtins.attrNames (

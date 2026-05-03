@@ -3,14 +3,95 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - "**.md"
+      - LICENSE
+      - .gitignore
   pull_request:
     branches:
       - main
+    paths-ignore:
+      - "**.md"
+      - LICENSE
+      - .gitignore
+
+concurrency:
+  group: build
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
-  build:
-    uses: carlthome/workflows/.github/workflows/nix.yaml@main
-    with:
-      cachix-cache: carlthome
-    secrets:
-      cachix-token: ${{ secrets.CACHIX_AUTH_TOKEN }}
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      packages: ${{ steps.detect.outputs.packages }}
+      systems: ${{ steps.detect.outputs.systems }}
+      homes: ${{ steps.detect.outputs.homes }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - run: nix flake check --all-systems --no-build
+      - id: detect
+        run: .github/scripts/detect-builds.sh
+
+  packages:
+    needs: check
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.check.outputs.packages) }}
+    runs-on: ${{ matrix.runs-on }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+        if: runner.os == 'Linux'
+      - uses: cachix/cachix-action@v17
+        with:
+          name: carlthome
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+      - run: nix build --print-build-logs
+
+  systems:
+    needs: check
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.check.outputs.systems) }}
+    runs-on: ${{ matrix.runs-on }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: docker/setup-qemu-action@v3
+        if: matrix.system == 'aarch64-linux'
+        with:
+          platforms: arm64
+      - uses: DeterminateSystems/nix-installer-action@main
+        with:
+          extra-conf: |
+            extra-platforms = aarch64-linux
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+        if: runner.os == 'Linux'
+      - uses: cachix/cachix-action@v17
+        with:
+          name: carlthome
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+      - run: nix build --print-build-logs .#${{ matrix.attr }}
+
+  homes:
+    needs: check
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.check.outputs.homes) }}
+    runs-on: ${{ matrix.runs-on }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+        if: runner.os == 'Linux'
+      - uses: cachix/cachix-action@v17
+        with:
+          name: carlthome
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+      - run: nix build --print-build-logs .#${{ matrix.attr }}
