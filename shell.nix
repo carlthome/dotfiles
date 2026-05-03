@@ -12,7 +12,7 @@ pkgs.mkShell {
     act
     nix
     git
-    home-manager
+    nh
     nix-diff
     nix-info
   ];

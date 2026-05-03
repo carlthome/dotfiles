@@ -5,8 +5,10 @@ My personal computing configuration that I wish to sync between machines.
 ## Install
 
 1. Install Nix on the system (with [flakes enabled](https://nixos.wiki/wiki/Flakes#Enable_flakes)) by running [bootstrap.sh](./bootstrap.sh)
-1. Create system configuration with `nix run github:carlthome/dotfiles#switch-system`
-1. Create user configuration with `nix run github:carlthome/dotfiles#switch-home`
+1. Enter a development shell with `nix develop github:carlthome/dotfiles`
+1. Create NixOS configuration with `nh os switch github:carlthome/dotfiles`
+1. Create macOS configuration with `nh darwin switch github:carlthome/dotfiles`
+1. Create user configuration with `nh home switch github:carlthome/dotfiles`
 
 ## Usage
 
