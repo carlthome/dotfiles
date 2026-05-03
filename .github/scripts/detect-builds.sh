@@ -28,7 +28,7 @@ darwin=$(nix eval --json .#darwinConfigurations --apply 'builtins.mapAttrs (name
 })' | jq -c '[to_entries[] | .value + {name: .key}]')
 
 # Combine and add runner mapping
-systems=$(echo "$nixos" "$darwin" | jq -s 'add | map(. + {
+systems=$(echo "$nixos" "$darwin" | jq -sc 'add | map(. + {
   "runs-on": (if .system == "aarch64-darwin" then "macos-14"
               elif .system == "x86_64-darwin" then "macos-13"
               else "ubuntu-latest" end)
@@ -43,7 +43,7 @@ homes='[]'
 for sys in x86_64-linux aarch64-darwin; do
 	runner=$(if [ "$sys" = "aarch64-darwin" ]; then echo "macos-14"; else echo "ubuntu-latest"; fi)
 	names=$(nix eval --json ".#legacyPackages.$sys.homeConfigurations" --apply 'builtins.attrNames')
-	homes=$(echo "$homes" "$names" | jq -s --arg sys "$sys" --arg runner "$runner" '
+	homes=$(echo "$homes" "$names" | jq -sc --arg sys "$sys" --arg runner "$runner" '
     .[0] + [.[1][] | {system: $sys, name: ., "runs-on": $runner, attr: "legacyPackages.\($sys).homeConfigurations.\(.).activationPackage"}]
   ')
 done
