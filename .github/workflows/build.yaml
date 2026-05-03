@@ -34,7 +34,7 @@ jobs:
       - uses: actions/cache/restore@v5
         with:
           path: ~/.cache/nix
-          key: nix-eval-${{ runner.os }}-${{ hashFiles('flake.lock') }}-${{ github.sha }}
+          key: nix-eval-${{ runner.os }}-${{ hashFiles('flake.lock') }}
           restore-keys: nix-eval-${{ runner.os }}-${{ hashFiles('flake.lock') }}-
       - run: nix flake check --all-systems --no-build
       - id: detect
@@ -45,7 +45,7 @@ jobs:
         if: always()
         with:
           path: ~/.cache/nix
-          key: nix-eval-${{ runner.os }}-${{ hashFiles('flake.lock') }}-${{ github.sha }}
+          key: nix-eval-${{ runner.os }}-${{ hashFiles('flake.lock') }}
 
   build:
     needs: detect
