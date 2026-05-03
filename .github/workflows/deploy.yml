@@ -1,0 +1,21 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Branch or PR head ref
+        required: true
+      sha:
+        description: Commit SHA
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: home
+    steps:
+      - run: |
+          curl -s "https://ntfy.sh/${{ secrets.NTFY_TOPIC }}" \
+            -d '{"ref":"${{ inputs.ref }}","sha":"${{ inputs.sha }}","repo":"${{ github.repository }}"}'
+          echo "::notice::Notified deployment of ${{ inputs.sha }} from ${{ inputs.ref }}"

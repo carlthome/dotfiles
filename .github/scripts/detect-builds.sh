@@ -2,6 +2,8 @@
 # shellcheck disable=SC2016  # Single quotes are intentional for Nix expressions
 set -euo pipefail
 
+START_TIME=$SECONDS
+
 # Determine base ref for comparison (skip comparison if not in CI)
 BASE_REF=""
 if [[ -n ${GITHUB_BASE_REF:-} ]]; then
@@ -16,107 +18,172 @@ if [[ -n $BASE_REF ]]; then
 	nix flake prefetch "$BASE_REF" --quiet || echo "Warning: could not prefetch base ref"
 fi
 
-# Check if derivation changed compared to base ref
-# Returns 0 (true) if changed or new, 1 (false) if unchanged
-drv_changed() {
-	local attr="$1"
+# Batch evaluate drvPaths for a list of attributes
+# Input: JSON array of attribute paths
+# Output: JSON object mapping attr -> drvPath (or null if missing)
+batch_drv_paths() {
+	local flake_ref="$1"
+	local attrs_json="$2"
 
-	# Skip comparison if no base ref (local dev or first commit)
-	[[ -z $BASE_REF ]] && return 0
-
-	local current_drv base_drv
-	current_drv=$(nix eval --raw ".#${attr}.drvPath" 2>/dev/null) || return 0
-	base_drv=$(nix eval --raw "${BASE_REF}#${attr}.drvPath" 2>/dev/null) || return 0
-
-	[[ $current_drv != "$base_drv" ]]
+	nix eval --json "${flake_ref}" --apply "
+    flake: builtins.listToAttrs (map (attr:
+      let
+        parts = builtins.filter (x: x != \"\") (builtins.split \"\\\\.\" attr);
+        val = builtins.foldl' (acc: key: acc.\${key} or null) flake parts;
+      in {
+        name = attr;
+        value = if val != null then val.drvPath or null else null;
+      }
+    ) (builtins.fromJSON ''${attrs_json}''))
+  " 2>/dev/null || echo '{}'
 }
 
-# Detect flake systems (from packages output) for building default package
-packages=$(nix eval --json .#packages --apply 'builtins.attrNames' | jq -c '[.[] | {
+# Compare current vs base drvPaths and return changed attributes
+# Input: JSON array of objects with 'attr' field
+# Output: filtered JSON array of changed items
+filter_changed() {
+	local items="$1"
+	local attrs
+	attrs=$(echo "$items" | jq -c '[.[].attr]')
+
+	if [[ -z $BASE_REF ]]; then
+		echo "$items"
+		return
+	fi
+
+	# Evaluate current and base in parallel
+	local current_file base_file
+	current_file=$(mktemp)
+	base_file=$(mktemp)
+	trap 'rm -f "$current_file" "$base_file"' RETURN
+
+	batch_drv_paths "." "$attrs" >"$current_file" &
+	local current_pid=$!
+	batch_drv_paths "$BASE_REF" "$attrs" >"$base_file" &
+	local base_pid=$!
+
+	wait "$current_pid" "$base_pid" || true
+
+	echo "$items" | jq -c --slurpfile current "$current_file" --slurpfile base "$base_file" '
+    [.[] | select(
+      ($current[0][.attr] == null) or
+      ($base[0][.attr] == null) or
+      ($current[0][.attr] != $base[0][.attr])
+    )]
+  '
+}
+
+# Print what changed vs unchanged
+print_status() {
+	local all="$1" changed="$2" key="$3"
+	echo "$all" "$changed" | jq -rs --arg key "$key" '
+    (.[1] | map({(.[$key]): true}) | add // {}) as $changed |
+    .[0][] | "\(.[$key]): \(if $changed[.[$key]] then "changed" else "unchanged, skipping" end)"
+  '
+}
+
+echo "Gathering flake metadata..."
+METADATA_START=$SECONDS
+
+# Gather all metadata in parallel
+tmpdir=$(mktemp -d)
+trap 'rm -rf "$tmpdir"' EXIT
+
+# Packages
+nix eval --json .#packages --apply 'builtins.attrNames' >"$tmpdir/pkg_systems.json" 2>/dev/null &
+pid_pkg=$!
+
+# NixOS configurations
+nix eval --json .#nixosConfigurations --apply 'builtins.mapAttrs (name: cfg: {
+  system = cfg.pkgs.stdenv.hostPlatform.system;
+  attr = "nixosConfigurations.${name}.config.system.build.toplevel";
+})' >"$tmpdir/nixos.json" 2>/dev/null &
+pid_nixos=$!
+
+# Darwin configurations
+nix eval --json .#darwinConfigurations --apply 'builtins.mapAttrs (name: cfg: {
+  system = cfg.pkgs.stdenv.hostPlatform.system;
+  attr = "darwinConfigurations.${name}.system";
+})' >"$tmpdir/darwin.json" 2>/dev/null &
+pid_darwin=$!
+
+# Home configurations (single eval for all systems)
+nix eval --json .#legacyPackages --apply '
+  lp: builtins.concatLists (builtins.attrValues (builtins.mapAttrs (sys: pkgs:
+    if pkgs ? homeConfigurations then
+      map (name: { system = sys; name = name; attr = "legacyPackages.${sys}.homeConfigurations.${name}.activationPackage"; })
+          (builtins.attrNames pkgs.homeConfigurations)
+    else []
+  ) lp))
+' >"$tmpdir/homes.json" 2>/dev/null &
+pid_homes=$!
+
+wait "$pid_pkg" "$pid_nixos" "$pid_darwin" "$pid_homes"
+echo "Metadata gathered in $((SECONDS - METADATA_START))s"
+
+# Process packages
+packages=$(jq -c '[.[] | {
   system: .,
+  attr: "packages.\(.).default",
   "runs-on": (if . == "aarch64-darwin" then "macos-14"
               elif . == "x86_64-darwin" then "macos-13"
               elif . == "aarch64-linux" then null
               else "ubuntu-latest" end)
-}] | map(select(."runs-on" != null))')
+}] | map(select(."runs-on" != null))' "$tmpdir/pkg_systems.json")
 
-# Filter to only changed packages
-changed_packages='[]'
-for row in $(echo "$packages" | jq -c '.[]'); do
-	sys=$(echo "$row" | jq -r '.system')
-	if drv_changed "packages.${sys}.default"; then
-		changed_packages=$(echo "$changed_packages" | jq -c ". + [$row]")
-		echo "packages.${sys}.default: changed"
-	else
-		echo "packages.${sys}.default: unchanged, skipping"
-	fi
-done
+# Process systems (nixos + darwin)
+systems=$(jq -sc '
+  [(.[0] // {}), (.[1] // {})] | add | to_entries | map(.value + {name: .key}) | map(. + {
+    "runs-on": (if .system == "aarch64-darwin" then "macos-14"
+                elif .system == "x86_64-darwin" then "macos-13"
+                else "ubuntu-latest" end)
+  })
+' "$tmpdir/nixos.json" "$tmpdir/darwin.json")
 
-echo "packages={\"include\":$changed_packages}" >>"$GITHUB_OUTPUT"
-
-# Detect NixOS configurations
-nixos=$(nix eval --json .#nixosConfigurations --apply 'builtins.mapAttrs (name: cfg: {
-  system = cfg.pkgs.stdenv.hostPlatform.system;
-  attr = "nixosConfigurations.${name}.config.system.build.toplevel";
-})' | jq -c '[to_entries[] | .value + {name: .key}]')
-
-# Detect Darwin configurations
-darwin=$(nix eval --json .#darwinConfigurations --apply 'builtins.mapAttrs (name: cfg: {
-  system = cfg.pkgs.stdenv.hostPlatform.system;
-  attr = "darwinConfigurations.${name}.system";
-})' | jq -c '[to_entries[] | .value + {name: .key}]')
-
-# Combine and add runner mapping
-systems=$(echo "$nixos" "$darwin" | jq -sc 'add | map(. + {
+# Process homes
+homes=$(jq -c 'map(. + {
   "runs-on": (if .system == "aarch64-darwin" then "macos-14"
-              elif .system == "x86_64-darwin" then "macos-13"
-              else "ubuntu-latest" end)
-})')
+              elif .system == "x86_64-linux" then "ubuntu-latest"
+              else null end)
+}) | map(select(."runs-on" != null))' "$tmpdir/homes.json")
 
-# Filter to only changed systems
-changed_systems='[]'
-for row in $(echo "$systems" | jq -c '.[]'); do
-	attr=$(echo "$row" | jq -r '.attr')
-	name=$(echo "$row" | jq -r '.name')
-	if drv_changed "$attr"; then
-		changed_systems=$(echo "$changed_systems" | jq -c ". + [$row]")
-		echo "${name}: changed"
-	else
-		echo "${name}: unchanged, skipping"
-	fi
-done
+# Filter changed items
+echo ""
+echo "Checking packages ($(echo "$packages" | jq length))..."
+PKG_START=$SECONDS
+changed_packages=$(filter_changed "$packages")
+print_status "$packages" "$changed_packages" "attr"
+echo "Packages checked in $((SECONDS - PKG_START))s"
 
-echo "systems={\"include\":$changed_systems}" >>"$GITHUB_OUTPUT"
+echo ""
+echo "Checking systems ($(echo "$systems" | jq length))..."
+SYS_START=$SECONDS
+changed_systems=$(filter_changed "$systems")
+print_status "$systems" "$changed_systems" "name"
+echo "Systems checked in $((SECONDS - SYS_START))s"
 
-# Detect home configurations for each system
-homes='[]'
-for sys in x86_64-linux aarch64-darwin; do
-	runner=$(if [ "$sys" = "aarch64-darwin" ]; then echo "macos-14"; else echo "ubuntu-latest"; fi)
-	names=$(nix eval --json ".#legacyPackages.$sys.homeConfigurations" --apply 'builtins.attrNames')
-	homes=$(echo "$homes" "$names" | jq -sc --arg sys "$sys" --arg runner "$runner" '
-    .[0] + [.[1][] | {system: $sys, name: ., "runs-on": $runner, attr: "legacyPackages.\($sys).homeConfigurations.\(.).activationPackage"}]
-  ')
-done
+echo ""
+echo "Checking homes ($(echo "$homes" | jq length))..."
+HOME_START=$SECONDS
+changed_homes=$(filter_changed "$homes")
+# Use attr for homes since names can duplicate across systems
+echo "$homes" "$changed_homes" | jq -rs '
+  (.[1] | map({(.attr): true}) | add // {}) as $changed |
+  .[0][] | "\(.name) (\(.system)): \(if $changed[.attr] then "changed" else "unchanged, skipping" end)"
+'
+echo "Homes checked in $((SECONDS - HOME_START))s"
 
-# Filter to only changed homes
-changed_homes='[]'
-for row in $(echo "$homes" | jq -c '.[]'); do
-	attr=$(echo "$row" | jq -r '.attr')
-	name=$(echo "$row" | jq -r '.name')
-	sys=$(echo "$row" | jq -r '.system')
-	if drv_changed "$attr"; then
-		changed_homes=$(echo "$changed_homes" | jq -c ". + [$row]")
-		echo "home ${name} (${sys}): changed"
-	else
-		echo "home ${name} (${sys}): unchanged, skipping"
-	fi
-done
-
-echo "homes={\"include\":$(echo "$changed_homes" | jq -c)}" >>"$GITHUB_OUTPUT"
+# Output for GitHub Actions
+{
+	echo "packages={\"include\":$changed_packages}"
+	echo "systems={\"include\":$changed_systems}"
+	echo "homes={\"include\":$changed_homes}"
+} >>"$GITHUB_OUTPUT"
 
 # Summary
 echo ""
 echo "=== Build Summary ==="
-echo "Packages: $(echo "$changed_packages" | jq length)"
-echo "Systems: $(echo "$changed_systems" | jq length)"
-echo "Homes: $(echo "$changed_homes" | jq length)"
+echo "Packages: $(echo "$changed_packages" | jq length) changed"
+echo "Systems: $(echo "$changed_systems" | jq length) changed"
+echo "Homes: $(echo "$changed_homes" | jq length) changed"
+echo "Total time: $((SECONDS - START_TIME))s"

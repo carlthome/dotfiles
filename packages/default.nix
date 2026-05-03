@@ -12,7 +12,7 @@ let
     overlays = [
       mirpkgs.overlays.default
       cargo2nix.overlays.default
-      self.overlays.accelerate-mps-fix
+      self.overlays.github-actions
     ];
   };
   names = builtins.attrNames (

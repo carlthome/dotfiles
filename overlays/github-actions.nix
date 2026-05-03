@@ -1,12 +1,12 @@
-# Fix accelerate tests failing on macOS CI runners with limited GPU memory
+# Fixes for packages that fail on GitHub Actions CI runners
 final: prev: {
   python3Packages = prev.python3Packages.override {
     overrides = pfinal: pprev: {
+      # MPS tests fail on CI runners with limited GPU memory
       accelerate = pprev.accelerate.overridePythonAttrs (old: {
         disabledTests =
           (old.disabledTests or [ ])
           ++ prev.lib.optionals final.stdenv.hostPlatform.isDarwin [
-            # MPS backend out of memory on CI runners
             "test_can_pickle_dataloader_0"
             "test_can_pickle_dataloader_1"
             "test_nested_hook"
@@ -36,6 +36,14 @@ final: prev: {
             "test_get_state_dict_offloaded_model"
             "test_set_module_tensor_to_meta_and_gpu"
           ];
+      });
+
+      # Gradio's vite build crashes on CI runners - limit Node.js memory
+      gradio = pprev.gradio.overrideAttrs (old: {
+        preBuild = ''
+          ${old.preBuild or ""}
+          export NODE_OPTIONS="--max-old-space-size=4096"
+        '';
       });
     };
   };
