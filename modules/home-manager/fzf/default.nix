@@ -9,6 +9,7 @@
 let
   system = pkgs.stdenv.hostPlatform.system;
   fzf-rg = lib.getExe self.packages.${system}.fzf-ripgrep;
+  fzf-k8s = lib.getExe self.packages.${system}.fzf-k8s;
 
   fzf-preview =
     let
@@ -83,6 +84,11 @@ in
     fzf-rg() { ${fzf-rg} "$BUFFER"; zle reset-prompt; }
     zle -N fzf-rg
     bindkey '^F' fzf-rg
+
+    fzf-k8s() { ${fzf-k8s} "$BUFFER"; zle reset-prompt; }
+    zle -N fzf-k8s
+    bindkey '^K' fzf-k8s
+
     source ${pkgs.fzf-git-sh}/share/fzf-git-sh/fzf-git.sh
 
   '';
@@ -98,6 +104,10 @@ in
 
     fzf-rg() { ${fzf-rg} "$READLINE_LINE"; }
     bind -x '"\C-f":fzf-rg'
+
+    fzf-k8s() { ${fzf-k8s} "$READLINE_LINE"; }
+    bind -x '"\C-k":fzf-k8s'
+
     source ${pkgs.fzf-git-sh}/share/fzf-git-sh/fzf-git.sh
 
   '';
@@ -113,6 +123,10 @@ in
 
     function fzf-rg; ${fzf-rg} (commandline); commandline -f repaint; end
     bind \cf fzf-rg
+
+    function fzf-k8s; ${fzf-k8s} (commandline); commandline -f repaint; end
+    bind \ck fzf-k8s
+
     source ${pkgs.fzf-git-sh}/share/fzf-git-sh/fzf-git.fish
 
   '';
