@@ -96,7 +96,7 @@ else
 	mapfile -t attr_list < <(echo "$attrs" | jq -r '.[]')
 	drv_items=$(printf 'f.%s.drvPath or null ' "${attr_list[@]}")
 
-	nix eval -vv --impure --json --expr "let f = builtins.getFlake \"path:.\"; in [ ${drv_items} ]" >"$tmpdir/current.json" &
+	nix eval -vv --impure --json --expr "let f = builtins.getFlake \"path:$PWD\"; in [ ${drv_items} ]" >"$tmpdir/current.json" &
 	nix eval -vv --impure --json --expr "let f = builtins.getFlake \"${BASE_REF}\"; in [ ${drv_items} ]" >"$tmpdir/base.json" &
 	wait
 
