@@ -8,9 +8,75 @@ on:
       - main
 
 jobs:
-  build:
-    uses: carlthome/workflows/.github/workflows/nix.yaml@main
-    with:
-      cachix-cache: carlthome
-    secrets:
-      cachix-token: ${{ secrets.CACHIX_AUTH_TOKEN }}
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - run: nix flake check --all-systems --keep-going
+
+  detect:
+    needs: check
+    runs-on: ubuntu-latest
+    outputs:
+      packages: ${{ steps.detect.outputs.packages }}
+      systems: ${{ steps.detect.outputs.systems }}
+      homes: ${{ steps.detect.outputs.homes }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - id: detect
+        run: .github/scripts/detect-builds.sh
+
+  packages:
+    needs: detect
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.detect.outputs.packages) }}
+    runs-on: ${{ matrix.runs-on }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - uses: cachix/cachix-action@v17
+        with:
+          name: carlthome
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+      - run: nix build --print-build-logs
+
+  systems:
+    needs: detect
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.detect.outputs.systems) }}
+    runs-on: ${{ matrix.runs-on }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: DeterminateSystems/nix-installer-action@main
+        with:
+          extra-conf: |
+            extra-platforms = aarch64-linux
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - uses: cachix/cachix-action@v17
+        with:
+          name: carlthome
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+      - run: nix build --print-build-logs .#${{ matrix.attr }}
+
+  homes:
+    needs: detect
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.detect.outputs.homes) }}
+    runs-on: ${{ matrix.runs-on }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - uses: cachix/cachix-action@v17
+        with:
+          name: carlthome
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+      - run: nix build --print-build-logs .#${{ matrix.attr }}
