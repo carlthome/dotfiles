@@ -36,6 +36,12 @@ jobs:
           path: ~/.cache/nix
           key: nix-eval-${{ runner.os }}-${{ hashFiles('flake.lock') }}
           restore-keys: nix-eval-${{ runner.os }}-${{ hashFiles('flake.lock') }}-
+      - uses: actions/cache/restore@v5
+        with:
+          path: /nix/store/*.drv
+          key: nix-drv-${{ runner.os }}-${{ hashFiles('flake.lock') }}
+          restore-keys: |
+            nix-drv-${{ runner.os }}-
       - run: nix flake check --all-systems --no-build
       - id: detect
         run: .github/scripts/detect-builds.sh
@@ -46,6 +52,11 @@ jobs:
         with:
           path: ~/.cache/nix
           key: nix-eval-${{ runner.os }}-${{ hashFiles('flake.lock') }}
+      - uses: actions/cache/save@v5
+        if: always()
+        with:
+          path: /nix/store/*.drv
+          key: nix-drv-${{ runner.os }}-${{ hashFiles('flake.lock') }}
 
   build:
     needs: detect
