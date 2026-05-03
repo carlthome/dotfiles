@@ -92,15 +92,12 @@ else
 	echo "Comparing derivations..."
 	attrs=$(echo "$all_items" | jq -c '[.[].attr]')
 
-	# Build refs and evaluate in parallel
-	current_refs=() base_refs=()
-	while IFS= read -r attr; do
-		current_refs+=(".#${attr}")
-		base_refs+=("${BASE_REF}#${attr}")
-	done < <(echo "$attrs" | jq -r '.[]')
+	# Evaluate drvPaths directly — faster than nix build --dry-run (no substituter queries)
+	mapfile -t attr_list < <(echo "$attrs" | jq -r '.[]')
+	drv_items=$(printf 'f.%s.drvPath or null ' "${attr_list[@]}")
 
-	nix build --dry-run --json "${current_refs[@]}" 2>/dev/null | jq -c '[.[].drvPath]' >"$tmpdir/current.json" &
-	nix build --dry-run --json "${base_refs[@]}" 2>/dev/null | jq -c '[.[].drvPath]' >"$tmpdir/base.json" &
+	nix eval -vvv --json --expr "let f = builtins.getFlake \"path:.\"; in [ ${drv_items} ]" >"$tmpdir/current.json" &
+	nix eval -vvv --json --expr "let f = builtins.getFlake \"${BASE_REF}\"; in [ ${drv_items} ]" >"$tmpdir/base.json" &
 	wait
 
 	matrix=$(jq -sc '
