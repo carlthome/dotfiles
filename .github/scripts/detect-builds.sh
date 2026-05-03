@@ -5,11 +5,13 @@ set -euo pipefail
 START_TIME=$SECONDS
 
 # Determine base ref for comparison (skip comparison if not in CI)
-BASE_REF=""
-if [[ -n ${GITHUB_BASE_REF:-} ]]; then
-	BASE_REF="github:${GITHUB_REPOSITORY}/${GITHUB_BASE_REF}"
-elif [[ -n ${GITHUB_SHA:-} ]]; then
-	BASE_REF="github:${GITHUB_REPOSITORY}/${GITHUB_SHA}~1"
+# Allow BASE_REF to be passed directly for testing
+if [[ -z ${BASE_REF:-} ]]; then
+	if [[ -n ${GITHUB_BASE_REF:-} ]]; then
+		BASE_REF="github:${GITHUB_REPOSITORY}/${GITHUB_BASE_REF}"
+	elif [[ -n ${GITHUB_SHA:-} ]]; then
+		BASE_REF="github:${GITHUB_REPOSITORY}/${GITHUB_SHA}~1"
+	fi
 fi
 
 if [[ -n $BASE_REF ]]; then
@@ -19,23 +21,33 @@ if [[ -n $BASE_REF ]]; then
 fi
 
 # Batch evaluate drvPaths for a list of attributes
-# Input: JSON array of attribute paths
+# Input: flake ref (e.g. "." or "github:user/repo/ref") and JSON array of attribute paths
 # Output: JSON object mapping attr -> drvPath (or null if missing)
 batch_drv_paths() {
 	local flake_ref="$1"
 	local attrs_json="$2"
 
-	nix eval --json "${flake_ref}" --apply "
-    flake: builtins.listToAttrs (map (attr:
-      let
-        parts = builtins.filter (x: x != \"\") (builtins.split \"\\\\.\" attr);
-        val = builtins.foldl' (acc: key: acc.\${key} or null) flake parts;
-      in {
-        name = attr;
-        value = if val != null then val.drvPath or null else null;
-      }
-    ) (builtins.fromJSON ''${attrs_json}''))
-  " 2>/dev/null || echo '{}'
+	# Build flake refs like ".#packages.x86_64-linux.foo" for each attr
+	local refs=()
+	while IFS= read -r attr; do
+		refs+=("${flake_ref}#${attr}")
+	done < <(echo "$attrs_json" | jq -r '.[]')
+
+	if [[ ${#refs[@]} -eq 0 ]]; then
+		echo '{}'
+		return
+	fi
+
+	# Use nix build --dry-run to get drvPaths efficiently
+	local result
+	result=$(nix build --dry-run --json "${refs[@]}" 2>/dev/null) || result='[]'
+
+	# Map back to attr names
+	echo "$attrs_json" "$result" | jq -sc '
+		.[0] as $attrs | .[1] as $results |
+		[$attrs, ($results | map(.drvPath))] |
+		transpose | map({(.[0]): .[1]}) | add // {}
+	'
 }
 
 # Compare current vs base drvPaths and return changed attributes
@@ -180,11 +192,13 @@ echo "$homes" "$changed_homes" | jq -rs '
 echo "Homes checked in $((SECONDS - HOME_START))s"
 
 # Output for GitHub Actions
-{
-	echo "packages={\"include\":$changed_packages}"
-	echo "systems={\"include\":$changed_systems}"
-	echo "homes={\"include\":$changed_homes}"
-} >>"$GITHUB_OUTPUT"
+if [[ -n ${GITHUB_OUTPUT:-} ]]; then
+	{
+		echo "packages={\"include\":$changed_packages}"
+		echo "systems={\"include\":$changed_systems}"
+		echo "homes={\"include\":$changed_homes}"
+	} >>"$GITHUB_OUTPUT"
+fi
 
 # Summary
 echo ""
