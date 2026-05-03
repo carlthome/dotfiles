@@ -2,24 +2,9 @@
   config,
   pkgs,
   lib,
-  self,
   ...
-}@inputs:
-let
-  system = pkgs.stdenv.hostPlatform.system;
-in
+}:
 {
-
-  # Add each flake input to registry.
-  nix.registry =
-    let
-      flakes = lib.filterAttrs (_: lib.isType "flake") inputs;
-      registry = lib.mapAttrs (_: flake: { inherit flake; }) flakes;
-      aliases = {
-        dotfiles.flake = self;
-      };
-    in
-    registry // aliases;
 
   # Set environment variables.
   home.sessionVariables = {
