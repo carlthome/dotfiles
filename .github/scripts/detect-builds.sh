@@ -22,7 +22,7 @@ if [[ -z ${BASE_REF:-} ]]; then
 	fi
 fi
 
-if [[ -n $BASE_REF ]]; then
+if [[ -n ${BASE_REF:-} ]]; then
 	echo "Comparing against: $BASE_REF"
 	echo "Pre-fetching base ref..."
 	nix flake prefetch "$BASE_REF" --quiet || echo "Warning: could not prefetch base ref"
@@ -46,60 +46,16 @@ batch_drv_paths() {
 		return
 	fi
 
-	# Use nix build --dry-run to get drvPaths efficiently
+	# Use nix build --dry-run --json to get drvPaths (preserves input order)
 	local result
 	result=$(nix build --dry-run --json "${refs[@]}" 2>/dev/null) || result='[]'
 
-	# Map back to attr names
+	# Map back to attr names (result array is in same order as input refs)
 	echo "$attrs_json" "$result" | jq -sc '
 		.[0] as $attrs | .[1] as $results |
 		[$attrs, ($results | map(.drvPath))] |
 		transpose | map({(.[0]): .[1]}) | add // {}
 	'
-}
-
-# Compare current vs base drvPaths and return changed attributes
-# Input: JSON array of objects with 'attr' field
-# Output: filtered JSON array of changed items
-filter_changed() {
-	local items="$1"
-	local attrs
-	attrs=$(echo "$items" | jq -c '[.[].attr]')
-
-	if [[ -z $BASE_REF ]]; then
-		echo "$items"
-		return
-	fi
-
-	# Evaluate current and base in parallel
-	local current_file base_file
-	current_file=$(mktemp)
-	base_file=$(mktemp)
-	trap 'rm -f "$current_file" "$base_file"' RETURN
-
-	batch_drv_paths "." "$attrs" >"$current_file" &
-	local current_pid=$!
-	batch_drv_paths "$BASE_REF" "$attrs" >"$base_file" &
-	local base_pid=$!
-
-	wait "$current_pid" "$base_pid" || true
-
-	echo "$items" | jq -c --slurpfile current "$current_file" --slurpfile base "$base_file" '
-    [.[] | select(
-      ($current[0][.attr] == null) or
-      ($base[0][.attr] == null) or
-      ($current[0][.attr] != $base[0][.attr])
-    )]
-  '
-}
-
-# Print what changed vs unchanged
-print_status() {
-	local all="$1" changed="$2" key="$3"
-	echo "$all" "$changed" | jq -rs --arg key "$key" '
-    (.[1] | map({(.[$key]): true}) | add // {}) as $changed |
-    .[0][] | "\(.[$key]): \(if $changed[.[$key]] then "changed" else "unchanged, skipping" end)"
-  '
 }
 
 echo "Gathering flake metadata..."
@@ -170,34 +126,69 @@ homes=$(jq -c 'map(. + {
               else null end)
 }) | map(select(."runs-on" != null))' "$tmpdir/homes.json")
 
-# Filter changed items
+# Combine all items and filter changed in one batch
+all_items=$(echo "$packages" "$systems" "$homes" | jq -sc 'add')
 echo ""
-echo "Checking packages ($(echo "$packages" | jq length))..."
-PKG_START=$SECONDS
-changed_packages=$(filter_changed "$packages")
-echo "$packages" "$changed_packages" | jq -rs '
-  (.[1] | map({(.attr): true}) | add // {}) as $changed |
-  .[0][] | "\(.name) (\(.system)): \(if $changed[.attr] then "changed" else "unchanged, skipping" end)"
-'
-echo "Packages checked in $((SECONDS - PKG_START))s"
+echo "Checking all attributes ($(echo "$all_items" | jq length))..."
+CHECK_START=$SECONDS
+
+if [[ -z ${BASE_REF:-} ]]; then
+	# No base ref, everything is changed
+	changed_items="$all_items"
+else
+	# Full comparison: evaluate drvPaths for current and base
+	all_attrs=$(echo "$all_items" | jq -c '[.[].attr]')
+
+	# Evaluate current and base in parallel (single batch for all attrs)
+	current_file=$(mktemp)
+	base_file=$(mktemp)
+	trap 'rm -f "$current_file" "$base_file"' EXIT
+
+	batch_drv_paths "." "$all_attrs" >"$current_file" &
+	current_pid=$!
+	batch_drv_paths "$BASE_REF" "$all_attrs" >"$base_file" &
+	base_pid=$!
+
+	wait "$current_pid" "$base_pid" || true
+
+	# Filter to changed items
+	changed_items=$(echo "$all_items" | jq -c --slurpfile current "$current_file" --slurpfile base "$base_file" '
+		[.[] | select(
+			($current[0][.attr] == null) or
+			($base[0][.attr] == null) or
+			($current[0][.attr] != $base[0][.attr])
+		)]
+	')
+fi
+
+# Build lookup of changed attrs
+changed_lookup=$(echo "$changed_items" | jq -c '[.[].attr] | map({(.): true}) | add // {}')
+
+# Split back into categories and print status
+changed_packages=$(echo "$packages" | jq -c --argjson changed "$changed_lookup" '[.[] | select($changed[.attr])]')
+changed_systems=$(echo "$systems" | jq -c --argjson changed "$changed_lookup" '[.[] | select($changed[.attr])]')
+changed_homes=$(echo "$homes" | jq -c --argjson changed "$changed_lookup" '[.[] | select($changed[.attr])]')
 
 echo ""
-echo "Checking systems ($(echo "$systems" | jq length))..."
-SYS_START=$SECONDS
-changed_systems=$(filter_changed "$systems")
-print_status "$systems" "$changed_systems" "name"
-echo "Systems checked in $((SECONDS - SYS_START))s"
+echo "Packages ($(echo "$packages" | jq length)):"
+echo "$packages" | jq -r --argjson changed "$changed_lookup" '
+	.[] | "\(.name) (\(.system)): \(if $changed[.attr] then "changed" else "unchanged, skipping" end)"
+'
 
 echo ""
-echo "Checking homes ($(echo "$homes" | jq length))..."
-HOME_START=$SECONDS
-changed_homes=$(filter_changed "$homes")
-# Use attr for homes since names can duplicate across systems
-echo "$homes" "$changed_homes" | jq -rs '
-  (.[1] | map({(.attr): true}) | add // {}) as $changed |
-  .[0][] | "\(.name) (\(.system)): \(if $changed[.attr] then "changed" else "unchanged, skipping" end)"
+echo "Systems ($(echo "$systems" | jq length)):"
+echo "$systems" | jq -r --argjson changed "$changed_lookup" '
+	.[] | "\(.name): \(if $changed[.attr] then "changed" else "unchanged, skipping" end)"
 '
-echo "Homes checked in $((SECONDS - HOME_START))s"
+
+echo ""
+echo "Homes ($(echo "$homes" | jq length)):"
+echo "$homes" | jq -r --argjson changed "$changed_lookup" '
+	.[] | "\(.name) (\(.system)): \(if $changed[.attr] then "changed" else "unchanged, skipping" end)"
+'
+
+echo ""
+echo "Checked in $((SECONDS - CHECK_START))s"
 
 # Output for GitHub Actions
 if [[ -n ${GITHUB_OUTPUT:-} ]]; then
