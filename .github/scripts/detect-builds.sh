@@ -89,8 +89,13 @@ METADATA_START=$SECONDS
 tmpdir=$(mktemp -d)
 trap 'rm -rf "$tmpdir"' EXIT
 
-# Packages
-nix eval --json .#packages --apply 'builtins.attrNames' >"$tmpdir/pkg_systems.json" 2>/dev/null &
+# Packages (enumerate all packages per system)
+nix eval --json .#packages --apply '
+  pkgs: builtins.concatLists (builtins.attrValues (builtins.mapAttrs (sys: sysPkgs:
+    map (name: { system = sys; name = name; attr = "packages.${sys}.${name}"; })
+        (builtins.attrNames sysPkgs)
+  ) pkgs))
+' >"$tmpdir/packages.json" 2>/dev/null &
 pid_pkg=$!
 
 # NixOS configurations
@@ -122,14 +127,12 @@ wait "$pid_pkg" "$pid_nixos" "$pid_darwin" "$pid_homes"
 echo "Metadata gathered in $((SECONDS - METADATA_START))s"
 
 # Process packages
-packages=$(jq -c '[.[] | {
-  system: .,
-  attr: "packages.\(.).default",
-  "runs-on": (if . == "aarch64-darwin" then "macos-14"
-              elif . == "x86_64-darwin" then "macos-13"
-              elif . == "aarch64-linux" then null
+packages=$(jq -c 'map(. + {
+  "runs-on": (if .system == "aarch64-darwin" then "macos-14"
+              elif .system == "x86_64-darwin" then "macos-13"
+              elif .system == "aarch64-linux" then null
               else "ubuntu-latest" end)
-}] | map(select(."runs-on" != null))' "$tmpdir/pkg_systems.json")
+}) | map(select(."runs-on" != null))' "$tmpdir/packages.json")
 
 # Process systems (nixos + darwin)
 systems=$(jq -sc '
@@ -152,7 +155,10 @@ echo ""
 echo "Checking packages ($(echo "$packages" | jq length))..."
 PKG_START=$SECONDS
 changed_packages=$(filter_changed "$packages")
-print_status "$packages" "$changed_packages" "attr"
+echo "$packages" "$changed_packages" | jq -rs '
+  (.[1] | map({(.attr): true}) | add // {}) as $changed |
+  .[0][] | "\(.name) (\(.system)): \(if $changed[.attr] then "changed" else "unchanged, skipping" end)"
+'
 echo "Packages checked in $((SECONDS - PKG_START))s"
 
 echo ""
