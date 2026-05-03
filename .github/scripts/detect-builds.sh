@@ -93,11 +93,12 @@ else
 	attrs=$(echo "$all_items" | jq -c '[.[].attr]')
 
 	# Evaluate drvPaths directly — faster than nix build --dry-run (no substituter queries)
+	# Run sequentially so the first eval warms the cache for the second
 	mapfile -t attr_list < <(echo "$attrs" | jq -r '.[]')
 	drv_items=$(printf 'f.%s.drvPath or null ' "${attr_list[@]}")
 
-	nix eval -vv --impure --json --expr "let f = builtins.getFlake \"path:$PWD\"; in [ ${drv_items} ]" >"$tmpdir/current.json"
-	nix eval -vv --impure --json --expr "let f = builtins.getFlake \"${BASE_REF}\"; in [ ${drv_items} ]" >"$tmpdir/base.json"
+	nix eval -v --impure --json --expr "let f = builtins.getFlake \"path:$PWD\"; in [ ${drv_items} ]" >"$tmpdir/current.json"
+	nix eval -v --impure --json --expr "let f = builtins.getFlake \"${BASE_REF}\"; in [ ${drv_items} ]" >"$tmpdir/base.json"
 
 	matrix=$(jq -sc '
 		.[0] as $items | .[1] as $current | .[2] as $base |
