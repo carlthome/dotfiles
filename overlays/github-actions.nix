@@ -45,7 +45,7 @@ final: prev: {
         if final.stdenv.hostPlatform.isLinux then
           pfinal.buildPythonPackage {
             pname = "gradio";
-            version = "0.0.0-ci-stub";
+            version = "0.0.0.post0";
             format = "setuptools";
 
             src = final.runCommand "gradio-ci-stub-src" { } ''
@@ -54,7 +54,7 @@ final: prev: {
               from setuptools import setup
               setup(
                 name="gradio",
-                version="0.0.0-ci-stub",
+                version="0.0.0.post0",
                 py_modules=[],
                 packages=["gradio"],
               )
