@@ -128,7 +128,7 @@ echo "Metadata gathered in $((SECONDS - METADATA_START))s"
 
 # Process packages
 packages=$(jq -c 'map(. + {
-  "runs-on": (if .system == "aarch64-darwin" then "macos-14"
+  "runs-on": (if .system == "aarch64-darwin" then "macos-latest"
               elif .system == "x86_64-darwin" then "macos-13"
               elif .system == "aarch64-linux" then null
               else "ubuntu-latest" end)
@@ -137,7 +137,7 @@ packages=$(jq -c 'map(. + {
 # Process systems (nixos + darwin)
 systems=$(jq -sc '
   [(.[0] // {}), (.[1] // {})] | add | to_entries | map(.value + {name: .key}) | map(. + {
-    "runs-on": (if .system == "aarch64-darwin" then "macos-14"
+    "runs-on": (if .system == "aarch64-darwin" then "macos-latest"
                 elif .system == "x86_64-darwin" then "macos-13"
                 else "ubuntu-latest" end)
   })
@@ -145,7 +145,7 @@ systems=$(jq -sc '
 
 # Process homes
 homes=$(jq -c 'map(. + {
-  "runs-on": (if .system == "aarch64-darwin" then "macos-14"
+  "runs-on": (if .system == "aarch64-darwin" then "macos-latest"
               elif .system == "x86_64-linux" then "ubuntu-latest"
               else null end)
 }) | map(select(."runs-on" != null))' "$tmpdir/homes.json")
