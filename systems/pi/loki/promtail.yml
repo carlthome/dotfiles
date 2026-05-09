@@ -18,3 +18,35 @@ scrape_configs:
     relabel_configs:
       - source_labels: ["__journal__systemd_unit"]
         target_label: "unit"
+      - source_labels: ["__journal_priority"]
+        target_label: "priority"
+        regex: "0"
+        replacement: "emerg"
+      - source_labels: ["__journal_priority"]
+        target_label: "priority"
+        regex: "1"
+        replacement: "alert"
+      - source_labels: ["__journal_priority"]
+        target_label: "priority"
+        regex: "2"
+        replacement: "crit"
+      - source_labels: ["__journal_priority"]
+        target_label: "priority"
+        regex: "3"
+        replacement: "err"
+      - source_labels: ["__journal_priority"]
+        target_label: "priority"
+        regex: "4"
+        replacement: "warning"
+      - source_labels: ["__journal_priority"]
+        target_label: "priority"
+        regex: "5"
+        replacement: "notice"
+      - source_labels: ["__journal_priority"]
+        target_label: "priority"
+        regex: "6"
+        replacement: "info"
+      - source_labels: ["__journal_priority"]
+        target_label: "priority"
+        regex: "7"
+        replacement: "debug"

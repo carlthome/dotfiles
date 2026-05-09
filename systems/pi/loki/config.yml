@@ -34,6 +34,9 @@ schema_config:
         prefix: index_
         period: 24h
 
+limits_config:
+  max_streams_per_user: 100000
+
 ruler:
   alertmanager_url: http://localhost:9093
 

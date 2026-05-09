@@ -167,7 +167,7 @@
             "uid": "${DS_LOKI}"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time({unit=~\"$unit\"}[$__interval]))",
+          "expr": "sum(count_over_time({unit=~\"$unit\"} | priority=~\"$priority\"[$__interval]))",
           "queryType": "range",
           "refId": "A"
         }
@@ -247,7 +247,7 @@
             "uid": "${DS_LOKI}"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time({unit=~\"$unit\"} |~ \"(?i)$search\"[$__interval]))",
+          "expr": "sum(count_over_time({unit=~\"$unit\"} | priority=~\"$priority\" |~ \"(?i)$search\"[$__interval]))",
           "queryType": "range",
           "refId": "A"
         }
@@ -325,7 +325,7 @@
             "uid": "${DS_LOKI}"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time({unit=~\"$unit\"} |~ \"(?i)$search\"[$__interval])) * 100 / sum(count_over_time({unit=~\"$unit\"}[$__interval]))",
+          "expr": "sum(count_over_time({unit=~\"$unit\"} | priority=~\"$priority\" |~ \"(?i)$search\"[$__interval])) * 100 / sum(count_over_time({unit=~\"$unit\"} | priority=~\"$priority\"[$__interval]))",
           "queryType": "range",
           "refId": "A"
         }
@@ -368,7 +368,7 @@
             "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "none"
+              "mode": "normal"
             },
             "thresholdsStyle": {
               "mode": "off"
@@ -386,7 +386,80 @@
           },
           "unit": "short"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "emerg" },
+            "properties": [
+              {
+                "id": "color",
+                "value": { "fixedColor": "#FF0000", "mode": "fixed" }
+              }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "alert" },
+            "properties": [
+              {
+                "id": "color",
+                "value": { "fixedColor": "#FF3300", "mode": "fixed" }
+              }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "crit" },
+            "properties": [
+              {
+                "id": "color",
+                "value": { "fixedColor": "#FF6600", "mode": "fixed" }
+              }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "err" },
+            "properties": [
+              {
+                "id": "color",
+                "value": { "fixedColor": "#FF9900", "mode": "fixed" }
+              }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "warning" },
+            "properties": [
+              {
+                "id": "color",
+                "value": { "fixedColor": "#FFCC00", "mode": "fixed" }
+              }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "notice" },
+            "properties": [
+              {
+                "id": "color",
+                "value": { "fixedColor": "#99CC00", "mode": "fixed" }
+              }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "info" },
+            "properties": [
+              {
+                "id": "color",
+                "value": { "fixedColor": "#33AA33", "mode": "fixed" }
+              }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "debug" },
+            "properties": [
+              {
+                "id": "color",
+                "value": { "fixedColor": "#888888", "mode": "fixed" }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 4,
@@ -397,14 +470,14 @@
       "id": 6,
       "options": {
         "legend": {
-          "calcs": [],
+          "calcs": ["sum"],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": false
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single",
-          "sort": "none"
+          "mode": "multi",
+          "sort": "desc"
         }
       },
       "pluginVersion": "9.3.6",
@@ -415,7 +488,8 @@
             "uid": "${DS_LOKI}"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time({unit=~\"$unit\"} |~ \"(?i)$search\"[$__interval]))",
+          "expr": "sum(count_over_time({unit=~\"$unit\"} | priority=~\"$priority\" |~ \"(?i)$search\"[$__interval])) by (priority)",
+          "legendFormat": "{{priority}}",
           "queryType": "range",
           "refId": "A"
         }
@@ -479,7 +553,7 @@
             "uid": "${DS_LOKI}"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time({unit=~\"$unit\"}[$__interval])) by (unit)",
+          "expr": "sum(count_over_time({unit=~\"$unit\"} | priority=~\"$priority\"[$__interval])) by (unit)",
           "legendFormat": "{{unit}}",
           "queryType": "range",
           "refId": "A"
@@ -570,7 +644,7 @@
             "uid": "${DS_LOKI}"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time({unit=~\"$unit\"}[$__interval])) by (unit)",
+          "expr": "sum(count_over_time({unit=~\"$unit\"} | priority=~\"$priority\"[$__interval])) by (unit)",
           "legendFormat": "{{unit}}",
           "queryType": "range",
           "refId": "A"
@@ -589,7 +663,7 @@
         "h": 20,
         "w": 24,
         "x": 0,
-        "y": 16
+        "y": 24
       },
       "id": 2,
       "options": {
@@ -609,7 +683,7 @@
             "uid": "${DS_LOKI}"
           },
           "editorMode": "code",
-          "expr": "{unit=~\"$unit\"} |~ \"(?i)$search\" | logfmt",
+          "expr": "{unit=~\"$unit\"} | priority=~\"$priority\" |~ \"(?i)$search\" | logfmt",
           "queryType": "range",
           "refId": "A"
         }
@@ -617,12 +691,100 @@
       "title": "Live Logs",
       "transparent": true,
       "type": "logs"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": { "group": "A", "mode": "none" }
+          },
+          "unit": "Bps"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
+      "id": 100,
+      "options": {
+        "legend": {
+          "calcs": ["mean", "max"],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Mean",
+          "sortDesc": true
+        },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "editorMode": "code",
+          "expr": "topk(10, rate(systemd_unit_io_bytes_total{direction=\"write\",unit=~\"$unit\"}[$__rate_interval]))",
+          "legendFormat": "{{unit}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Disk Write Rate by Service",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": { "group": "A", "mode": "none" }
+          },
+          "unit": "Bps"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 },
+      "id": 101,
+      "options": {
+        "legend": {
+          "calcs": ["mean", "max"],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Mean",
+          "sortDesc": true
+        },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "editorMode": "code",
+          "expr": "topk(10, rate(systemd_unit_io_bytes_total{direction=\"read\",unit=~\"$unit\"}[$__rate_interval]))",
+          "legendFormat": "{{unit}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Disk Read Rate by Service",
+      "type": "timeseries"
     }
   ],
   "refresh": "30s",
   "schemaVersion": 37,
   "style": "dark",
-  "tags": ["Loki", "logging", "systemd"],
+  "tags": ["Loki", "logging", "systemd", "io"],
   "templating": {
     "list": [
       {
@@ -670,6 +832,19 @@
         "type": "query"
       },
       {
+        "allValue": ".*",
+        "current": {},
+        "hide": 0,
+        "includeAll": true,
+        "label": "Priority",
+        "multi": true,
+        "name": "priority",
+        "options": [],
+        "query": "emerg,alert,crit,err,warning,notice,info,debug",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
         "current": {
           "selected": false,
           "text": "",
@@ -710,7 +885,7 @@
     ]
   },
   "timezone": "",
-  "title": "Logs / Systemd",
+  "title": "Services",
   "uid": "sadlil-loki-apps-dashboard",
   "version": 14
 }

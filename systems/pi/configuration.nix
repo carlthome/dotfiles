@@ -447,12 +447,7 @@ in
           }
         ];
       }
-      {
-        job_name = "process_exporter";
-        static_configs = [
-          { targets = [ "localhost:${toString config.services.prometheus.exporters.process.port}" ]; }
-        ];
-      }
+
       {
         job_name = "blocky";
         static_configs = [
@@ -485,24 +480,17 @@ in
         listenAddress = "127.0.0.1";
         enabledCollectors = [
           "systemd"
-          "processes"
+          "textfile"
+        ];
+        extraFlags = [
+          "--collector.textfile.directory=/var/lib/prometheus-node-exporter/textfile-collector"
         ];
       };
       systemd = {
         enable = true;
         listenAddress = "127.0.0.1";
       };
-      process = {
-        enable = true;
-        listenAddress = "127.0.0.1";
-        settings.process_names = [
-          {
-            name = "{{.Matches.Service}}";
-            cmdline = [ ".*" ];
-            exe = [ ".*" ];
-          }
-        ];
-      };
+
     };
 
     alertmanager = {
@@ -512,6 +500,47 @@ in
       configText = builtins.readFile ./prometheus/alertmanager/config.yml;
       environmentFile = "/etc/nixos/secrets/alertmanager.env";
       checkConfig = false;
+    };
+  };
+
+  # Enable IO accounting per service so cgroup stats are available.
+  systemd.settings.Manager.DefaultIOAccounting = true;
+
+  systemd.tmpfiles.rules = [
+    "d /var/lib/prometheus-node-exporter/textfile-collector 0755 root root -"
+  ];
+
+  # Collect per-service IO stats from systemd cgroups and expose via node_exporter textfile.
+  systemd.services.prometheus-systemd-io = {
+    description = "Collect per-service I/O stats for Prometheus";
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = pkgs.writeShellScript "collect-systemd-io" ''
+        set -euo pipefail
+        outdir=/var/lib/prometheus-node-exporter/textfile-collector
+        tmp=$(mktemp "$outdir/systemd-io.XXXXXX")
+        trap 'rm -f "$tmp"' EXIT
+        {
+          echo "# HELP systemd_unit_io_bytes_total Cumulative bytes read or written by a systemd service."
+          echo "# TYPE systemd_unit_io_bytes_total counter"
+          for unit in $(${pkgs.systemd}/bin/systemctl list-units --type=service --state=running --no-legend --plain | ${pkgs.gawk}/bin/awk '{print $1}'); do
+            read_bytes=$(${pkgs.systemd}/bin/systemctl show "$unit" -p IOReadBytes --value 2>/dev/null)
+            write_bytes=$(${pkgs.systemd}/bin/systemctl show "$unit" -p IOWriteBytes --value 2>/dev/null)
+            [[ "$read_bytes" =~ ^[0-9]+$ ]] && printf 'systemd_unit_io_bytes_total{unit="%s",direction="read"} %s\n' "$unit" "$read_bytes"
+            [[ "$write_bytes" =~ ^[0-9]+$ ]] && printf 'systemd_unit_io_bytes_total{unit="%s",direction="write"} %s\n' "$unit" "$write_bytes"
+          done
+        } > "$tmp"
+        chmod 644 "$tmp"
+        mv "$tmp" "$outdir/systemd-io.prom"
+      '';
+    };
+  };
+
+  systemd.timers.prometheus-systemd-io = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnBootSec = "30s";
+      OnUnitActiveSec = "30s";
     };
   };
 
