@@ -2,6 +2,7 @@
 set -e
 
 echo "Starting git refresh at $(date)"
+start=$(date +%s)
 
 # Download remote changes for all git repos and check if local repo is up-to-date.
 git_root="$HOME/Repos"
@@ -29,4 +30,4 @@ for repo in $repos; do
 	fi
 done
 
-echo "git refresh completed at $(date)"
+echo "git refresh completed at $(date) (elapsed: $(($(date +%s) - start))s)"

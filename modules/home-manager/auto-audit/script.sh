@@ -3,8 +3,9 @@
 # Run Lynis audit and save the report to a temporary file.
 REPORT_FILE="/tmp/lynis-report-$(date +%Y%m%d).dat"
 echo "Lynis audit started at $(date)"
+start=$(date +%s)
 lynis audit system --report-file "$REPORT_FILE"
-echo "Lynis audit completed at $(date)"
+echo "Lynis audit completed at $(date) (elapsed: $(($(date +%s) - start))s)"
 
 # Extract suggestions and warnings from the report.
 WARNINGS=$(grep "warning" "$REPORT_FILE" | sort | uniq)

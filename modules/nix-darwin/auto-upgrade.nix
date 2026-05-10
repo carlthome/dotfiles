@@ -11,8 +11,9 @@ let
     name = "auto-upgrade-nix-darwin";
     text = ''
       echo "Starting Nix upgrade at $(date)"
+      start=$(date +%s)
       /run/current-system/sw/bin/darwin-rebuild switch --refresh --flake ${cfg.flake}
-      echo "Nix upgrade completed at $(date)"
+      echo "Nix upgrade completed at $(date) (elapsed: $(($(date +%s) - start))s)"
     '';
     runtimeInputs = with pkgs; [
       coreutils
