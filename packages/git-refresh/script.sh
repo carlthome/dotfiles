@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
+echo "Starting git refresh at $(date)"
+
 # Download remote changes for all git repos and check if local repo is up-to-date.
 git_root="$HOME/Repos"
 
@@ -13,7 +15,10 @@ printf "Will run 'git fetch' for:\n%s\n\n" "$repos"
 for repo in $repos; do
 
 	# Download remote changes and apply repo maintenance.
-	git -C "$repo" fetch --verbose --progress --auto-maintenance
+	if ! git -C "$repo" fetch --verbose --progress --auto-maintenance; then
+		printf "WARNING: Failed to fetch %s\n\n" "$repo"
+		continue
+	fi
 
 	# Display local changes.
 	status=$(git -C "$repo" status --porcelain)
@@ -23,3 +28,5 @@ for repo in $repos; do
 		printf "%s is up-to-date with remote\n\n" "$repo"
 	fi
 done
+
+echo "git refresh completed at $(date)"
