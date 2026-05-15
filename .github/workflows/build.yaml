@@ -30,6 +30,8 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: DeterminateSystems/nix-installer-action@main
+        with:
+          extra-conf: extra-platforms = aarch64-darwin aarch64-linux
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: actions/cache/restore@v5
         with:
