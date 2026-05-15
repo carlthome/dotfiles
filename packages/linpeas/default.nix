@@ -8,6 +8,6 @@
 writeScriptBin "linpeas" (
   builtins.readFile (fetchurl {
     url = "https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.sh";
-    hash = "sha256-18DJUw7tYnvu4IM217OMtE9MDfep66O6GyopDZZr4W8=";
+    hash = "sha256-6GifZASmb9VraNT1DybbgP1VhKHWULRsIg5pwJEppes=";
   })
 )
