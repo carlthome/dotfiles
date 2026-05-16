@@ -155,7 +155,7 @@ groups:
           description: '{{ $labels.instance }} has gone up and down {{ printf "%.0f" $value }} times in the last 30 minutes.'
 
       - alert: HostIdle
-        expr: (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[10m])) * 100) > 98 and on(instance) up == 1
+        expr: (avg by(instance) (rate(node_cpu_seconds_total{mode="idle",instance!~"pi-zero.local:9100|t1:9100|mba:9100"}[10m])) * 100) > 98 and on(instance) up == 1
         for: 4h
         labels:
           severity: info
