@@ -72,8 +72,8 @@
       bing-wallpaper-changer
       blur-my-shell
       caffeine
-      hue-lights
       night-theme-switcher
+      smart-home
       system-monitor
       vitals
     ]);
