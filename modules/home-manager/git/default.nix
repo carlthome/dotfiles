@@ -36,7 +36,7 @@ in
       ".worktrees"
     ];
     settings = {
-      aliases = {
+      alias = {
         ci = "commit";
         co = "checkout";
         s = "status";
