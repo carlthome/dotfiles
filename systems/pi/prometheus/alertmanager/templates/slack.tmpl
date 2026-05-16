@@ -41,7 +41,7 @@ https://alertmanager.home/#/silences/new?filter=%7Balertname%3D%22{{ .CommonLabe
 
 {{/* Grafana dashboard link */}}
 {{ define "grafana.link" -}}
-https://grafana.home/d/node-exporter/node-exporter?var-instance={{ .Labels.instance }}&from=now-1h&to=now
+https://grafana.home/d/rYdddlPWk/systems?var-job=node_exporter&var-node={{ .Labels.instance }}&from=now-1h&to=now
 {{- end }}
 
 {{/* Alertmanager alert view link */}}
