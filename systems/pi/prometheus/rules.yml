@@ -2,7 +2,7 @@ groups:
   - name: AllInstances
     rules:
       - alert: InstanceDown
-        expr: up == 0
+        expr: up{instance!~"t1:9100|mba:9100"} == 0
         for: 1m
         labels:
           severity: critical
