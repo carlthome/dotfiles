@@ -20,23 +20,23 @@ https://alertmanager.home/#/silences/new?filter=%7Balertname%3D%22{{ .CommonLabe
 {{- end }}
 
 {{ define "silence.1h.link" -}}
-{{ template "__silence.base" . }}&comment=1%20hour
+{{ template "__silence.base" . }}&duration=1h&comment=1%20hour
 {{- end }}
 
 {{ define "silence.4h.link" -}}
-{{ template "__silence.base" . }}&comment=4%20hours
+{{ template "__silence.base" . }}&duration=4h&comment=4%20hours
 {{- end }}
 
 {{ define "silence.tomorrow.link" -}}
-{{ template "__silence.base" . }}&comment=Until%20tomorrow
+{{ template "__silence.base" . }}&duration=1d&comment=Until%20tomorrow
 {{- end }}
 
 {{ define "silence.week.link" -}}
-{{ template "__silence.base" . }}&comment=Until%20next%20week
+{{ template "__silence.base" . }}&duration=1w&comment=Until%20next%20week
 {{- end }}
 
 {{ define "silence.month.link" -}}
-{{ template "__silence.base" . }}&comment=Until%20next%20month
+{{ template "__silence.base" . }}&duration=4w&comment=Until%20next%20month
 {{- end }}
 
 {{/* Grafana dashboard link */}}
