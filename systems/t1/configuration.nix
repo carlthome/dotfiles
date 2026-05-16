@@ -122,6 +122,24 @@
     };
   };
 
+  # Prevent Bluetooth suspend/wake loop. # Kernel resets wakeup on resume, so re-apply before each sleep.
+  systemd.services.disable-bluetooth-xhci-wakeup = {
+    description = "Disable xHCI wakeup on Bluetooth controller to prevent suspend loop";
+    wantedBy = [ "sleep.target" ];
+    before = [ "sleep.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${
+        pkgs.writeShellApplication {
+          name = "disable-bluetooth-xhci-wakeup";
+          text = ''
+            echo disabled > /sys/bus/pci/devices/0000:02:00.0/power/wakeup
+          '';
+        }
+      }/bin/disable-bluetooth-xhci-wakeup";
+    };
+  };
+
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave
