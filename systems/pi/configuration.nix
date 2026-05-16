@@ -308,7 +308,7 @@ in
       done
       [[ $ip =~ ^100\. ]] || exit 1
       mkdir -p /var/lib/blocky
-      echo "@  IN  A  $ip" > /var/lib/blocky/zone
+      printf "@  IN  A  192.168.0.2\n@  IN  A  $ip\n" > /var/lib/blocky/zone
     '';
   };
 
