@@ -242,19 +242,30 @@ in
 
   services.journald.storage = "volatile";
 
-  # Automatically backup datasets and media to Google Drive.
-  services.restic.backups = {
-    datasets.paths = [ "/mnt/datasets" ];
-    media = {
-      repository = "rclone:gdrive:/Media";
-      # TODO Populate secrets automatically.
-      passwordFile = "/etc/nixos/secrets/restic/media";
-      rcloneConfigFile = "/etc/nixos/secrets/restic/rclone.conf";
-      paths = [ "/mnt/media" ];
-      timerConfig = {
-        OnCalendar = "weekly";
-        Persistent = true;
-      };
+  services.restic.backups.datasets = {
+    repository = "rclone:gdrive:/Datasets";
+    paths = [ "/mnt/datasets" ];
+
+    # TODO Populate secrets automatically.
+    passwordFile = "/etc/nixos/secrets/restic/datasets";
+    rcloneConfigFile = "/etc/nixos/secrets/restic/rclone.conf";
+    timerConfig = {
+      OnCalendar = "weekly";
+      Persistent = true;
+    };
+  };
+
+  # Automatically backup media to Google Drive.
+  services.restic.backups.media = {
+    repository = "rclone:gdrive:/Media";
+    paths = [ "/mnt/media" ];
+
+    # TODO Populate secrets automatically.
+    passwordFile = "/etc/nixos/secrets/restic/media";
+    rcloneConfigFile = "/etc/nixos/secrets/restic/rclone.conf";
+    timerConfig = {
+      OnCalendar = "weekly";
+      Persistent = true;
     };
   };
 
