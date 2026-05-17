@@ -438,8 +438,11 @@ in
         job_name = "node_exporter";
         static_configs = [
           {
+            targets = [ "localhost:${toString config.services.prometheus.exporters.node.port}" ];
+            labels.instance = config.networking.hostName;
+          }
+          {
             targets = [
-              "localhost:${toString config.services.prometheus.exporters.node.port}"
               "pi-zero.local:9100"
               "t1:9100"
               "mba:9100"
@@ -452,9 +455,8 @@ in
         job_name = "blocky";
         static_configs = [
           {
-            targets = [
-              "127.0.0.1:${toString services.blocky.port}"
-            ];
+            targets = [ "127.0.0.1:${toString services.blocky.port}" ];
+            labels.instance = config.networking.hostName;
           }
         ];
       }
