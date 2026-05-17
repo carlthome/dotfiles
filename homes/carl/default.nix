@@ -35,7 +35,8 @@ home-manager.lib.homeManagerConfiguration {
     self.homeModules.tmux
     self.homeModules.vim
     self.homeModules.vscode
-    self.homeModules.zed
+    # TODO Enable again once fixed
+    #self.homeModules.zed
     self.homeModules.direnv
     self.homeModules.macos-spotlight-apps
   ];
