@@ -5,20 +5,26 @@
   ...
 }:
 let
-  username = builtins.getEnv "USER";
-  homeDirectory = builtins.getEnv "HOME";
+  # builtins.getEnv returns "" in pure/CI mode; provide valid fallbacks so the
+  # config builds without --impure. On a real machine, pass --impure and these
+  # will reflect the actual user.
+  username = let u = builtins.getEnv "USER"; in if u != "" then u else "user";
+  homeEnv = builtins.getEnv "HOME";
+  homeDirectory = if homeEnv != "" then homeEnv else "/home/${username}";
 
-  # Read work email from ~/.config/dotfiles/git-email if it exists,
-  # then fall back to GIT_EMAIL env var, then personal email.
+  # Guard pathExists behind homeEnv check: Nix && is lazy, so pathExists is
+  # never called in pure mode (where homeEnv == ""), avoiding restricted-access errors.
   gitEmailFile = "${homeDirectory}/.config/dotfiles/git-email";
   gitEmail =
-    if builtins.pathExists gitEmailFile then
-      builtins.replaceStrings [ "\n" "\r" ] [ "" "" ] (builtins.readFile gitEmailFile)
-    else
-      let
-        env = builtins.getEnv "GIT_EMAIL";
-      in
-      if env != "" then env else "carlthome@gmail.com";
+    let
+      fromFile =
+        if homeEnv != "" && builtins.pathExists gitEmailFile then
+          builtins.replaceStrings [ "\n" "\r" ] [ "" "" ] (builtins.readFile gitEmailFile)
+        else
+          "";
+      fromEnv = builtins.getEnv "GIT_EMAIL";
+    in
+    if fromFile != "" then fromFile else if fromEnv != "" then fromEnv else "carlthome@gmail.com";
 in
 {
   home.username = username;
