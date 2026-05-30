@@ -6,10 +6,10 @@
   # Use GDM as the display manager.
   services.displayManager.gdm.enable = true;
 
-  # Install GNOME and COSMIC desktop environments.
+  # Install desktop environments.
   services.desktopManager.gnome.enable = true;
-  services.desktopManager.cosmic.enable = true;
-  services.desktopManager.plasma6.enable = true;
+  services.desktopManager.cosmic.enable = false;
+  services.desktopManager.plasma6.enable = false;
 
   # Enable lock screen by default.
   programs.dconf.profiles.user.databases = [
