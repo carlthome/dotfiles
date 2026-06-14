@@ -132,6 +132,7 @@
     docker-slim
     duckdb
     electrum
+    hack-font
     fantasque-sans-mono
     fd
     fdupes
