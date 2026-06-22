@@ -14,6 +14,8 @@
     max-free = 1G
   '';
 
+  services.terminal-profile.enable = true;
+
   services.wallpaper = {
     enable = true;
     frequency = "daily";
@@ -23,6 +25,18 @@
     enable = true;
     flake = "github:carlthome/dotfiles";
   };
+
+  #services.node-exporter = {
+  #  enable = true;
+  #  listen.address = "tailscale";
+  #};
+
+  # services.auto-tunnel = {
+  #   enable = true;
+  #   exitNode = "pi";
+  #   trustedNetworks = [ ];
+  #   trustedNetworksFile = "/etc/auto-tunnel/trusted-networks";
+  # };
 
   system.stateVersion = 6;
 }
