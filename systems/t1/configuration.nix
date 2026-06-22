@@ -31,7 +31,6 @@
       extraGroups = [
         "networkmanager"
         "wheel"
-        "docker"
         "audio"
       ];
       openssh.authorizedKeys.keyFiles = [
@@ -71,7 +70,7 @@
   networking.firewall.interfaces."tailscale0".allowedTCPPorts = [ 9100 ];
 
   # Enable container runtime.
-  virtualisation.docker = {
+  virtualisation.podman = {
     enable = true;
     autoPrune.enable = true;
   };

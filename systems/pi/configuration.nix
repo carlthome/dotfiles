@@ -557,7 +557,7 @@ in
     };
   };
 
-  virtualisation.oci-containers.backend = "docker";
+  virtualisation.oci-containers.backend = "podman";
   virtualisation.oci-containers.containers.home-assistant = {
     image = "ghcr.io/home-assistant/home-assistant:2024.12.1";
     volumes = [
