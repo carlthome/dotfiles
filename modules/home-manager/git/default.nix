@@ -7,7 +7,6 @@
 }:
 let
   system = pkgs.stdenv.hostPlatform.system;
-  fzf-git-log = lib.getExe self.packages.${system}.fzf-git-log;
   allowedSigners = [
     (self + /systems/mba/carl.pub)
     (self + /systems/t1/carl.pub)
@@ -41,7 +40,7 @@ in
         ci = "commit";
         co = "checkout";
         s = "status";
-        l = "!${fzf-git-log}";
+        l = "log";
         b = "branch";
         d = "diff";
         find = "grep -w";
