@@ -75,7 +75,7 @@ jobs:
       cancel-in-progress: true
     steps:
       - uses: actions/checkout@v6
-      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-qemu-action@v4
         if: matrix.system == 'aarch64-linux'
         with:
           platforms: arm64
