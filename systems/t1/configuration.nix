@@ -133,23 +133,28 @@
     };
   };
 
-  # Prevent Bluetooth suspend/wake loop. # Kernel resets wakeup on resume, so re-apply before each sleep.
-  systemd.services.disable-bluetooth-xhci-wakeup = {
-    description = "Disable xHCI wakeup on Bluetooth controller to prevent suspend loop";
-    wantedBy = [ "sleep.target" ];
-    before = [ "sleep.target" ];
+  # TODO Try S3 again: remove this and test with pcieport udev rule + powerManagement.enable = false.
+  # S3 uses less power but NVIDIA+GNOME on this machine causes immediate wakeup and re-suspend loops.
+  #boot.kernelParams = [ "mem_sleep_default=s2idle" ];
+
+  # Prevent NVIDIA GPU from asserting spurious wakeup events during S3.
+  services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="pci", DRIVER=="pcieport", ATTR{power/wakeup}="disabled"
+  '';
+
+  # Inhibit sleep for 60s after resume to prevent gsd-power from immediately re-suspending.
+  systemd.services.inhibit-sleep-after-resume = {
+    description = "Inhibit sleep for 60s after resume to prevent gsd-power re-suspend loop";
+    wantedBy = [ "post-resume.target" ];
+    after = [ "post-resume.target" ];
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "${
-        pkgs.writeShellApplication {
-          name = "disable-bluetooth-xhci-wakeup";
-          text = ''
-            echo disabled > /sys/bus/pci/devices/0000:02:00.0/power/wakeup
-          '';
-        }
-      }/bin/disable-bluetooth-xhci-wakeup";
+      ExecStart = "${pkgs.systemd}/bin/systemd-inhibit --mode=block --what=sleep:idle --who=inhibit-sleep-after-resume --why='Prevent gsd-power re-suspend loop after resume' ${pkgs.coreutils}/bin/sleep 60";
     };
   };
+
+  # No swap exists so hibernation is impossible.
+  systemd.sleep.extraConfig = "AllowSuspendThenHibernate=no\nAllowHibernation=no";
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
