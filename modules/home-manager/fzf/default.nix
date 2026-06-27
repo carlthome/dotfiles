@@ -9,6 +9,7 @@
 let
   system = pkgs.stdenv.hostPlatform.system;
   fzf-rg = lib.getExe self.packages.${system}.fzf-ripgrep;
+  fzf-k8s = lib.getExe self.packages.${system}.fzf-k8s;
   fzf-blame = lib.getExe self.packages.${system}.fzf-git-blame;
 
   fzf-preview =
