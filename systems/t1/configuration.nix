@@ -53,6 +53,7 @@
     # TODO Populate secrets automatically.
     passwordFile = "/etc/nixos/secrets/restic/datasets";
     rcloneConfigFile = "/etc/nixos/secrets/restic/rclone.conf";
+    extraOptions = [ "rclone.timeout=15m" ];
     timerConfig = {
       OnCalendar = "weekly";
       Persistent = true;
