@@ -128,7 +128,10 @@ groups:
           description: "{{ $value | humanizePercentage }} of DNS queries are being blocked. This could indicate misconfiguration or malware."
 
       - alert: SuspiciousDnsSpike
-        expr: rate(blocky_query_total[5m]) > 20 * avg_over_time(rate(blocky_query_total[5m])[1d:5m])
+        expr: |
+          rate(blocky_query_total[5m]) > 50
+          and
+          rate(blocky_query_total[5m]) > 3 * quantile_over_time(0.95, rate(blocky_query_total[5m])[7d:5m])
         for: 15m
         labels:
           severity: warning
