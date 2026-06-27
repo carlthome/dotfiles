@@ -453,11 +453,16 @@ in
             labels.instance = config.networking.hostName;
           }
           {
-            targets = [
-              "pi-zero.local:9100"
-              "t1:9100"
-              "mba:9100"
-            ];
+            targets = [ "pi-zero.local:9100" ];
+            labels.instance = "pi-zero";
+          }
+          {
+            targets = [ "t1:9100" ];
+            labels.instance = "t1";
+          }
+          {
+            targets = [ "mba:9100" ];
+            labels.instance = "mba";
           }
         ];
       }
