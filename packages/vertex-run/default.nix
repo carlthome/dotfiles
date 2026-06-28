@@ -25,7 +25,7 @@ pkgs.writeShellApplication {
   runtimeInputs = [
     image
     pkgs.google-cloud-sdk
-    pkgs.docker
+    pkgs.docker_29
   ];
   text = ''
     echo "$2"

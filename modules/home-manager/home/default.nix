@@ -128,7 +128,7 @@
     dbeaver-bin
     delve
     dive
-    docker-client
+    docker_29
     docker-slim
     duckdb
     electrum
