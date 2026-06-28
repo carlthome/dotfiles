@@ -56,17 +56,21 @@
         "aarch64-linux"
         "aarch64-darwin"
       ];
-      mkSystem = system: {
-        legacyPackages.homeConfigurations = import ./homes (inputs // { inherit system; });
-        packages = import ./packages (inputs // { inherit system; });
-        checks = import ./pre-commit.nix (inputs // { inherit system; });
-        formatter = nixpkgs.legacyPackages.${system}.nixfmt-tree;
-        devShells.default = import ./shell.nix {
-          pkgs = nixpkgs.legacyPackages.${system};
-          shellHook = self.checks.${system}.pre-commit-check.shellHook;
-          buildInputs = self.checks.${system}.pre-commit-check.enabledPackages;
+      mkSystem = system:
+        let
+          systemInputs = inputs // { inherit system; };
+        in
+        {
+          legacyPackages.homeConfigurations = import ./homes systemInputs;
+          packages = import ./packages systemInputs;
+          checks = import ./pre-commit.nix systemInputs;
+          formatter = nixpkgs.legacyPackages.${system}.nixfmt-tree;
+          devShells.default = import ./shell.nix {
+            pkgs = nixpkgs.legacyPackages.${system};
+            shellHook = self.checks.${system}.pre-commit-check.shellHook;
+            buildInputs = self.checks.${system}.pre-commit-check.enabledPackages;
+          };
         };
-      };
       allSystems = import ./systems inputs;
     in
     flake-utils.lib.eachSystem systems mkSystem
