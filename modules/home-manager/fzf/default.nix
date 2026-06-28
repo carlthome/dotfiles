@@ -60,6 +60,12 @@ let
   ];
 
   toOpts = lib.concatStringsSep " ";
+
+  # Pre-compute formatted option strings once; each is reused across three shell init blocks.
+  defaultOptsStr = toOpts fzfDefaultOpts;
+  ctrlTOptsStr = toOpts fzfCtrlTOpts;
+  altCOptsStr = toOpts fzfAltCOpts;
+  ctrlROptsStr = toOpts fzfCtrlROpts;
 in
 {
   programs.fzf = {
@@ -75,12 +81,12 @@ in
 
   programs.zsh.initContent = ''
     export LS_COLORS=""
-    export FZF_DEFAULT_OPTS="${toOpts fzfDefaultOpts}"
+    export FZF_DEFAULT_OPTS="${defaultOptsStr}"
     export FZF_CTRL_T_COMMAND="${fzfCtrlTCommand}"
-    export FZF_CTRL_T_OPTS="${toOpts fzfCtrlTOpts}"
+    export FZF_CTRL_T_OPTS="${ctrlTOptsStr}"
     export FZF_ALT_C_COMMAND="${fzfAltCCommand}"
-    export FZF_ALT_C_OPTS="${toOpts fzfAltCOpts}"
-    export FZF_CTRL_R_OPTS="${toOpts fzfCtrlROpts}"
+    export FZF_ALT_C_OPTS="${altCOptsStr}"
+    export FZF_CTRL_R_OPTS="${ctrlROptsStr}"
 
     fzf-rg() { ${fzf-rg} "$BUFFER"; zle reset-prompt; }
     zle -N fzf-rg
@@ -100,12 +106,12 @@ in
 
   programs.bash.initExtra = ''
     export LS_COLORS=""
-    export FZF_DEFAULT_OPTS="${toOpts fzfDefaultOpts}"
+    export FZF_DEFAULT_OPTS="${defaultOptsStr}"
     export FZF_CTRL_T_COMMAND="${fzfCtrlTCommand}"
-    export FZF_CTRL_T_OPTS="${toOpts fzfCtrlTOpts}"
+    export FZF_CTRL_T_OPTS="${ctrlTOptsStr}"
     export FZF_ALT_C_COMMAND="${fzfAltCCommand}"
-    export FZF_ALT_C_OPTS="${toOpts fzfAltCOpts}"
-    export FZF_CTRL_R_OPTS="${toOpts fzfCtrlROpts}"
+    export FZF_ALT_C_OPTS="${altCOptsStr}"
+    export FZF_CTRL_R_OPTS="${ctrlROptsStr}"
 
     fzf-rg() { ${fzf-rg} "$READLINE_LINE"; }
     bind -x '"\C-f":fzf-rg'
@@ -122,12 +128,12 @@ in
 
   programs.fish.interactiveShellInit = ''
     set -gx LS_COLORS ""
-    set -gx FZF_DEFAULT_OPTS "${toOpts fzfDefaultOpts}"
+    set -gx FZF_DEFAULT_OPTS "${defaultOptsStr}"
     set -gx FZF_CTRL_T_COMMAND "${fzfCtrlTCommand}"
-    set -gx FZF_CTRL_T_OPTS "${toOpts fzfCtrlTOpts}"
+    set -gx FZF_CTRL_T_OPTS "${ctrlTOptsStr}"
     set -gx FZF_ALT_C_COMMAND "${fzfAltCCommand}"
-    set -gx FZF_ALT_C_OPTS "${toOpts fzfAltCOpts}"
-    set -gx FZF_CTRL_R_OPTS "${toOpts fzfCtrlROpts}"
+    set -gx FZF_ALT_C_OPTS "${altCOptsStr}"
+    set -gx FZF_CTRL_R_OPTS "${ctrlROptsStr}"
 
     function fzf-rg; ${fzf-rg} (commandline); commandline -f repaint; end
     bind \cf fzf-rg
