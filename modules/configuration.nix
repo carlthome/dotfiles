@@ -20,6 +20,10 @@
     ];
     cores = 0;
     max-jobs = "auto";
+    max-substitution-jobs = 128;
+    http-connections = 50;
+    keep-going = true;
+    narinfo-cache-negative-ttl = 0;
   };
 
   # Link old commands (nix-shell, nix-build, etc.) to use the same nixpkgs as the flake.
