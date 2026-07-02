@@ -35,6 +35,8 @@
   "[rust]": {
     "editor.defaultFormatter": "rust-lang.rust-analyzer"
   },
+  "chat.unifiedAgentsBar.enabled": false,
+  "chat.agentsControl.enabled": "hidden",
   "cloudcode.autoDependencies": "off",
   "cloudcode.enableTelemetry": false,
   "cmake.configureOnOpen": true,
