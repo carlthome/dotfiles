@@ -2,12 +2,8 @@
   config,
   pkgs,
   lib,
-  self,
   ...
-}@inputs:
-let
-  system = pkgs.stdenv.hostPlatform.system;
-in
+}:
 {
   programs.direnv = {
     enable = true;
