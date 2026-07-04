@@ -4,7 +4,7 @@
     src = ./.;
     hooks = {
       actionlint.enable = true;
-      nixfmt-rfc-style.enable = true;
+      nixfmt.enable = true;
       prettier = {
         enable = true;
         excludes = [
