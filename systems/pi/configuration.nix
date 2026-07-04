@@ -109,6 +109,12 @@ let
       user = "home-assistant";
       mode = "0644";
     };
+    "alloy/config.alloy" = {
+      source = ./loki/config.alloy;
+      group = "alloy";
+      user = "alloy";
+      mode = "0644";
+    };
   };
 
 in
@@ -388,11 +394,8 @@ in
     configFile = ./loki/config.yml;
   };
 
-  services.promtail = {
+  services.alloy = {
     enable = true;
-    configFile = ./loki/promtail.yml;
-    # TODO https://github.com/NixOS/nixpkgs/blame/33b9d57c656e65a9c88c5f34e4eb00b83e2b0ca9/nixos/modules/services/logging/promtail.nix#L9
-    configuration.scrape_configs = [ { journal = true; } ];
   };
 
   services.grafana = {
@@ -405,6 +408,7 @@ in
       };
       panels.disable_sanitize_html = true;
       analytics.reporting_enabled = false;
+      security.secret_key = "$__file{/etc/nixos/secrets/grafana}";
     };
     declarativePlugins = with pkgs.grafanaPlugins; [
       grafana-piechart-panel

@@ -1,0 +1,81 @@
+loki.write "default" {
+  endpoint {
+    url = "http://127.0.0.1:3100/loki/api/v1/push"
+  }
+}
+
+loki.relabel "journal" {
+  forward_to = [loki.write.default.receiver]
+
+  rule {
+    source_labels = ["__journal__systemd_unit"]
+    target_label  = "unit"
+  }
+
+  rule {
+    source_labels = ["__journal_priority"]
+    regex         = "0"
+    replacement   = "emerg"
+    target_label  = "priority"
+  }
+
+  rule {
+    source_labels = ["__journal_priority"]
+    regex         = "1"
+    replacement   = "alert"
+    target_label  = "priority"
+  }
+
+  rule {
+    source_labels = ["__journal_priority"]
+    regex         = "2"
+    replacement   = "crit"
+    target_label  = "priority"
+  }
+
+  rule {
+    source_labels = ["__journal_priority"]
+    regex         = "3"
+    replacement   = "err"
+    target_label  = "priority"
+  }
+
+  rule {
+    source_labels = ["__journal_priority"]
+    regex         = "4"
+    replacement   = "warning"
+    target_label  = "priority"
+  }
+
+  rule {
+    source_labels = ["__journal_priority"]
+    regex         = "5"
+    replacement   = "notice"
+    target_label  = "priority"
+  }
+
+  rule {
+    source_labels = ["__journal_priority"]
+    regex         = "6"
+    replacement   = "info"
+    target_label  = "priority"
+  }
+
+  rule {
+    source_labels = ["__journal_priority"]
+    regex         = "7"
+    replacement   = "debug"
+    target_label  = "priority"
+  }
+}
+
+loki.source.journal "journal" {
+  max_age = "12h"
+
+  labels = {
+    job  = "systemd-journal"
+    host = "pi"
+  }
+
+  forward_to = [loki.relabel.journal.receiver]
+}
