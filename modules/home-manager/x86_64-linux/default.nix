@@ -50,7 +50,7 @@
       element-desktop
       firefox
       google-chrome
-      helvum
+      crosspipe
       keepassxc
       logseq
       marker
