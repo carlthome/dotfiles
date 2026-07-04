@@ -64,7 +64,7 @@
       steam
       telegram-desktop
       transmission_4-gtk
-      wineWowPackages.full
+      wineWow64Packages.full
       yabridge
       yabridgectl
       zlib
