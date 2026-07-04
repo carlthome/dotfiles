@@ -15,7 +15,7 @@
       vim-startify
       vim-gitgutter
       vim-which-key
-      ctrlp
+      ctrlp-vim
     ];
     settings = {
       copyindent = true;
