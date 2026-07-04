@@ -28,7 +28,6 @@
       neotest.enable = true;
       nix-develop.enable = true;
       noice.enable = true;
-      specs.enable = true;
       startify.enable = true;
       statuscol.enable = true;
       tagbar.enable = true;
@@ -65,14 +64,11 @@
 
     extraPlugins = with pkgs.vimPlugins; [
       ale
-      ctrlp
+      ctrlp-vim
       fidget-nvim
       nerdtree
       nvim-highlite
       nvim-pqf
-      nvim-remote-containers
-      nvim-test
-      nvim-treesitter-context
       plenary-nvim
       scrollbar-nvim
       tabout-nvim
@@ -86,7 +82,6 @@
       vim-flog
       vim-nix
       whitespace-nvim
-      winbar-nvim
       windows-nvim
     ];
 
