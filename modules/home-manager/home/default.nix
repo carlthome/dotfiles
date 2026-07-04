@@ -171,7 +171,7 @@
     nix-diff
     nix-info
     nix-tree
-    nixfmt-rfc-style
+    nixfmt
     nixos-rebuild
     nixpkgs-review
     nmap
