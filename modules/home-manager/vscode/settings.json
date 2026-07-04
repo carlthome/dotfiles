@@ -71,7 +71,7 @@
   "editor.suggestSelection": "first",
   "editor.wordWrap": "off",
   "explorer.autoReveal": false,
-  "extensions.autoUpdate": false,
+  "extensions.autoUpdate": "off",
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
   "files.trimTrailingWhitespace": true,
