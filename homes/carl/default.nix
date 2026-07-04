@@ -14,6 +14,7 @@ home-manager.lib.homeManagerConfiguration {
     inherit system;
     overlays = [
       self.overlays.nixpkgs-unstable
+      self.overlays.nixpkgs-patches
     ];
   };
   modules = [
