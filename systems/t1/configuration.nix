@@ -154,7 +154,10 @@
   };
 
   # No swap exists so hibernation is impossible.
-  systemd.sleep.extraConfig = "AllowSuspendThenHibernate=no\nAllowHibernation=no";
+  systemd.sleep.settings.Sleep = {
+    AllowSuspendThenHibernate = false;
+    AllowHibernation = false;
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
