@@ -1,6 +1,7 @@
 {
   pkgs,
   vscode-extensions,
+  allowVscode,
   ...
 }:
 
@@ -33,7 +34,7 @@ let
     ms-python.mypy-type-checker
     ms-python.pylint
     ms-python.python
-    (if pkgs.config.allowUnfreePredicate "vscode" then ms-python.vscode-pylance else ms-pyright.pyright)
+    (if allowVscode then ms-python.vscode-pylance else ms-pyright.pyright)
     ms-toolsai.datawrangler
     ms-toolsai.jupyter
     ms-toolsai.jupyter-keymap
