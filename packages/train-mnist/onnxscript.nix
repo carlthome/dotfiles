@@ -8,14 +8,14 @@
 
 python3Packages.buildPythonPackage rec {
   pname = "onnxscript";
-  version = "0.5.6";
+  version = "0.7.1";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "microsoft";
     repo = "onnxscript";
     rev = "v${version}";
-    hash = "sha256-vMxjB0FhONzLE2Duje5//T6hWXTGTXUPYRNLAWQpZEk=";
+    hash = "sha256-l6Nsnbg7LG/0Z9y1EX5BPP3sFdY/EZwRFFHOrP4mwdw=";
   };
 
   build-system = with python3Packages; [
