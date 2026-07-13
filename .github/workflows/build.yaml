@@ -39,7 +39,7 @@ jobs:
         with:
           path: ~/.cache/nix
           key: nix-eval-${{ runner.os }}-${{ hashFiles('flake.lock') }}
-          restore-keys: nix-eval-${{ runner.os }}-${{ hashFiles('flake.lock') }}-
+          restore-keys: nix-eval-${{ runner.os }}-
       - uses: actions/cache/restore@v5
         with:
           path: /nix/store/*.drv
