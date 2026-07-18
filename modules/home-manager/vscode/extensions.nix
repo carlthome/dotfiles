@@ -9,9 +9,9 @@ let
   packagedExtensions = with pkgs.vscode-extensions; [
     anthropic.claude-code
     charliermarsh.ruff
-    docker.docker
     davidanson.vscode-markdownlint
     dbaeumer.vscode-eslint
+    docker.docker
     esbenp.prettier-vscode
     github.copilot
     github.copilot-chat
@@ -22,6 +22,7 @@ let
     golang.go
     hashicorp.terraform
     jnoortheen.nix-ide
+    llvm-vs-code-extensions.lldb-dap
     mikestead.dotenv
     mkhl.direnv
     ms-azuretools.vscode-containers
