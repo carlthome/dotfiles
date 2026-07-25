@@ -119,7 +119,8 @@
     #cachix
     cmake
     comma
-    commitizen
+    # TODO Broken
+    #commitizen
     cookiecutter
     copier
     coreutils-full
@@ -131,7 +132,8 @@
     docker_29
     docker-slim
     duckdb
-    electrum
+    # TODO Broken
+    #electrum
     hack-font
     fantasque-sans-mono
     fd
