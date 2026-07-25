@@ -34,7 +34,7 @@ tailscale lock sign <auth-key>
 Then add the key as a new version of the existing GCP secret:
 
 ```sh
-./rotate-tailscale-auth-key.sh
+bash ./rotate-tailscale-auth-key.sh
 ```
 
 The key is entered without echo and is sent directly to Secret Manager. It is
