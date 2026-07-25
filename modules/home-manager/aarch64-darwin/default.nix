@@ -25,6 +25,7 @@
     colima
     net-news-wire
     roomeqwizard
+    signal-desktop
     sequelpro
     stats
     iterm2
