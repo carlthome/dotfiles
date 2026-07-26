@@ -28,6 +28,9 @@
         "firefox-bin"
         "firefox-bin-unwrapped"
       ];
+    permittedInsecurePackages = [
+      "electron-39.8.10"
+    ];
   };
 
   home.shellAliases = {
