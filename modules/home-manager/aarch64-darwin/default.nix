@@ -13,6 +13,10 @@
         "roomeqwizard"
         "terraform"
         "vscode"
+        "discord"
+        "google-chrome"
+        "spotify"
+        "whatsapp-for-mac"
       ];
     permittedInsecurePackages = [
       "lima-additional-guestagents-1.2.2"
@@ -29,6 +33,20 @@
     sequelpro
     stats
     iterm2
+    discord
+    element-desktop
+    firefox
+    google-chrome
+    keepassxc
+    spotify
+    telegram-desktop
+    whatsapp-for-mac
+    # TODO Not supported on darwin arm64 yet
+    #steam
+    # TODO Not supported on darwin arm64 yet
+    #chromium
+    # TODO Not supported on darwin arm64 yet
+    #dropbox
   ];
 
   # Create wrapper apps so Spotlight can find Nix-installed GUI apps.
