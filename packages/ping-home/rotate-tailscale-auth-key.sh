@@ -22,8 +22,8 @@ fi
 read -rsp "New reusable, ephemeral Tailscale auth key: " auth_key
 echo
 
-if [[ "${auth_key}" != tskey-auth-* ]]; then
-	echo "Error: value does not look like a Tailscale auth key." >&2
+if [[ ${auth_key} != tskey-auth-* ]]; then
+	echo "Error: value does not look like a Tailscale auth key. Go to https://console.tailscale.com/admin/settings/keys and create one." >&2
 	exit 1
 fi
 
