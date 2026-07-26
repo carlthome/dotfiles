@@ -38,6 +38,7 @@
     telegram-desktop
     whatsapp-for-mac
     reaper
+    opencode-desktop
     # TODO Not supported on darwin arm64 yet
     #steam
     # TODO Not supported on darwin arm64 yet
