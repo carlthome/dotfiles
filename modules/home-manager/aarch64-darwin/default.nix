@@ -17,6 +17,7 @@
         "google-chrome"
         "spotify"
         "whatsapp-for-mac"
+        "reaper"
       ];
   };
 
@@ -36,6 +37,7 @@
     spotify
     telegram-desktop
     whatsapp-for-mac
+    reaper
     # TODO Not supported on darwin arm64 yet
     #steam
     # TODO Not supported on darwin arm64 yet
