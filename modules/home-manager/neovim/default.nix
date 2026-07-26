@@ -1,68 +1,54 @@
-{
-  config,
-  pkgs,
-  lib,
-  ...
-}:
-{
+{ pkgs, ... }:
 
-  programs.nixvim = {
+{
+  programs.neovim = {
     enable = true;
     vimdiffAlias = true;
-    globals.mapleader = ",";
-    colorscheme = "tokyonight";
-    plugins = {
-      lualine.enable = true;
-      bufferline.enable = true;
-      dap.enable = true;
-      direnv.enable = true;
-      edgy.enable = true;
-      fugitive.enable = true;
-      gitblame.enable = true;
-      gitgutter.enable = true;
-      goyo.enable = true;
-      headlines.enable = true;
-      # TODO
-      #jupytext.enable = true;
-      neoscroll.enable = true;
-      neotest.enable = true;
-      nix-develop.enable = true;
-      noice.enable = true;
-      startify.enable = true;
-      statuscol.enable = true;
-      tagbar.enable = true;
-      telescope.enable = true;
-      treesitter.enable = true;
-      trouble.enable = true;
-      twilight.enable = true;
-      virt-column.enable = true;
-      web-devicons.enable = true;
-      which-key.enable = true;
-      wilder.enable = true;
-      wtf.enable = true;
-      toggleterm = {
-        enable = true;
-        settings = {
-          autochdir = true;
-        };
-      };
-      lsp = {
-        enable = true;
-        servers = {
-          bashls.enable = true;
-          nixd.enable = true;
-        };
-        keymaps.lspBuf = {
-          "gd" = "definition";
-          "gD" = "references";
-          "gt" = "type_definition";
-          "gi" = "implementation";
-          "K" = "hover";
-        };
-      };
-    };
+    withRuby = false;
+    withPython3 = false;
 
-    extraPlugins = with pkgs.vimPlugins; [
+    # Prevent Home Manager from owning ~/.config/nvim/init.lua.
+    sideloadInitLua = true;
+
+    extraPackages = with pkgs; [
+      bash-language-server
+      nixd
+    ];
+
+    plugins = with pkgs.vimPlugins; [
+      lualine-nvim
+      bufferline-nvim
+      nvim-dap
+      direnv-vim
+      edgy-nvim
+      vim-fugitive
+      git-blame-nvim
+      vim-gitgutter
+      goyo-vim
+      headlines-nvim
+      neoscroll-nvim
+      neotest
+      nix-develop-nvim
+      noice-nvim
+      vim-startify
+      statuscol-nvim
+      tagbar
+      telescope-nvim
+      nvim-treesitter.withAllGrammars
+      trouble-nvim
+      twilight-nvim
+      virt-column-nvim
+      nvim-web-devicons
+      which-key-nvim
+      wilder-nvim
+      wtf-nvim
+      toggleterm-nvim
+      nvim-lspconfig
+
+      nui-nvim
+      nvim-nio
+      nvim-notify
+
       ale
       ctrlp-vim
       fidget-nvim
@@ -84,70 +70,10 @@
       whitespace-nvim
       windows-nvim
     ];
+  };
 
-    opts = {
-      autochdir = true;
-      autoindent = true;
-      copyindent = true;
-      expandtab = true;
-      hlsearch = true;
-      ignorecase = true;
-      incsearch = true;
-      lazyredraw = true;
-      mouse = "a";
-      number = true;
-      redrawtime = 200;
-      showcmd = true;
-      showmatch = true;
-      smartcase = true;
-      splitbelow = true;
-      splitright = true;
-      swapfile = false;
-      syntax = "on";
-      termguicolors = true;
-      undofile = true;
-      wildmenu = true;
-      wildmode = "longest:full,full";
-      wildoptions = "pum";
-    };
-
-    keymaps = [
-      {
-        mode = "n";
-        key = "<F8>";
-        action = ":TagbarToggle<CR>";
-        options.desc = "Toggle Tagbar";
-      }
-      {
-        mode = "v";
-        key = "<C-r>";
-        options.noremap = true;
-        action = "hy:%s/<C-r>h//gc<left><left><left>";
-        options.desc = "CTRL-r in visual mode to search and replace";
-      }
-      {
-        key = "<leader>fm";
-        action = "<CMD>lua vim.lsp.buf.format()<CR>";
-        options.desc = "Format the current buffer";
-      }
-      {
-        mode = "n";
-        key = "<leader>g";
-        action = "+git";
-        options.desc = "Git";
-      }
-      {
-        mode = "n";
-        key = "<C-k>";
-        action = ":bprev<CR>";
-        options.desc = "Previous buffer";
-      }
-      {
-        mode = "n";
-        key = "<C-j>";
-        action = ":bnext<CR>";
-        options.desc = "Next buffer";
-      }
-    ];
+  xdg.configFile."nvim" = {
+    source = ./nvim;
+    recursive = true;
   };
 }

@@ -4,7 +4,6 @@
   nix-index-database,
   system,
   self,
-  nixvim,
   ...
 }@inputs:
 
@@ -20,7 +19,6 @@ home-manager.lib.homeManagerConfiguration {
   modules = [
     ./home.nix
     nix-index-database.homeModules.nix-index
-    nixvim.homeModules.nixvim
     self.homeModules.${system}
     self.homeModules.auto-audit
     self.homeModules.auto-upgrade
