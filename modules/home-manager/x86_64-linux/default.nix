@@ -28,10 +28,6 @@
         "firefox-bin"
         "firefox-bin-unwrapped"
       ];
-    permittedInsecurePackages = [
-      "python3.12-ecdsa-0.19.1"
-      "electron-39.8.10"
-    ];
   };
 
   home.shellAliases = {
