@@ -181,6 +181,8 @@
     #nodejs
     #nodePackages.npm
     #nodePackages.prettier
+    ollama
+    opencode
     opus-tools
     pandoc
     pass
