@@ -189,6 +189,7 @@
     pdfgrep
     pdm
     phoronix-test-suite
+    pi-coding-agent
     pijul
     pipenv
     pipx
