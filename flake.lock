@@ -300,11 +300,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786052213,
-        "narHash": "sha256-sO99LFQ0q/QCXur3shpe+BYeCFCSVCwElunJlYzxukY=",
+        "lastModified": 1786399883,
+        "narHash": "sha256-n+XLUgvzkx6BZ/ICntvcOvbPpaTcAv5FAqnUVP1/b4Q=",
         "owner": "carlthome",
         "repo": "mirpkgs",
-        "rev": "ac6185a47d45a18eded1174757d65308081cc309",
+        "rev": "d401e9c8f5bdadbbc0d63158db19d9c7955241ab",
         "type": "github"
       },
       "original": {
