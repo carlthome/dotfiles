@@ -30,8 +30,8 @@ read -rsp "Enter Wi-Fi PSK: " psk
 echo
 
 cd "/run/media/$USER/NIXOS_SD/"
-sudo mkdir etc
-sudo tee etc/wpa_supplicant.conf <<EOF
+sudo mkdir -p etc/wpa_supplicant
+sudo tee etc/wpa_supplicant/imperative.conf <<EOF
 network={
   ssid="$ssid"
   psk="$psk"
