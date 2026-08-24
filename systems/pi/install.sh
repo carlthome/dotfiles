@@ -37,6 +37,7 @@ network={
   psk="$psk"
 }
 EOF
+sudo chmod 600 etc/wpa_supplicant/imperative.conf
 
 # Configure alertmanager secrets.
 read -rp "Enter Slack webhook URL (or press Enter to skip): " slack_url
