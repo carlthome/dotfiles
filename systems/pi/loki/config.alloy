@@ -73,8 +73,8 @@ loki.source.journal "journal" {
   max_age = "12h"
 
   labels = {
-    job  = "systemd-journal"
-    host = "pi"
+    job  = "systemd-journal",
+    host = "pi",
   }
 
   forward_to = [loki.relabel.journal.receiver]
