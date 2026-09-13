@@ -121,6 +121,14 @@ in
 {
   hardware.enableRedistributableFirmware = true;
 
+  # The root filesystem is a small SD card shared with the Nix store, so keep it
+  # from filling up: free space during builds, and keep fewer old generations.
+  nix.settings = {
+    min-free = 2 * 1024 * 1024 * 1024;
+    max-free = 8 * 1024 * 1024 * 1024;
+  };
+  nix.gc.options = lib.mkForce "--delete-older-than 7d";
+
   boot = {
     supportedFilesystems.zfs = lib.mkForce false;
     kernelPackages = pkgs.linuxKernel.packages.linux_rpi4;
