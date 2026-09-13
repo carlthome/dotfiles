@@ -1,4 +1,9 @@
-{ nixpkgs, self, ... }:
+{
+  nixpkgs,
+  self,
+  sops-nix,
+  ...
+}:
 
 nixpkgs.lib.nixosSystem {
   system = "aarch64-linux";
@@ -11,6 +16,7 @@ nixpkgs.lib.nixosSystem {
     self.modules.default
     self.nixosModules.default
     self.nixosModules.server
+    sops-nix.nixosModules.sops
     {
       virtualisation.vmVariant = {
         virtualisation.host.pkgs = nixpkgs.legacyPackages.x86_64-linux;

@@ -1,0 +1,17 @@
+# Who can decrypt the secrets files. After changing a list, re-encrypt with `sops updatekeys <file>`.
+keys:
+  # The Pi's SSH host key, converted with ssh-to-age; sops-nix decrypts with the host key.
+  - &pi age1hudxgykgh6xjhqcp0wr5g26apypn9yspek8jk0uq4kgj9ajlwu9qyzduld
+  # Carl's SSH keys. Decrypt with SOPS_AGE_SSH_PRIVATE_KEY_FILE=~/.ssh/id_ed25519.
+  - &mba ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDJmEWvLXWvMV9S6XZApJUEaUPvTpEhPMiVWu7lZAEpQ
+  - &mba-2 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICj6rO7yzN3+uK48a2N+6TPQlwvk3Qfw85Mffom3ebyc
+  - &t1 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMwK4lbeU6NJ5JUmP/kwaxBybU2bj7Jq1HUSsX0GqnAb
+
+creation_rules:
+  - path_regex: systems/pi/secrets\.yaml$
+    key_groups:
+      - age:
+          - *pi
+          - *mba
+          - *mba-2
+          - *t1

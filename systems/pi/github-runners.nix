@@ -1,10 +1,14 @@
 # Self-hosted GitHub Actions runners on the Pi, one per repository in `githubRunners`.
 #
 # Hosted Actions minutes on private repositories run out quickly; a workflow sends a job here with
-# `runs-on: [self-hosted, <name>-pi]`. To add a repository, run
-# `./register-github-runner.sh <owner>/<repo>` from this directory: it adds the entry below,
-# installs the token, deploys and waits for the runner to come online.
-{ lib, pkgs, ... }:
+# `runs-on: [self-hosted, <name>-pi]`. Adding a repository is one line below, and the Pi picks it up
+# at its nightly auto-upgrade. The shared token is set up once; see README.md.
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   # Runner name -> GitHub repository. The name is used for the systemd unit
@@ -12,8 +16,6 @@ let
   githubRunners = {
     rustler = "carlthome/rustler";
   };
-
-  tokenDir = "/etc/nixos/secrets/github-runner";
 
   # Build trees are several GB, so keep them off the SD card. Each runner deletes everything in its
   # own work dir on every start, so these directories must be dedicated to the runners.
@@ -36,13 +38,20 @@ in
     name: _: "d ${workRoot}/${name} 0750 github-runner github-runner -"
   ) githubRunners;
 
-  # Each token is a fine-grained PAT with Administration: read and write on its repository, so
-  # re-registration keeps working (a one-hour registration token breaks on the next config change).
+  # One fine-grained PAT (all repositories, Administration: read and write) registers every runner.
+  # It is stored encrypted in secrets.yaml; see README.md. A PAT rather than a registration token,
+  # because registration tokens expire after an hour and break the next re-registration.
+  sops.secrets.github-runner-token = {
+    sopsFile = ./secrets.yaml;
+    # Re-register the runners when the token is rotated.
+    restartUnits = map (name: "github-runner-${name}.service") (lib.attrNames githubRunners);
+  };
+
   services.github-runners = lib.mapAttrs (name: repo: {
     enable = true;
     url = "https://github.com/${repo}";
     name = "pi";
-    tokenFile = "${tokenDir}/${name}.token";
+    tokenFile = config.sops.secrets.github-runner-token.path;
     extraLabels = [ "${name}-pi" ];
     replace = true;
     user = "github-runner";
