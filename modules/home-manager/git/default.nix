@@ -11,11 +11,15 @@ let
     (self + /systems/mba/carl.pub)
     (self + /systems/t1/carl.pub)
   ];
+  extraAllowedSigners = [
+    # Carl's MacBook Air (carls-macbook-air on the tailnet).
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICj6rO7yzN3+uK48a2N+6TPQlwvk3Qfw85Mffom3ebyc\n"
+  ];
 in
 {
   home.file.".ssh/allowed_signers".text = lib.concatMapStrings (
-    path: "${config.programs.git.settings.user.email} ${builtins.readFile path}"
-  ) allowedSigners;
+    key: "${config.programs.git.settings.user.email} ${key}"
+  ) (map builtins.readFile allowedSigners ++ extraAllowedSigners);
 
   programs.git = {
     enable = true;
