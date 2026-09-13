@@ -225,6 +225,10 @@ in
         ../mba/carl.pub
         ../t1/carl.pub
       ];
+      openssh.authorizedKeys.keys = [
+        # Carl's MacBook Air (carls-macbook-air on the tailnet).
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICj6rO7yzN3+uK48a2N+6TPQlwvk3Qfw85Mffom3ebyc"
+      ];
     };
   };
 
