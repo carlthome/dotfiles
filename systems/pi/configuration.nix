@@ -119,6 +119,8 @@ let
 
 in
 {
+  imports = [ ./github-runners.nix ];
+
   hardware.enableRedistributableFirmware = true;
 
   # The root filesystem is a small SD card shared with the Nix store, so keep it
