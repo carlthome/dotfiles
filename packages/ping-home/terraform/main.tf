@@ -24,12 +24,15 @@ data "google_client_config" "current" {}
 resource "google_project_service" "apis" {
   for_each = toset([
     "artifactregistry.googleapis.com",
+    "cloudbuild.googleapis.com",
+    "cloudfunctions.googleapis.com",
     "cloudscheduler.googleapis.com",
     "iam.googleapis.com",
     "iamcredentials.googleapis.com",
     "logging.googleapis.com",
     "monitoring.googleapis.com",
     "run.googleapis.com",
+    "secretmanager.googleapis.com",
   ])
   service            = each.value
   disable_on_destroy = false
