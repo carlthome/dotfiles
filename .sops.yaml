@@ -8,7 +8,7 @@ keys:
   - &t1 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMwK4lbeU6NJ5JUmP/kwaxBybU2bj7Jq1HUSsX0GqnAb
 
 creation_rules:
-  - path_regex: systems/pi/secrets\.yaml$
+  - path_regex: systems/pi/github-runners/secrets\.yaml$
     key_groups:
       - age:
           - *pi
