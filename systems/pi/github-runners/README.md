@@ -6,6 +6,10 @@
 
 Add a line to `githubRunners` and merge. The Pi picks it up at its nightly auto-upgrade (04:40), or deploy right away as described in [the Pi's README](../README.md).
 
+## Caches
+
+Each runner deletes its work dir whenever its service restarts, so build state lives next to it in `/mnt/datasets/.github-runner/.cache/<name>`: cargo's registry (`CARGO_HOME`) and target dir (`CARGO_TARGET_DIR`), plus any Nix dev shell a workflow records under `CI_CACHE_DIR` to protect it from garbage collection. Delete that directory to start a runner from scratch.
+
 ## Token (set up once)
 
 All runners share one fine-grained personal access token. It is stored encrypted in `secrets.yaml` and decrypted on the Pi with its SSH host key.

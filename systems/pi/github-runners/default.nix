@@ -20,6 +20,12 @@ let
   # Build trees are several GB, so keep them off the SD card. Each runner deletes everything in its
   # own work dir on every start, so these directories must be dedicated to the runners.
   workRoot = "/mnt/datasets/.github-runner";
+
+  # Build state that should outlive a runner restart, which wipes the work dir: cargo's registry and
+  # target dir, and the Nix dev shell GC root a workflow records in CI_CACHE_DIR. One per runner, next
+  # to the work dirs rather than inside them (the dot keeps a runner named "cache" from landing on it),
+  # and excluded from the backup along with the rest of workRoot.
+  cacheDir = name: "${workRoot}/.cache/${name}";
 in
 {
   users.users.github-runner = {
@@ -33,10 +39,14 @@ in
 
   systemd.tmpfiles.rules = [
     "d ${workRoot} 0750 github-runner github-runner -"
+    "d ${workRoot}/.cache 0750 github-runner github-runner -"
   ]
-  ++ lib.mapAttrsToList (
-    name: _: "d ${workRoot}/${name} 0750 github-runner github-runner -"
-  ) githubRunners;
+  ++ lib.concatLists (
+    lib.mapAttrsToList (name: _: [
+      "d ${workRoot}/${name} 0750 github-runner github-runner -"
+      "d ${cacheDir name} 0750 github-runner github-runner -"
+    ]) githubRunners
+  );
 
   # One fine-grained PAT (all repositories, Administration: read and write) registers every runner.
   # It is stored encrypted in secrets.yaml; see README.md. A PAT rather than a registration token,
@@ -63,9 +73,21 @@ in
       git
     ];
 
+    # Only the default Node 24 runtime: nixpkgs refuses the end-of-life Node 20. The runner still
+    # evaluates hashFiles() with Node 20, so a job routed here must not use it (rustler's workflows
+    # skip their hashFiles-keyed cache steps on self-hosted runners).
+
+    # The service sandbox makes everything but the work dir read-only; the cache dir must be writable.
+    serviceOverrides.ReadWritePaths = [ (cacheDir name) ];
+
     # Headless defaults, so GUI apps and games can run their tests on a machine with no screen,
     # GPU or sound card.
     extraEnvironment = {
+      # Build state that survives runner restarts; see cacheDir above.
+      CARGO_HOME = "${cacheDir name}/cargo";
+      CARGO_TARGET_DIR = "${cacheDir name}/target";
+      CI_CACHE_DIR = cacheDir name;
+
       DISPLAY = ":99";
       # Software GL. rustler's dev shell forces an NVIDIA Vulkan ICD, which doesn't exist here.
       WGPU_BACKEND = "gl";
