@@ -34,6 +34,11 @@ in
   };
   users.groups.github-runner = { };
 
+  # The shared config never caches a binary-cache miss (negative TTL 0), so a CI build re-asks all
+  # five caches about every path it has to build, thousands of lookups for a Rust dependency build.
+  # Remember misses for an hour on this host only.
+  nix.settings.narinfo-cache-negative-ttl = lib.mkForce 3600;
+
   # Regenerable CI build trees; keep them out of the weekly Drive backup.
   services.restic.backups.datasets.exclude = [ workRoot ];
 
