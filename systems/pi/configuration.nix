@@ -119,7 +119,7 @@ let
 
 in
 {
-  imports = [ ./github-runners.nix ];
+  imports = [ ./github-runners ];
 
   hardware.enableRedistributableFirmware = true;
 
