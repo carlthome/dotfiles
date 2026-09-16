@@ -21,6 +21,11 @@ for repo in $repos; do
 		continue
 	fi
 
+	# Preload direnv environment.
+	if ! direnv exec "$repo" true; then
+		printf "WARNING: Failed to reload direnv environment (%s)\n\n" "$repo"
+	fi
+
 	# Display local changes.
 	status=$(git -C "$repo" status --porcelain)
 	if [ -n "$status" ]; then

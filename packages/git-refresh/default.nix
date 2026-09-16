@@ -2,6 +2,7 @@
   pkgs,
   git,
   findutils,
+  direnv,
   ...
 }:
 pkgs.writeShellApplication {
@@ -9,6 +10,7 @@ pkgs.writeShellApplication {
   runtimeInputs = [
     git
     findutils
+    direnv
   ];
   text = builtins.readFile ./script.sh;
 }
