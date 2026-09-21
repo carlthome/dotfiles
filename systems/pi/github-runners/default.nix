@@ -1,25 +1,19 @@
-# Self-hosted GitHub Actions runners on the Pi, one per repository in `githubRunners`.
+# Self-hosted GitHub Actions runners, one per repository in `githubRunners`.
 #
-# Hosted Actions minutes on private repositories run out quickly; a workflow sends a job here with
-# `runs-on: [self-hosted, <name>-pi]`. Adding a repository is one line below, and the Pi picks it up
-# at its nightly auto-upgrade. The shared token is set up once; see README.md.
+# Hosted Actions minutes run out quickly on private repositories; a workflow sends a job here with
+# `runs-on: [self-hosted, <name>-pi]`. Adding a repository is one line below. See README.md.
 { lib, pkgs, ... }:
 
 let
-  # Runner name -> GitHub repository. The name is used for the systemd unit
-  # (github-runner-<name>), the token file, the work dir and the `<name>-pi` label.
+  # Runner name -> repository. The name is the systemd unit, token file, work dir and label.
   githubRunners = {
     rustler = "carlthome/rustler";
   };
 
-  # Build trees are several GB, so keep them off the SD card. Each runner deletes everything in its
-  # own work dir on every start, so these directories must be dedicated to the runners.
+  # Wiped on every service start, so nothing worth keeping lives here.
   workRoot = "/mnt/datasets/.github-runner";
 
-  # Build state that should outlive a runner restart, which wipes the work dir: cargo's registry and
-  # target dir, and the Nix dev shell GC root a workflow records in CI_CACHE_DIR. One per runner, next
-  # to the work dirs rather than inside them (the dot keeps a runner named "cache" from landing on it),
-  # and excluded from the backup along with the rest of workRoot.
+  # Kept across restarts: cargo's registry and target dir, and the Nix dev shell GC root.
   cacheDir = name: "${workRoot}/.cache/${name}";
 in
 {
@@ -29,17 +23,13 @@ in
   };
   users.groups.github-runner = { };
 
-  # The shared config never caches a binary-cache miss (negative TTL 0), so a CI build re-asks all
-  # five caches about every path it has to build, thousands of lookups for a Rust dependency build.
-  # Remember misses for an hour on this host only.
+  # The shared config re-asks every cache about every missing path; remember misses here instead.
   nix.settings.narinfo-cache-negative-ttl = lib.mkForce 3600;
 
-  # Mesa at /run/opengl-driver, which is where a GUI app's LD_LIBRARY_PATH looks for a GL driver.
-  # The Pi has no display, but its CI runs games headless against Xvfb and software rendering, and
-  # without this every run dies at graphics initialisation.
+  # Mesa at /run/opengl-driver: headless CI still needs a GL driver to render into Xvfb.
   hardware.graphics.enable = true;
 
-  # Regenerable CI build trees; keep them out of the weekly Drive backup.
+  # Regenerable build trees; keep them out of the weekly Drive backup.
   services.restic.backups.datasets.exclude = [ workRoot ];
 
   systemd.tmpfiles.rules = [
@@ -57,41 +47,36 @@ in
     enable = true;
     url = "https://github.com/${repo}";
     name = "pi";
-    # A fine-grained PAT (Administration: read and write), placed by hand as a root-only file like the
-    # other secrets in /etc/nixos/secrets; see README.md. A PAT rather than a registration token,
-    # because registration tokens expire after an hour and break the next re-registration.
+
+    # A fine-grained PAT (Administration: read and write), placed by hand; see README.md.
     tokenFile = "/etc/nixos/secrets/github-runner/${name}.token";
+
     extraLabels = [ "${name}-pi" ];
     replace = true;
     user = "github-runner";
     workDir = "${workRoot}/${name}";
 
-    # Most jobs here build through `nix develop`.
+    # Node 24 only: nixpkgs refuses the end-of-life Node 20 the runner uses for hashFiles(), so a
+    # job routed here must not call it.
+
+    # Most jobs build through `nix develop`.
     extraPackages = with pkgs; [
       nix
       git
     ];
 
-    # Only the default Node 24 runtime: nixpkgs refuses the end-of-life Node 20. The runner still
-    # evaluates hashFiles() with Node 20, so a job routed here must not use it (rustler's workflows
-    # skip their hashFiles-keyed cache steps on self-hosted runners).
-
-    # The service sandbox makes everything but the work dir read-only; the cache dir must be writable.
+    # Everything outside the work dir is read-only to the service.
     serviceOverrides.ReadWritePaths = [ (cacheDir name) ];
 
-    # Headless defaults, so GUI apps and games can run their tests on a machine with no screen,
-    # GPU or sound card.
     extraEnvironment = {
-      # Build state that survives runner restarts; see cacheDir above.
       CARGO_HOME = "${cacheDir name}/cargo";
       CARGO_TARGET_DIR = "${cacheDir name}/target";
       CI_CACHE_DIR = cacheDir name;
 
+      # Headless defaults: no screen, no GPU, no sound card.
       DISPLAY = ":99";
-      # Software GL. rustler's dev shell forces an NVIDIA Vulkan ICD, which doesn't exist here.
       WGPU_BACKEND = "gl";
       LIBGL_ALWAYS_SOFTWARE = "1";
-      # Route ALSA's default PCM to null, as hosted runners are usually set up to do.
       ALSA_CONFIG_PATH = "${pkgs.writeText "alsa-null.conf" ''
         <${pkgs.alsa-lib}/share/alsa/alsa.conf>
         pcm.!default {
@@ -105,15 +90,14 @@ in
     lib.mapAttrs' (
       name: _:
       lib.nameValuePair "github-runner-${name}" {
-        # The work dir lives on the automounted USB drive.
+        # The work dir is on the automounted USB drive.
         unitConfig.RequiresMountsFor = [ "/mnt/datasets" ];
         requires = [ "xvfb.service" ];
         after = [ "xvfb.service" ];
       }
     ) githubRunners
     // {
-      # Virtual display for headless runs. Xvfb also listens on the abstract socket, which the
-      # runners can reach despite their PrivateTmp sandbox.
+      # Virtual display for headless runs; reachable through its abstract socket.
       xvfb = {
         description = "Virtual X display for CI";
         serviceConfig = {
