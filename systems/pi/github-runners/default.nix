@@ -34,6 +34,11 @@ in
   # Remember misses for an hour on this host only.
   nix.settings.narinfo-cache-negative-ttl = lib.mkForce 3600;
 
+  # Mesa at /run/opengl-driver, which is where a GUI app's LD_LIBRARY_PATH looks for a GL driver.
+  # The Pi has no display, but its CI runs games headless against Xvfb and software rendering, and
+  # without this every run dies at graphics initialisation.
+  hardware.graphics.enable = true;
+
   # Regenerable CI build trees; keep them out of the weekly Drive backup.
   services.restic.backups.datasets.exclude = [ workRoot ];
 
