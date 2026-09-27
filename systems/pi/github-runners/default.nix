@@ -35,6 +35,25 @@ in
   # Mesa at /run/opengl-driver: headless CI still needs a GL driver to render into Xvfb.
   hardware.graphics.enable = true;
 
+  # This box serves the home network's DNS and DHCP, and a CI build otherwise takes every core it
+  # can (measured: 349% of 4 cores under software rendering), which shows up as slow name
+  # resolution everywhere. Everything CI runs lives in this slice instead.
+  #
+  # `CPUWeight` is the part that matters day to day: it only applies under contention, so CI still
+  # uses the whole machine when the network is quiet but yields to blocky and dnsmasq — which sit at
+  # the default weight of 100, five times this — the moment they want the CPU. `CPUQuota` is the
+  # backstop for the scheduler reacting too slowly, leaving about a core's worth of headroom.
+  # `MemoryHigh` throttles a heavy rustc rather than letting it push DNS into swap.
+  systemd.slices.ci = {
+    description = "CI runners, kept from starving the services this box exists for";
+    sliceConfig = {
+      CPUWeight = 20;
+      CPUQuota = "300%";
+      IOWeight = 50;
+      MemoryHigh = "5G";
+    };
+  };
+
   # Regenerable build trees; keep them out of the weekly Drive backup.
   services.restic.backups.datasets.exclude = [ workRoot ];
 
@@ -111,6 +130,7 @@ in
       lib.nameValuePair "github-runner-${name}" {
         # The work dir is on the automounted USB drive.
         unitConfig.RequiresMountsFor = [ "/mnt/datasets" ];
+        serviceConfig.Slice = "ci.slice";
         requires = [ "xvfb.service" ];
         after = [ "xvfb.service" ];
       }
@@ -121,6 +141,7 @@ in
         description = "Virtual X display for CI";
         serviceConfig = {
           ExecStart = "${pkgs.xorg-server}/bin/Xvfb :99 -screen 0 1280x720x24 -nolisten tcp";
+          Slice = "ci.slice";
           DynamicUser = true;
           Restart = "on-failure";
         };
