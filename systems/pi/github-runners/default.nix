@@ -86,6 +86,12 @@ in
       # other repositories, which simply ignore it.
       RUSTLER_BAKE_CACHE = "${cacheDir name}/bake";
 
+      # Cap how far rustler's render smoke test draws. Software GL here costs ~3s a frame at the
+      # game's 1280x960, so a full scenario renders for over half an hour and the nine-entry matrix
+      # would be a multi-hour gate. A starting point, to be tuned from a real run: the script fails
+      # loudly if this stops before gameplay rather than passing on loader frames alone.
+      RUSTLER_SMOKE_FRAMES = "300";
+
       # Headless defaults: no screen, no GPU, no sound card.
       DISPLAY = ":99";
       WGPU_BACKEND = "gl";
