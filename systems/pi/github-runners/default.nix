@@ -81,6 +81,11 @@ in
       CARGO_TARGET_DIR = "${cacheDir name}/target";
       CI_CACHE_DIR = cacheDir name;
 
+      # rustler synthesises its intro on every launch, and a PR launches the game ~108 times; this
+      # lets those runs reuse one bake. Keyed on the binary, so a rebuild re-bakes. Harmless to
+      # other repositories, which simply ignore it.
+      RUSTLER_BAKE_CACHE = "${cacheDir name}/bake";
+
       # Headless defaults: no screen, no GPU, no sound card.
       DISPLAY = ":99";
       WGPU_BACKEND = "gl";
