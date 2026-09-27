@@ -19,8 +19,14 @@ let
   # Wiped on every service start, so nothing worth keeping lives here.
   workRoot = "/mnt/datasets/.github-runner";
 
-  # Kept across restarts: cargo's registry and target dir, and the Nix dev shell GC root.
+  # Kept across restarts: the build tree and the Nix dev shell GC root. Per instance, because two
+  # concurrent cargo builds cannot share a target dir — they would serialise on its lock.
   cacheDir = name: "${workRoot}/.cache/${name}";
+
+  # Downloaded crate sources, shared by every instance. Cargo guards this with its own file lock, so
+  # concurrent builds are safe here; what they briefly serialise on is the download, not compilation.
+  # Sharing means a lockfile change costs one download for the machine instead of one per instance.
+  cargoHome = "${workRoot}/.cache/cargo";
 in
 {
   users.users.github-runner = {
@@ -60,6 +66,7 @@ in
   systemd.tmpfiles.rules = [
     "d ${workRoot} 0750 github-runner github-runner -"
     "d ${workRoot}/.cache 0750 github-runner github-runner -"
+    "d ${cargoHome} 0750 github-runner github-runner -"
   ]
   ++ lib.concatLists (
     lib.mapAttrsToList (name: _: [
@@ -93,10 +100,13 @@ in
     ];
 
     # Everything outside the work dir is read-only to the service.
-    serviceOverrides.ReadWritePaths = [ (cacheDir name) ];
+    serviceOverrides.ReadWritePaths = [
+      (cacheDir name)
+      cargoHome
+    ];
 
     extraEnvironment = {
-      CARGO_HOME = "${cacheDir name}/cargo";
+      CARGO_HOME = cargoHome;
       CARGO_TARGET_DIR = "${cacheDir name}/target";
       CI_CACHE_DIR = cacheDir name;
 

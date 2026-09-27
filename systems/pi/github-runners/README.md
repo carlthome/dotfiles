@@ -8,7 +8,12 @@ Add a line to `githubRunners`, give it a token file (see below), and merge. Seve
 
 ## Caches
 
-Each runner deletes its work dir whenever its service restarts, so build state lives next to it in `/mnt/datasets/.github-runner/.cache/<name>`: cargo's registry (`CARGO_HOME`) and target dir (`CARGO_TARGET_DIR`), plus any Nix dev shell a workflow records under `CI_CACHE_DIR` to protect it from garbage collection. Delete that directory to start a runner from scratch.
+Each runner deletes its work dir whenever its service restarts, so build state lives beside it and survives:
+
+- `/mnt/datasets/.github-runner/.cache/<instance>` — the build tree (`CARGO_TARGET_DIR`) and any Nix dev shell a workflow records under `CI_CACHE_DIR`. Per instance, because two concurrent cargo builds cannot share a target dir.
+- `/mnt/datasets/.github-runner/.cache/cargo` — downloaded crate sources (`CARGO_HOME`), shared by every instance. Cargo locks it itself, so a lockfile change costs one download for the machine rather than one per instance.
+
+Delete an instance's directory to make it build from scratch; delete the shared one to re-download crates.
 
 ## Token
 
