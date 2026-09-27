@@ -1,14 +1,20 @@
-# Self-hosted GitHub Actions runners, one per repository in `githubRunners`.
+# Self-hosted GitHub Actions runners, one per entry in `githubRunners`.
 #
 # Hosted Actions minutes run out quickly on private repositories; a workflow sends a job here with
-# `runs-on: [self-hosted, <name>-pi]`. Adding a repository is one line below. See README.md.
+# `runs-on: [self-hosted, <repo>-pi]`. Adding a repository is one line below. See README.md.
 { lib, pkgs, ... }:
 
 let
-  # Runner name -> repository. The name is the systemd unit, token file, work dir and label.
+  # Instance name -> repository. The instance is the systemd unit, work dir and cache dir; the
+  # repository decides the label and token file. Several instances may serve one repository so a
+  # short job (a playtest) runs beside a long one (a test suite) instead of queueing behind it.
   githubRunners = {
-    rustler = "carlthome/rustler";
+    rustler-1 = "carlthome/rustler";
+    rustler-2 = "carlthome/rustler";
   };
+
+  # `rustler-1` and `rustler-2` both answer for `carlthome/rustler`.
+  repoOf = repo: baseNameOf repo;
 
   # Wiped on every service start, so nothing worth keeping lives here.
   workRoot = "/mnt/datasets/.github-runner";
@@ -46,12 +52,14 @@ in
   services.github-runners = lib.mapAttrs (name: repo: {
     enable = true;
     url = "https://github.com/${repo}";
-    name = "pi";
+    name = "pi-${name}";
 
     # A fine-grained PAT (Administration: read and write), placed by hand; see README.md.
-    tokenFile = "/etc/nixos/secrets/github-runner/${name}.token";
+    # One token per repository, shared by its instances.
+    tokenFile = "/etc/nixos/secrets/github-runner/${repoOf repo}.token";
 
-    extraLabels = [ "${name}-pi" ];
+    # Shared by every instance of a repository, so a job lands on whichever is free.
+    extraLabels = [ "${repoOf repo}-pi" ];
     replace = true;
     user = "github-runner";
     workDir = "${workRoot}/${name}";

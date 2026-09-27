@@ -4,7 +4,7 @@
 
 ## Add a repository
 
-Add a line to `githubRunners`, give it a token file (see below), and merge. The Pi picks it up at its nightly auto-upgrade (04:40), or deploy right away as described in [the Pi's README](../README.md).
+Add a line to `githubRunners`, give it a token file (see below), and merge. Several entries may point at one repository (`rustler-1`, `rustler-2`): they share its label and token, so a short job runs beside a long one instead of queueing behind it. Each instance keeps its own work and cache dirs, because concurrent cargo builds cannot share a target dir. The Pi picks it up at its nightly auto-upgrade (04:40), or deploy right away as described in [the Pi's README](../README.md).
 
 ## Caches
 
