@@ -41,24 +41,25 @@ in
   # Mesa at /run/opengl-driver: headless CI still needs a GL driver to render into Xvfb.
   hardware.graphics.enable = true;
 
-  # This box serves the home network's DNS and DHCP, and a CI build otherwise takes every core it
-  # can (measured: 349% of 4 cores under software rendering), which shows up as slow name
-  # resolution everywhere. Everything CI runs lives in this slice instead.
-  #
-  # `CPUWeight` is the part that matters day to day: it only applies under contention, so CI still
-  # uses the whole machine when the network is quiet but yields to blocky and dnsmasq — which sit at
-  # the default weight of 100, five times this — the moment they want the CPU. `CPUQuota` is the
-  # backstop for the scheduler reacting too slowly, leaving about a core's worth of headroom.
-  # `MemoryHigh` throttles a heavy rustc rather than letting it push DNS into swap.
+  # Bound both runners together, including builds delegated to nix-daemon. Weights
+  # yield under contention; the quota leaves CPU headroom even during busy CI.
+  # MemoryHigh starts reclaim before MemoryMax confines an OOM to this slice.
   systemd.slices.ci = {
     description = "CI runners, kept from starving the services this box exists for";
     sliceConfig = {
-      CPUWeight = 20;
-      CPUQuota = "300%";
-      IOWeight = 50;
-      MemoryHigh = "5G";
+      CPUWeight = 10;
+      CPUQuota = "150%";
+      IOWeight = 10;
+      MemoryHigh = "40%";
+      MemoryMax = "50%";
+      MemorySwapMax = 0;
+      TasksMax = 1024;
     };
   };
+
+  # These also apply to system rebuilds: DNS takes priority over all local builds.
+  nix.settings.cores = lib.mkForce 1;
+  nix.settings.max-jobs = lib.mkForce 1;
 
   # Regenerable build trees; keep them out of the weekly Drive backup.
   services.restic.backups.datasets.exclude = [ workRoot ];
@@ -110,6 +111,13 @@ in
       CARGO_TARGET_DIR = "${cacheDir name}/target";
       CI_CACHE_DIR = cacheDir name;
 
+      # Avoid creating large worker pools only to throttle them at the slice.
+      CARGO_BUILD_JOBS = "1";
+      RUST_TEST_THREADS = "1";
+      RAYON_NUM_THREADS = "1";
+      LP_NUM_THREADS = "1";
+      OMP_NUM_THREADS = "1";
+
       # rustler synthesises its intro on every launch, and a PR launches the game ~108 times; this
       # lets those runs reuse one bake. Keyed on the binary, so a rebuild re-bakes. Harmless to
       # other repositories, which simply ignore it.
@@ -140,12 +148,25 @@ in
       lib.nameValuePair "github-runner-${name}" {
         # The work dir is on the automounted USB drive.
         unitConfig.RequiresMountsFor = [ "/mnt/datasets" ];
-        serviceConfig.Slice = "ci.slice";
+        serviceConfig = {
+          Slice = "ci.slice";
+          Nice = 15;
+          IOSchedulingClass = "idle";
+          OOMScoreAdjust = 500;
+        };
         requires = [ "xvfb.service" ];
         after = [ "xvfb.service" ];
       }
     ) githubRunners
     // {
+      # A daemon build is not a child of the runner; explicitly share its budget.
+      nix-daemon.serviceConfig = {
+        Slice = "ci.slice";
+        Nice = lib.mkForce 15;
+        IOSchedulingClass = lib.mkForce "idle";
+        OOMScoreAdjust = lib.mkForce 500;
+      };
+
       # Virtual display for headless runs; reachable through its abstract socket.
       xvfb = {
         description = "Virtual X display for CI";

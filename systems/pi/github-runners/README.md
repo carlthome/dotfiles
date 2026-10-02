@@ -6,6 +6,25 @@
 
 Add a line to `githubRunners`, give it a token file (see below), and merge. Several entries may point at one repository (`rustler-1`, `rustler-2`): they share its label and token, so a short job runs beside a long one instead of queueing behind it. Each instance keeps its own work and cache dirs, because concurrent cargo builds cannot share a target dir. The Pi picks it up at its nightly auto-upgrade (04:40), or deploy right away as described in [the Pi's README](../README.md).
 
+## Protecting DNS and DHCP
+
+Both runners, Xvfb and the Nix daemon share one `ci.slice` budget: 150% CPU
+(1.5 cores), memory reclaim at 40% of RAM, a hard limit at 50%, no swap, and
+1024 tasks. Low CPU/I/O weights and idle I/O priority on runners and the daemon
+favor normal services under contention. I/O prioritization depends on the device's
+scheduler; these limits reduce interference, but do not guarantee DNS latency.
+
+Nix builds one derivation at a time with one core; Cargo, Rust tests, Rayon,
+software rendering and OpenMP default to one worker per runner. Workflows can
+override worker defaults, but still share the slice limits. System rebuilds also
+share this budget. Excessive jobs can fail at the memory or task limit rather
+than exhaust the host; CI may take longer.
+
+After deploying, check `systemctl show ci.slice -p CPUQuotaPerSecUSec -p MemoryHigh
+-p MemoryMax -p MemorySwapMax -p TasksMax` (on one line) and `systemd-cgls /ci.slice`.
+Check DNS response times from another machine during a busy job; configuration
+validation alone cannot establish latency under load.
+
 ## Caches
 
 Each runner deletes its work dir whenever its service restarts, so build state lives beside it and survives:
