@@ -98,13 +98,16 @@ else
 	drv_items=$(printf 'f.%s.drvPath or null ' "${attr_list[@]}")
 
 	nix eval -v --impure --json --expr "let f = builtins.getFlake \"path:$PWD\"; in [ ${drv_items} ]" >"$tmpdir/current.json"
-	nix eval -v --impure --json --expr "let f = builtins.getFlake \"${BASE_REF}\"; in [ ${drv_items} ]" >"$tmpdir/base.json"
-
-	matrix=$(jq -sc '
+	if nix eval -v --impure --json --expr "let f = builtins.getFlake \"${BASE_REF}\"; in [ ${drv_items} ]" >"$tmpdir/base.json"; then
+		matrix=$(jq -sc '
 		.[0] as $items | .[1] as $current | .[2] as $base |
 		[$items, $current, $base] | transpose |
 		map(select(.[1] != .[2]) | .[0])
-	' <(echo "$all_items") "$tmpdir/current.json" "$tmpdir/base.json")
+		' <(echo "$all_items") "$tmpdir/current.json" "$tmpdir/base.json")
+	else
+		echo "Warning: could not evaluate base ref; building all targets"
+		matrix="$all_items"
+	fi
 fi
 
 # Print summary
