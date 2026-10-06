@@ -251,7 +251,7 @@ in
     };
   };
 
-  networking.firewall.trustedInterfaces = [ "tailscale0" ];
+  # The tailnet gets the same firewall as the LAN, so services stay behind nginx.
   services.tailscale = {
     useRoutingFeatures = "server";
     extraSetFlags = [

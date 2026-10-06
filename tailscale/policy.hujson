@@ -38,10 +38,11 @@
 			"dst": ["tag:homelab", "autogroup:internet"],
 			"ip":  ["*"],
 		},
+		// Allow homelab Prometheus to scrape node_exporter on personal devices.
 		{
 			"src": ["tag:homelab"],
 			"dst": ["tag:personal"],
-			"ip":  ["*"],
+			"ip":  ["tcp:9100"],
 		},
 
 		// Optional: allow personal devices to talk to each other.
@@ -95,7 +96,6 @@
 	// },
 
 	// Test access rules every time they're saved.
-	// Test access rules every time they're saved.
 	"tests": [
 		{
 			// Personal devices should be able to reach homelab on arbitrary ports.
@@ -121,11 +121,25 @@
 				"tag:homelab:22",
 				"tag:homelab:443",
 				"tag:homelab:6443",
+				"tag:personal:22",
 				"tag:personal:80",
+				"tag:personal:9100",
 			],
 		},
 		{
-			// Replace with your actual admin identity.
+			// Homelab should only be able to scrape metrics from personal devices.
+			"src": "tag:homelab",
+
+			"accept": ["tag:personal:9100"],
+
+			"deny": [
+				"tag:personal:22",
+				"tag:personal:80",
+				"tag:personal:443",
+				"tag:monitor:80",
+			],
+		},
+		{
 			"src": "carlthome@github",
 
 			"accept": [
