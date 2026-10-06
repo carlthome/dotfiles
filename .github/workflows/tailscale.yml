@@ -1,0 +1,32 @@
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - ".github/workflows/tailscale.yml"
+      - "tailscale/**"
+
+jobs:
+  plan-and-apply:
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        working-directory: tailscale
+    env:
+      TAILSCALE_OAUTH_CLIENT_ID: ${{ vars.TAILSCALE_OAUTH_CLIENT_ID }}
+      TAILSCALE_AUDIENCE: ${{ vars.TAILSCALE_AUDIENCE }}
+    steps:
+      - uses: actions/checkout@v6
+      # Only needed for the Terraform state bucket.
+      - uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ secrets.GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GOOGLE_CLOUD_TERRAFORM_SERVICE_ACCOUNT }}
+      - uses: hashicorp/setup-terraform@v3
+      - run: terraform init -backend-config="bucket=${{ secrets.TERRAFORM_STATE_BUCKET_NAME }}"
+      - run: terraform plan -out=tfplan
+      - run: terraform apply -auto-approve tfplan

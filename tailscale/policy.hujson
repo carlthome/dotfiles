@@ -1,0 +1,147 @@
+// Example/default ACLs for unrestricted connections.
+{
+	// Declare static groups of users. Use autogroups for all users or users with a specific role.
+	// "groups": {
+	//   "group:example": ["alice@example.com", "bob@example.com"],
+	// },
+
+	// Define the tags which can be applied to devices and by which users.
+	"tagOwners": {
+		// Google Cloud monitoring service
+		"tag:monitor": ["autogroup:admin"],
+
+		// Home lab infrastructure (servers, routers, hypervisors, etc.)
+		"tag:homelab": ["autogroup:admin"],
+
+		// Personal devices you own (laptop, phone, tablet, etc.)
+		"tag:personal": ["autogroup:admin"],
+	},
+
+	// Define grants that govern access for users, groups, autogroups, tags,
+	// Tailscale IP addresses, and subnet ranges.
+	"grants": [
+		// Allow all connections for admins.
+		{
+			"src": ["autogroup:admin"],
+			"dst": ["*"],
+			"ip":  ["*"],
+		},
+		// Allow monitoring to reach homelab HTTP endpoint(s).
+		{
+			"src": ["tag:monitor"],
+			"dst": ["tag:homelab"],
+			"ip":  ["tcp:80"],
+		},
+		// Allow personal devices full access to homelab devices.
+		{
+			"src": ["tag:personal"],
+			"dst": ["tag:homelab", "autogroup:internet"],
+			"ip":  ["*"],
+		},
+		{
+			"src": ["tag:homelab"],
+			"dst": ["tag:personal"],
+			"ip":  ["*"],
+		},
+
+		// Optional: allow personal devices to talk to each other.
+		// Uncomment if you want your laptop/phone/tablet to reach each other over Tailscale.
+		// {
+		//  "src": ["tag:personal"],
+		//  "dst": ["tag:personal"],
+		//  "ip":  ["*"],
+		// },
+
+		// Allow users in "group:example" to access "tag:example", but only from
+		// devices that are running macOS and have enabled Tailscale client auto-updating.
+		// {"src": ["group:example"], "dst": ["tag:example"], "ip": ["*"], "srcPosture":["posture:autoUpdateMac"]},
+	],
+
+	// Automatically approve certain devices to advertise special capabilities.
+	"autoApprovers": {
+		// Allow homelab-tagged machines to advertise themselves as exit nodes.
+		"exitNode": ["tag:homelab"],
+
+		// Optional: if later you advertise subnet routes from homelab, you can auto-approve them here.
+		// Example:
+		// "routes": {
+		//   "192.168.1.0/24": ["tag:homelab"],
+		//   "10.0.0.0/24": ["tag:homelab"],
+		// },
+	},
+
+	// Node attributes applied to matching devices.
+	"nodeAttrs": [
+		// Cloud Run cannot send UDP, so keep the monitor on DERP over TCP 443
+		// instead of retrying STUN and rebinding every netcheck.
+		{"target": ["tag:monitor"], "attr": ["only-tcp-443"]},
+	],
+
+	// Define postures that will be applied to all rules without any specific
+	// srcPosture definition.
+	// "defaultSrcPosture": [
+	//      "posture:anyMac",
+	// ],
+
+	// Define device posture rules requiring devices to meet
+	// certain criteria to access parts of your system.
+	// "postures": {
+	//      // Require devices running macOS, a stable Tailscale
+	//      // version and auto update enabled for Tailscale.
+	//  "posture:autoUpdateMac": [
+	//      "node:os == 'macos'",
+	//      "node:tsReleaseTrack == 'stable'",
+	//      "node:tsAutoUpdate",
+	//  ],
+	//      // Require devices running macOS and a stable
+	//      // Tailscale version.
+	//  "posture:anyMac": [
+	//      "node:os == 'macos'",
+	//      "node:tsReleaseTrack == 'stable'",
+	//  ],
+	// },
+
+	// Test access rules every time they're saved.
+	// Test access rules every time they're saved.
+	"tests": [
+		{
+			// Personal devices should be able to reach homelab on arbitrary ports.
+			"src": "tag:personal",
+
+			"accept": [
+				"tag:homelab:22",
+				"tag:homelab:80",
+				"tag:homelab:443",
+				"tag:homelab:6443",
+				"tag:homelab:32400",
+			],
+
+			"deny": ["tag:monitor:22"],
+		},
+		{
+			// Monitoring should only be able to reach homelab on tcp:80.
+			"src": "tag:monitor",
+
+			"accept": ["tag:homelab:80"],
+
+			"deny": [
+				"tag:homelab:22",
+				"tag:homelab:443",
+				"tag:homelab:6443",
+				"tag:personal:80",
+			],
+		},
+		{
+			// Replace with your actual admin identity.
+			"src": "carlthome@github",
+
+			"accept": [
+				"tag:homelab:22",
+				"tag:homelab:80",
+				"tag:homelab:443",
+				"tag:personal:22",
+				"tag:monitor:80",
+			],
+		},
+	],
+}
