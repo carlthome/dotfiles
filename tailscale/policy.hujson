@@ -70,13 +70,6 @@
 		// },
 	},
 
-	// Node attributes applied to matching devices.
-	"nodeAttrs": [
-		// Cloud Run cannot send UDP, so keep the monitor on DERP over TCP 443
-		// instead of retrying STUN and rebinding every netcheck.
-		{"target": ["tag:monitor"], "attr": ["only-tcp-443"]},
-	],
-
 	// Define postures that will be applied to all rules without any specific
 	// srcPosture definition.
 	// "defaultSrcPosture": [
