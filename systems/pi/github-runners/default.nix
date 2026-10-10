@@ -19,6 +19,10 @@ let
   # Wiped on every service start, so nothing worth keeping lives here.
   workRoot = "/mnt/datasets/.github-runner";
 
+  # Large local builds (notably the Pi kernel) compile many gigabytes of temporary objects.
+  # Keep that scratch I/O on USB; final registered Nix store outputs still live on root.
+  nixBuildDir = "/mnt/datasets/.nix-build";
+
   # Kept across restarts: the build tree and the Nix dev shell GC root. Per instance, because two
   # concurrent cargo builds cannot share a target dir — they would serialise on its lock.
   cacheDir = name: "${workRoot}/.cache/${name}";
@@ -36,7 +40,10 @@ in
   users.groups.github-runner = { };
 
   # The shared config re-asks every cache about every missing path; remember misses here instead.
-  nix.settings.narinfo-cache-negative-ttl = lib.mkForce 3600;
+  nix.settings = {
+    narinfo-cache-negative-ttl = lib.mkForce 3600;
+    build-dir = nixBuildDir;
+  };
 
   # Mesa at /run/opengl-driver: headless CI still needs a GL driver to render into Xvfb.
   hardware.graphics.enable = true;
@@ -62,9 +69,13 @@ in
   nix.settings.max-jobs = lib.mkForce 1;
 
   # Regenerable build trees; keep them out of the weekly Drive backup.
-  services.restic.backups.datasets.exclude = [ workRoot ];
+  services.restic.backups.datasets.exclude = [
+    workRoot
+    nixBuildDir
+  ];
 
   systemd.tmpfiles.rules = [
+    "d ${nixBuildDir} 0711 root root -"
     "d ${workRoot} 0750 github-runner github-runner -"
     "d ${workRoot}/.cache 0750 github-runner github-runner -"
     "d ${cargoHome} 0750 github-runner github-runner -"
@@ -149,6 +160,7 @@ in
     ) githubRunners
     // {
       # A daemon build is not a child of the runner; explicitly share its budget.
+      nix-daemon.unitConfig.RequiresMountsFor = [ "/mnt/datasets" ];
       nix-daemon.serviceConfig = {
         Slice = "ci.slice";
         Nice = lib.mkForce 15;
