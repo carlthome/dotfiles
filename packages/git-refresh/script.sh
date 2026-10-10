@@ -3,6 +3,7 @@ set -e
 
 echo "Starting git refresh at $(date)"
 start=$(date +%s)
+failed=0
 
 # Download remote changes for all git repos and check if local repo is up-to-date.
 git_root="$HOME/Repos"
@@ -18,11 +19,13 @@ for repo in $repos; do
 	# Download remote changes and apply repo maintenance.
 	if ! git -C "$repo" fetch --verbose --progress --auto-maintenance; then
 		printf "WARNING: Failed to fetch %s\n\n" "$repo"
+		failed=1
 		continue
 	fi
 
 	# Preload direnv environment.
-	if ! direnv exec "$repo" true; then
+	if [ -f "$repo/.envrc" ] && ! direnv exec "$repo" true; then
+		failed=1
 		printf "WARNING: Failed to reload direnv environment (%s)\n\n" "$repo"
 	fi
 
@@ -36,3 +39,5 @@ for repo in $repos; do
 done
 
 echo "git refresh completed at $(date) (elapsed: $(($(date +%s) - start))s)"
+
+exit "$failed"
