@@ -118,17 +118,6 @@ in
       LP_NUM_THREADS = "1";
       OMP_NUM_THREADS = "1";
 
-      # rustler synthesises its intro on every launch, and a PR launches the game ~108 times; this
-      # lets those runs reuse one bake. Keyed on the binary, so a rebuild re-bakes. Harmless to
-      # other repositories, which simply ignore it.
-      RUSTLER_BAKE_CACHE = "${cacheDir name}/bake";
-
-      # Cap how far rustler's render smoke test draws. Software GL here costs ~3s a frame at the
-      # game's 1280x960, so a full scenario renders for over half an hour and the nine-entry matrix
-      # would be a multi-hour gate. A starting point, to be tuned from a real run: the script fails
-      # loudly if this stops before gameplay rather than passing on loader frames alone.
-      RUSTLER_SMOKE_FRAMES = "300";
-
       # Headless defaults: no screen, no GPU, no sound card.
       DISPLAY = ":99";
       WGPU_BACKEND = "gl";
