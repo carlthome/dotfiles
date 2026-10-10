@@ -8,7 +8,7 @@ Add a line to `githubRunners`, give it a token file (see below), and merge. Seve
 
 ## Protecting DNS and DHCP
 
-Both runners, Xvfb and the Nix daemon share one `ci.slice` budget: 150% CPU
+Both runners, Xvfb, the Nix daemon and automatic upgrades share one `ci.slice` budget: 150% CPU
 (1.5 cores), memory reclaim at 40% of RAM, a hard limit at 50%, no swap, and
 1024 tasks. Low CPU/I/O weights and idle I/O priority on runners and the daemon
 favor normal services under contention. I/O prioritization depends on the device's
@@ -20,6 +20,17 @@ override worker defaults, but still share the slice limits. System rebuilds also
 share this budget. Excessive jobs can fail at the memory or task limit rather
 than exhaust the host; CI may take longer.
 
+Nix build scratch goes to `/mnt/cache/nix-build` on USB, alongside the
+runner caches. Builds wait for the USB mount; installed Nix store outputs
+remain on the SD card. Automatic upgrades are constrained separately because
+root's Nix builds can bypass the daemon.
+
+`/mnt/cache` mounts the USB drive's `cache` Btrfs subvolume with `noatime`.
+Create that subvolume before activation and set `chattr +C` on its empty root.
+New cache files then avoid copy-on-write, checksums and compression. These
+files are regenerable and excluded from backups. The inode flag confines this
+tuning to caches; Btrfs compression/CoW mount options apply to the whole drive.
+
 After deploying, check `systemctl show ci.slice -p CPUQuotaPerSecUSec -p MemoryHigh
 -p MemoryMax -p MemorySwapMax -p TasksMax` (on one line) and `systemd-cgls /ci.slice`.
 Check DNS response times from another machine during a busy job; configuration
@@ -29,10 +40,21 @@ validation alone cannot establish latency under load.
 
 Each runner deletes its work dir whenever its service restarts, so build state lives beside it and survives:
 
-- `/mnt/datasets/.github-runner/.cache/<instance>` — the build tree (`CARGO_TARGET_DIR`) and any Nix dev shell a workflow records under `CI_CACHE_DIR`. Per instance, because two concurrent cargo builds cannot share a target dir.
-- `/mnt/datasets/.github-runner/.cache/cargo` — downloaded crate sources (`CARGO_HOME`), shared by every instance. Cargo locks it itself, so a lockfile change costs one download for the machine rather than one per instance.
+- `/mnt/cache/github-runner/.cache/<instance>` — the build tree (`CARGO_TARGET_DIR`) and any Nix dev shell a workflow records under `CI_CACHE_DIR`. Per instance, because two concurrent cargo builds cannot share a target dir.
+- `/mnt/cache/github-runner/.cache/cargo` — downloaded crate sources (`CARGO_HOME`), shared by every instance. Cargo locks it itself, so a lockfile change costs one download for the machine rather than one per instance.
 
 Delete an instance's directory to make it build from scratch; delete the shared one to re-download crates.
+
+During migration, old paths under `/mnt/datasets/.github-runner` are symlinks
+to `/mnt/cache/github-runner`. Original directories ending in
+`.before-cache-move` retain a rollback copy; existing data was reflinked, so
+its blocks are shared. New files inherit the cache's no-CoW flag.
+
+Until the flake is activated, the Pi uses a mount unit and service drop-ins
+under `/etc/systemd/system.control` (`mnt-cache.mount`, `usb-cache.conf` and
+`usb-builds.conf`). Remove these migration overrides and their copies under
+`/run/systemd/system` after activating this configuration, then reload systemd.
+The temporary `/etc/fail2ban/jail.d/99-pi-ssh-only.local` can then be removed too.
 
 ## Token
 

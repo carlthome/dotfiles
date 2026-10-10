@@ -17,11 +17,11 @@ let
   repoOf = repo: baseNameOf repo;
 
   # Wiped on every service start, so nothing worth keeping lives here.
-  workRoot = "/mnt/datasets/.github-runner";
+  workRoot = "/mnt/cache/github-runner";
 
   # Large local builds (notably the Pi kernel) compile many gigabytes of temporary objects.
   # Keep that scratch I/O on USB; final registered Nix store outputs still live on root.
-  nixBuildDir = "/mnt/datasets/.nix-build";
+  nixBuildDir = "/mnt/cache/nix-build";
 
   # Kept across restarts: the build tree and the Nix dev shell GC root. Per instance, because two
   # concurrent cargo builds cannot share a target dir — they would serialise on its lock.
@@ -68,13 +68,16 @@ in
   nix.settings.cores = lib.mkForce 1;
   nix.settings.max-jobs = lib.mkForce 1;
 
-  # Regenerable build trees; keep them out of the weekly Drive backup.
+  # Exclude old caches until migration is complete. /mnt/cache is not backed up.
   services.restic.backups.datasets.exclude = [
-    workRoot
-    nixBuildDir
+    "/mnt/datasets/.github-runner"
+    "/mnt/datasets/.nix-build"
   ];
 
   systemd.tmpfiles.rules = [
+    # Cache data is regenerable: avoid CoW/checksum overhead for new files.
+    # Use an inode flag, since Btrfs mount options affect the whole USB filesystem.
+    "h /mnt/cache - - - - +C"
     "d ${nixBuildDir} 0711 root root -"
     "d ${workRoot} 0750 github-runner github-runner -"
     "d ${workRoot}/.cache 0750 github-runner github-runner -"
@@ -147,7 +150,7 @@ in
       name: _:
       lib.nameValuePair "github-runner-${name}" {
         # The work dir is on the automounted USB drive.
-        unitConfig.RequiresMountsFor = [ "/mnt/datasets" ];
+        unitConfig.RequiresMountsFor = [ "/mnt/cache" ];
         serviceConfig = {
           Slice = "ci.slice";
           Nice = 15;
@@ -160,12 +163,23 @@ in
     ) githubRunners
     // {
       # A daemon build is not a child of the runner; explicitly share its budget.
-      nix-daemon.unitConfig.RequiresMountsFor = [ "/mnt/datasets" ];
+      nix-daemon.unitConfig.RequiresMountsFor = [ "/mnt/cache" ];
       nix-daemon.serviceConfig = {
         Slice = "ci.slice";
         Nice = lib.mkForce 15;
         IOSchedulingClass = lib.mkForce "idle";
         OOMScoreAdjust = lib.mkForce 500;
+      };
+
+      # Root's nixos-rebuild can build directly, bypassing nix-daemon.
+      nixos-upgrade = {
+        unitConfig.RequiresMountsFor = [ "/mnt/cache" ];
+        serviceConfig = {
+          Slice = "ci.slice";
+          Nice = 15;
+          IOSchedulingClass = "idle";
+          OOMScoreAdjust = 500;
+        };
       };
 
       # Virtual display for headless runs; reachable through its abstract socket.

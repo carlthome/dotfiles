@@ -169,6 +169,7 @@ in
 
     "/mnt/datasets" = usbMount "datasets" [ "compress=zstd" ];
     "/mnt/media" = usbMount "media" [ ];
+    "/mnt/cache" = usbMount "cache" [ "noatime" ];
   };
 
   environment.etc = configFiles // grafanaDashboards // alertManagerTemplates;
@@ -216,14 +217,11 @@ in
 
   services.fail2ban = {
     enable = true;
-    jails = {
-      ssh-iptables = ''
-        enabled = true
-        filter = sshd
-        maxretry = 3
-        findtime = 600
-        bantime = 3600
-      '';
+    # The built-in jail follows openssh.ports. A second jail without a port
+    # setting inherits all TCP ports and blocks DNS, dashboards and logs too.
+    jails.sshd.settings = {
+      findtime = 600;
+      bantime = 3600;
     };
   };
 
