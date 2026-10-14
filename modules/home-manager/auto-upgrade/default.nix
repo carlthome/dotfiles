@@ -14,7 +14,7 @@ let
     text = ''
       echo "Starting Home Manager upgrade at $(date)"
       start=$(date +%s)
-      home-manager switch --print-build-logs --refresh --flake ${cfg.flake}
+      home-manager switch --print-build-logs --refresh --flake ${cfg.flake}${lib.optionalString cfg.impure " --impure"}
       echo "Home Manager upgrade completed at $(date) (elapsed: $(($(date +%s) - start))s)"
     '';
     runtimeInputs = with pkgs; [
@@ -73,6 +73,12 @@ in
       flake = lib.mkOption {
         type = lib.types.str;
         description = "Flake URI to use for upgrades";
+      };
+
+      impure = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Pass --impure to home-manager switch (needed for configs that read from the environment)";
       };
     };
   };
