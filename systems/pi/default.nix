@@ -1,10 +1,19 @@
-{ nixpkgs, self, ... }:
+{
+  nixpkgs,
+  nixos-hardware,
+  self,
+  ...
+}:
 
 nixpkgs.lib.nixosSystem {
   system = "aarch64-linux";
   modules = [
     ./configuration.nix
     ./hardware-configuration.nix
+    ({ pkgs, ... }: {
+      # Use the maintained vendor kernel without importing a different boot setup.
+      boot.kernelPackages = pkgs.linuxPackagesFor nixos-hardware.packages.aarch64-linux.rpi4-kernel;
+    })
     "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
     { nixpkgs.overlays = [ self.overlays.modules-closure ]; }
     { sdImage.compressImage = false; }

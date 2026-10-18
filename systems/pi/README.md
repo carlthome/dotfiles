@@ -2,6 +2,14 @@
 
 ## Usage
 
+The Pi uses the vendor Pi 4 kernel from the pinned `nixos-hardware` input,
+with that input following our nixpkgs revision. The deprecated nixpkgs
+`linux_rpi4` package is no longer used. Only the kernel package is selected;
+the existing extlinux bootloader, firmware settings, and SD root remain in place.
+The VM variant still uses the generic ARM kernel. This migration does not
+guarantee an upstream binary-cache hit; CI must build and publish missing outputs
+before a fetch-only upgrade can succeed.
+
 ### Installation
 
 ```sh
