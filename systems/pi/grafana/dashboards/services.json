@@ -871,7 +871,7 @@
           "selected": true,
           "text": "All",
           "value": "$__all"
-        }
+        },
         "hide": 0,
         "includeAll": true,
         "label": "Priority",
