@@ -836,8 +836,12 @@
         "type": "query"
       },
       {
-        "allValue": ".+",
-        "current": {},
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
         "datasource": {
           "type": "loki",
           "uid": "${DS_LOKI}"
@@ -863,7 +867,11 @@
       },
       {
         "allValue": ".*",
-        "current": {},
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        }
         "hide": 0,
         "includeAll": true,
         "label": "Priority",
