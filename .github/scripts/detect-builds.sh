@@ -72,13 +72,13 @@ nix eval --json .#legacyPackages --apply '
 wait
 
 # Combine and add runners
-# aarch64-linux uses ubuntu with QEMU, but only for system configs (not packages)
+# aarch64-linux system configs build natively; QEMU kernel builds are too slow.
 all_items=$(jq -sc 'add | map(. + {
   "runs-on": (
     if .system == "aarch64-darwin" then "macos-latest"
     elif .system == "x86_64-darwin" then "macos-13"
     elif .system == "x86_64-linux" then "ubuntu-latest"
-    elif .system == "aarch64-linux" and (.attr | startswith("nixosConfigurations.")) then "ubuntu-latest"
+    elif .system == "aarch64-linux" and (.attr | startswith("nixosConfigurations.")) then "ubuntu-24.04-arm"
     else null end
   )
 }) | map(select(."runs-on" != null))' "$tmpdir/packages.json" "$tmpdir/nixos.json" "$tmpdir/darwin.json" "$tmpdir/homes.json")

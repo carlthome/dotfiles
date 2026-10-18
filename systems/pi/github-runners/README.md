@@ -4,11 +4,11 @@
 
 ## Add a repository
 
-Add a line to `githubRunners`, give it a token file (see below), and merge. Several entries may point at one repository (`rustler-1`, `rustler-2`): they share its label and token, so a short job runs beside a long one instead of queueing behind it. Each instance keeps its own work and cache dirs, because concurrent cargo builds cannot share a target dir. The Pi picks it up at its nightly auto-upgrade (04:40), or deploy right away as described in [the Pi's README](../README.md).
+Add a line to `githubRunners`, give it a token file (see below), and merge. The Pi currently runs only `rustler-1`: multiple compilers and a system rebuild sharing its memory budget caused days of reclaim thrashing. Jobs queue behind one worker; the old second worker's cache is retained on USB. The Pi picks up cached configurations at its nightly auto-upgrade (04:40), or deploy as described in [the Pi's README](../README.md).
 
 ## Protecting DNS and DHCP
 
-Both runners, Xvfb, the Nix daemon and automatic upgrades share one `ci.slice` budget: 150% CPU
+The runner, Xvfb, the Nix daemon and automatic upgrades share one `ci.slice` budget: 150% CPU
 (1.5 cores), memory reclaim at 40% of RAM, a hard limit at 50%, no swap, and
 1024 tasks. Low CPU/I/O weights and idle I/O priority on runners and the daemon
 favor normal services under contention. I/O prioritization depends on the device's
@@ -25,11 +25,24 @@ runner caches. Builds wait for the USB mount; installed Nix store outputs
 remain on the SD card. Automatic upgrades are constrained separately because
 root's Nix builds can bypass the daemon.
 
+Automatic upgrades pass `--max-jobs 0` and time out after 30 minutes. The
+dotfiles workflow builds Pi configurations on a native ARM hosted runner and
+publishes them to Cachix. An uncached configuration fails the automatic upgrade
+instead of compiling a kernel on the DNS host; updates wait until CI publishes
+their closure. Manual rebuilds can still compile locally. The runner restarts
+after process failures, with a 30-second delay.
+
 `/mnt/cache` mounts the USB drive's `cache` Btrfs subvolume with `noatime`.
 Create that subvolume before activation and set `chattr +C` on its empty root.
 New cache files then avoid copy-on-write, checksums and compression. These
 files are regenerable and excluded from backups. The inode flag confines this
 tuning to caches; Btrfs compression/CoW mount options apply to the whole drive.
+
+Runner registration state and diagnostics also live on USB, at
+`/mnt/cache/github-runner-state` and `/mnt/cache/github-runner-logs`, bind-mounted
+at the runner's standard `/var/lib` and `/var/log` paths. Diagnostic files expire
+after 14 days through systemd's existing tmpfiles cleanup. Only the runners
+require these mounts; DNS and the installed system remain available without USB.
 
 After deploying, check `systemctl show ci.slice -p CPUQuotaPerSecUSec -p MemoryHigh
 -p MemoryMax -p MemorySwapMax -p TasksMax` (on one line) and `systemd-cgls /ci.slice`.
@@ -52,9 +65,11 @@ its blocks are shared. New files inherit the cache's no-CoW flag.
 
 Until the flake is activated, the Pi uses a mount unit and service drop-ins
 under `/etc/systemd/system.control` (`mnt-cache.mount`, `usb-cache.conf` and
-`usb-builds.conf`). Remove these migration overrides and their copies under
-`/run/systemd/system` after activating this configuration, then reload systemd.
-The temporary `/etc/fail2ban/jail.d/99-pi-ssh-only.local` can then be removed too.
+`usb-builds.conf`, plus runner state/log bind mounts). Remove these migration
+overrides and their copies under `/run/systemd/system` after activating this
+configuration, then reload systemd.
+The temporary `/etc/fail2ban/jail.d/99-pi-ssh-only.local` and
+`/etc/tmpfiles.d/pi-runner-diagnostics.conf` can then be removed too.
 
 ## Token
 

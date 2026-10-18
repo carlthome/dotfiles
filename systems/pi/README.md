@@ -47,6 +47,19 @@ nixos-rebuild --flake .#pi --fast --build-host pi --target-host pi --use-remote-
 
 Replace `test` with `switch` to apply the new configuration on reboot. Note that this can lead to permanent lock out without physical access. To recover, access the SD card on another machine and edit NIXOS_SD/boot/extlinux/extlinux.conf to temporarily boot into the last known working configuration.
 
+### USB backups
+
+Dataset backups run on Mondays and media backups on Tuesdays. Each job limits
+rclone to 0.5 requests per second with a burst of one, so even overlapping jobs
+stay within one request per second combined. Backup indexes live under
+`/mnt/cache/restic`; a 768 MiB soft memory limit and 1 GiB hard limit keep scans
+from crowding out DNS and CI. A single file reader and one Go execution thread
+also reduce disk contention during large initial backups.
+
+The current Google Drive remote uses rclone's shared OAuth client. Its retirement
+warning requires configuring a personal client ID in the existing secret rclone
+config; throttling mitigates quota failures but does not replace that migration.
+
 ### Tailscale DNS
 
 To access `grafana.home`, `jellyfin.home`, etc. via Tailscale:

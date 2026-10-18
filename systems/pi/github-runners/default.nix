@@ -6,14 +6,12 @@
 
 let
   # Instance name -> repository. The instance is the systemd unit, work dir and cache dir; the
-  # repository decides the label and token file. Several instances may serve one repository so a
-  # short job (a playtest) runs beside a long one (a test suite) instead of queueing behind it.
+  # repository decides the label and token file. Keep one worker on this 8 GB
+  # DNS host: concurrent compilers exhausted the CI working set and thrashed.
   githubRunners = {
     rustler-1 = "carlthome/rustler";
-    rustler-2 = "carlthome/rustler";
   };
 
-  # `rustler-1` and `rustler-2` both answer for `carlthome/rustler`.
   repoOf = repo: baseNameOf repo;
 
   # Wiped on every service start, so nothing worth keeping lives here.
@@ -22,6 +20,21 @@ let
   # Large local builds (notably the Pi kernel) compile many gigabytes of temporary objects.
   # Keep that scratch I/O on USB; final registered Nix store outputs still live on root.
   nixBuildDir = "/mnt/cache/nix-build";
+
+  # Runner.Listener writes diagnostics beside its registration state, even
+  # when a separate LogsDirectory is configured. Both belong on USB.
+  stateRoot = "/mnt/cache/github-runner-state";
+  logRoot = "/mnt/cache/github-runner-logs";
+  usbBind = device: {
+    inherit device;
+    fsType = "none";
+    options = [
+      "bind"
+      "noauto"
+      "nofail"
+      "x-systemd.requires-mounts-for=/mnt/cache"
+    ];
+  };
 
   # Kept across restarts: the build tree and the Nix dev shell GC root. Per instance, because two
   # concurrent cargo builds cannot share a target dir — they would serialise on its lock.
@@ -38,6 +51,12 @@ in
     group = "github-runner";
   };
   users.groups.github-runner = { };
+
+  # Only runner services require these mounts; boot and DNS stay on SD.
+  fileSystems = {
+    "/var/lib/github-runner" = usbBind stateRoot;
+    "/var/log/github-runner" = usbBind logRoot;
+  };
 
   # The shared config re-asks every cache about every missing path; remember misses here instead.
   nix.settings = {
@@ -68,6 +87,14 @@ in
   nix.settings.cores = lib.mkForce 1;
   nix.settings.max-jobs = lib.mkForce 1;
 
+  # CI publishes system closures to Cachix. Missing cached builds must fail an
+  # automatic upgrade instead of starting a multi-day kernel build beside CI.
+  # Manual rebuilds still allow local compilation.
+  system.autoUpgrade.flags = [
+    "--max-jobs"
+    "0"
+  ];
+
   # Exclude old caches until migration is complete. /mnt/cache is not backed up.
   services.restic.backups.datasets.exclude = [
     "/mnt/datasets/.github-runner"
@@ -78,6 +105,10 @@ in
     # Cache data is regenerable: avoid CoW/checksum overhead for new files.
     # Use an inode flag, since Btrfs mount options affect the whole USB filesystem.
     "h /mnt/cache - - - - +C"
+    "d ${stateRoot} 0755 root root -"
+    "d ${logRoot} 0755 root root -"
+    "e ${stateRoot}/*/_diag - - - m:14d"
+    "e ${logRoot}/* - - - m:14d"
     "d ${nixBuildDir} 0711 root root -"
     "d ${workRoot} 0750 github-runner github-runner -"
     "d ${workRoot}/.cache 0750 github-runner github-runner -"
@@ -150,12 +181,18 @@ in
       name: _:
       lib.nameValuePair "github-runner-${name}" {
         # The work dir is on the automounted USB drive.
-        unitConfig.RequiresMountsFor = [ "/mnt/cache" ];
+        unitConfig.RequiresMountsFor = [
+          "/mnt/cache"
+          "/var/lib/github-runner"
+          "/var/log/github-runner"
+        ];
         serviceConfig = {
           Slice = "ci.slice";
           Nice = 15;
           IOSchedulingClass = "idle";
           OOMScoreAdjust = 500;
+          Restart = lib.mkForce "on-failure";
+          RestartSec = "30s";
         };
         requires = [ "xvfb.service" ];
         after = [ "xvfb.service" ];
@@ -179,6 +216,8 @@ in
           Nice = 15;
           IOSchedulingClass = "idle";
           OOMScoreAdjust = 500;
+          # This is a oneshot unit; RuntimeMaxSec would not bound its build.
+          TimeoutStartSec = "30min";
         };
       };
 

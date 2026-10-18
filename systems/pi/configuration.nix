@@ -263,12 +263,17 @@ in
   services.restic.backups.datasets = {
     repository = "rclone:gdrive:/Datasets";
     paths = [ "/mnt/datasets" ];
+    extraBackupArgs = [ "--read-concurrency=1" ];
 
     # TODO Populate secrets automatically.
     passwordFile = "/etc/nixos/secrets/restic/datasets";
     rcloneConfigFile = "/etc/nixos/secrets/restic/rclone.conf";
+    rcloneOptions = {
+      tpslimit = "0.5";
+      tpslimit-burst = "1";
+    };
     timerConfig = {
-      OnCalendar = "weekly";
+      OnCalendar = "Mon *-*-* 00:00:00";
       Persistent = true;
     };
   };
@@ -277,13 +282,44 @@ in
   services.restic.backups.media = {
     repository = "rclone:gdrive:/Media";
     paths = [ "/mnt/media" ];
+    extraBackupArgs = [ "--read-concurrency=1" ];
 
     # TODO Populate secrets automatically.
     passwordFile = "/etc/nixos/secrets/restic/media";
     rcloneConfigFile = "/etc/nixos/secrets/restic/rclone.conf";
+    rcloneOptions = {
+      tpslimit = "0.5";
+      tpslimit-burst = "1";
+    };
     timerConfig = {
-      OnCalendar = "weekly";
+      OnCalendar = "Tue *-*-* 00:00:00";
       Persistent = true;
+    };
+  };
+
+  # Backup indexes are regenerable; keep them off the SD card as well.
+  systemd.services.restic-backups-datasets = {
+    unitConfig.RequiresMountsFor = [ "/mnt/cache" ];
+    environment.RESTIC_CACHE_DIR = lib.mkForce "/mnt/cache/restic/datasets";
+    environment.GOMAXPROCS = "1";
+    serviceConfig = {
+      Nice = 19;
+      IOSchedulingClass = "idle";
+      MemoryHigh = "768M";
+      MemoryMax = "1G";
+      MemorySwapMax = 0;
+    };
+  };
+  systemd.services.restic-backups-media = {
+    unitConfig.RequiresMountsFor = [ "/mnt/cache" ];
+    environment.RESTIC_CACHE_DIR = lib.mkForce "/mnt/cache/restic/media";
+    environment.GOMAXPROCS = "1";
+    serviceConfig = {
+      Nice = 19;
+      IOSchedulingClass = "idle";
+      MemoryHigh = "768M";
+      MemoryMax = "1G";
+      MemorySwapMax = 0;
     };
   };
 
@@ -541,6 +577,8 @@ in
   systemd.settings.Manager.DefaultIOAccounting = true;
 
   systemd.tmpfiles.rules = [
+    "d /mnt/cache/restic/datasets 0700 root root -"
+    "d /mnt/cache/restic/media 0700 root root -"
     "d /var/lib/prometheus-node-exporter/textfile-collector 0755 root root -"
   ];
 
