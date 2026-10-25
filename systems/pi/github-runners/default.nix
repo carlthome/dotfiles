@@ -1,12 +1,12 @@
 # Self-hosted GitHub Actions runners, one per entry in `githubRunners`.
 #
 # Hosted Actions minutes run out quickly on private repositories; a workflow sends a job here with
-# `runs-on: [self-hosted, <repo>-pi]`. Adding a repository is one line below. See README.md.
+# `runs-on: [self-hosted, Linux, ARM64]`. Adding a repository is one line below. See README.md.
 { lib, pkgs, ... }:
 
 let
   # Instance name -> repository. The instance is the systemd unit, work dir and cache dir; the
-  # repository decides the label and token file. Keep one worker on this 8 GB
+  # repository decides the token file. Keep one worker on this 8 GB
   # DNS host: concurrent compilers exhausted the CI working set and thrashed.
   githubRunners = {
     rustler-1 = "carlthome/rustler";
@@ -130,8 +130,8 @@ in
     # One token per repository, shared by its instances.
     tokenFile = "/etc/nixos/secrets/github-runner/${repoOf repo}.token";
 
-    # Shared by every instance of a repository, so a job lands on whichever is free.
-    extraLabels = [ "${repoOf repo}-pi" ];
+    # Use GitHub's standard self-hosted/OS/architecture labels.
+    # Workflows own runner selection; no repository-specific routing labels.
     replace = true;
     user = "github-runner";
     workDir = "${workRoot}/${name}";

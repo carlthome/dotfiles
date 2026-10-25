@@ -1,6 +1,6 @@
 # GitHub Actions runners
 
-`default.nix` runs a self-hosted runner on the Pi for each repository in `githubRunners`. A workflow sends a job there with `runs-on: [self-hosted, <name>-pi]` (rustler picks its runner through its `LINUX_RUNNER` repository variable).
+`default.nix` runs a self-hosted runner on the Pi for each repository in `githubRunners`. A workflow sends a job there with `runs-on: [self-hosted, Linux, ARM64]`. Workflow routing belongs in each repository; do not add temporary recovery labels or use repository variables to redirect jobs.
 
 ## Add a repository
 
