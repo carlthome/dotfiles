@@ -10,8 +10,8 @@
 
   # Since the disk is only 256 GB, garbage collect store paths when running out of space.
   nix.extraOptions = ''
-    min-free = 1G
-    max-free = 10G
+    min-free = 10G
+    max-free = 20G
   '';
 
   services.wallpaper = {
