@@ -16,7 +16,6 @@
         "discord"
         "google-chrome"
         "spotify"
-        "whatsapp-for-mac"
         "reaper"
       ];
   };
@@ -36,7 +35,6 @@
     keepassxc
     spotify
     telegram-desktop
-    whatsapp-for-mac
     reaper
     # Match upstream's Electron 42 fix until the locked nixpkgs includes it.
     (opencode-desktop.override { electron_41 = electron_42; })
