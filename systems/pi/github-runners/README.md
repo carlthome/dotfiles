@@ -4,7 +4,7 @@
 
 ## Add a repository
 
-Add a line to `githubRunners`, give it a token file (see below), and merge. The Pi currently runs only `rustler-1`: multiple compilers and a system rebuild sharing its memory budget caused days of reclaim thrashing. Jobs queue behind one worker; the old second worker's cache is retained on USB. The Pi picks up cached configurations at its nightly auto-upgrade (04:40), or deploy as described in [the Pi's README](../README.md).
+The single runner is managed as `github-actions-runner.service`; NixOS also creates its internal instance unit. Add a line to `githubRunners`, give it a token file (see below), and merge. The Pi currently runs only `actions`: multiple compilers and a system rebuild sharing its memory budget caused days of reclaim thrashing. Jobs queue behind one worker; the old second worker's cache is retained on USB. The Pi picks up cached configurations at its nightly auto-upgrade (04:40), or deploy as described in [the Pi's README](../README.md).
 
 ## Protecting DNS and DHCP
 

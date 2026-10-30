@@ -9,7 +9,7 @@ let
   # repository decides the token file. Keep one worker on this 8 GB
   # DNS host: concurrent compilers exhausted the CI working set and thrashed.
   githubRunners = {
-    rustler-1 = "carlthome/rustler";
+    actions = "carlthome/rustler";
   };
 
   repoOf = repo: baseNameOf repo;
@@ -180,6 +180,7 @@ in
     lib.mapAttrs' (
       name: _:
       lib.nameValuePair "github-runner-${name}" {
+        aliases = lib.optional (name == "actions") "github-actions-runner.service";
         # The work dir is on the automounted USB drive.
         unitConfig.RequiresMountsFor = [
           "/mnt/cache"
