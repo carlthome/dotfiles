@@ -102,7 +102,6 @@
     nh.enable = true;
     poetry.enable = true;
     alacritty.enable = true;
-    visidata.enable = true;
     nix-init.enable = true;
   };
 
