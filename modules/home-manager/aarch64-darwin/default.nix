@@ -18,6 +18,9 @@
         "spotify"
         "reaper"
       ];
+    permittedInsecurePackages = [
+      "electron-42.11.18"
+    ];
   };
 
   home.packages = with pkgs; [
