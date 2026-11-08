@@ -13,7 +13,6 @@ let
     dbaeumer.vscode-eslint
     docker.docker
     esbenp.prettier-vscode
-    github.copilot
     github.copilot-chat
     github.github-vscode-theme
     github.vscode-github-actions
@@ -103,9 +102,9 @@ let
           version = "2.2.1";
           sha256 = "PRGtxcN98DisCPAoRdgDQYFwYo/LEPflx55YDe08C+k=";
         }).overrideAttrs
-        (_: {
-          sourceRoot = "extension";
-        })
+          (_: {
+            sourceRoot = "extension";
+          })
       )
     ];
 in
