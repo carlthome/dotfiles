@@ -38,6 +38,7 @@
     systemPackages = with pkgs; [
       vim
       htop
+      strace
       ncdu
       tmux
     ];
