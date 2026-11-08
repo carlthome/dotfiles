@@ -443,6 +443,9 @@ in
 
   services.alloy = {
     enable = true;
+    extraFlags = [
+      "--disable-reporting"
+    ];
   };
 
   services.grafana = {
