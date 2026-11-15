@@ -158,7 +158,7 @@ in
 
     "/var/lib/prometheus2/data" = {
       fsType = "tmpfs";
-      options = [ "size=1G" ];
+      options = [ "size=2G" ];
     };
 
     "/var/cache/jellyfin" = {
