@@ -10,6 +10,21 @@ My personal computing configuration that I wish to sync between machines.
 1. Create macOS configuration with `nh darwin switch github:carlthome/dotfiles`
 1. Create user configuration with `nh home switch github:carlthome/dotfiles`
 
+### New machine (portable setup)
+
+For machines where your username or work email differs from an existing config, use the portable home configuration. It auto-detects your username and home directory from the environment, and reads your work email from a local file that isn't tracked by git.
+
+```bash
+# Optionally set a work email (skip to use personal email as default):
+mkdir -p ~/.config/dotfiles
+echo "you@work.com" > ~/.config/dotfiles/git-email
+
+# Apply the portable home configuration:
+home-manager switch --flake github:carlthome/dotfiles#portable --impure
+```
+
+Auto-upgrade is enabled and will re-read the local email file on each run, so no git commits are needed when you change jobs.
+
 ## Usage
 
 Run packages by `nix run dotfiles#<name>` where `<name>` is the package name.
