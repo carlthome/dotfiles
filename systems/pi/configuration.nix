@@ -130,6 +130,7 @@ in
     max-free = 8 * 1024 * 1024 * 1024;
   };
   nix.gc.options = lib.mkForce "--delete-older-than 7d";
+  nix.gc.dates = "Sun *-*-* 03:15:00";
 
   boot = {
     supportedFilesystems.zfs = lib.mkForce false;
