@@ -217,8 +217,7 @@ in
           Nice = 15;
           IOSchedulingClass = "idle";
           OOMScoreAdjust = 500;
-          # This is a oneshot unit; RuntimeMaxSec would not bound its build.
-          TimeoutStartSec = "30min";
+          TimeoutStartSec = "90min";
         };
       };
 
